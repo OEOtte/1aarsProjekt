@@ -5,13 +5,13 @@ import java.util.ArrayList;
 import model.Freight;
 
 public class FreightDB implements FreightDBIF{
-	private ArrayList<Freight> listOfFreighters;
 	private void init() {
 		
 	}
 	
 	@Override
 	public Freight findFreightByFreightNumber(String freightNumber) {
+		ArrayList<Freight> freighters = new ArrayList<>();
 		Freight res = null;
 //		for(Freight f : listOfFreighters) {
 //			if(freightNumber == f.getFreightNumber()) {
@@ -22,10 +22,10 @@ public class FreightDB implements FreightDBIF{
 //			
 //		}
 		
-		for(int i = 0; i < listOfFreighters.size(); i++) {
-			if(freightNumber == listOfFreighters.get(i).getFreightNumber()) {
-				res = listOfFreighters.get(i);
-				i = listOfFreighters.size();
+		for(int i = 0; i < freighters.size(); i++) {
+			if(freightNumber == freighters.get(i).getFreightNumber()) {
+				res = freighters.get(i);
+				i = freighters.size();
 			}
 		}
 		if(res == null) {
