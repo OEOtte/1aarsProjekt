@@ -19,7 +19,13 @@ public class Shipment {
 		for(int i = 0; i < shipmentLines.size(); i++) {
 			if(shipmentLines.get(i).getProduct().equals(product)){
 				shipmentLines.get(i).increaseQty(quantity);
+				res = true;
 			}
 		}
+		if(!res) {
+			ShipmentLine shipmentLine = new ShipmentLine(product, quantity);
+		}
+		
+		return res;
 	}
 }

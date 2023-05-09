@@ -10,6 +10,7 @@ public class ShipmentController {
 
 	private Shipment shipment;
 	private ProductCtrl productCtrl;
+	private StorageCrtl storageCtrl;
 
 	public boolean createShipment(List<String> staffIds, String freightNumber) {
 		boolean res = true;
@@ -39,8 +40,11 @@ public class ShipmentController {
 			System.out.println("brok"); //TODO implement thowable or error
 		}
 		
-		checkIfProductAlreadyScannedAndAddProductToOrderline(product, quantity);
+		boolean accomplished = checkIfProductAlreadyScannedAndAddProductToOrderline(product, quantity);
 		
+		if(accomplished) {
+			addFoundProductToAvaliableLot(product);
+		}
 		
 		return product;
 	}
@@ -50,4 +54,22 @@ public class ShipmentController {
 		return res;
 	}
 
+	private LotLine addFoundProductToAvaliableLot(Product product) {
+		boolean res = false;
+		if(storageCtrl == null) {
+			storageCtrl = new StorageCtrl;
+		}
+		
+		LotLine lotLine = storageCtrl.findAvailableLotByPriorityForProduct(product);
+		boolean res = productCtrl.addLotLineToProduct(product, lotLine);
+
+		return res;
+	}
+
+	public Shipment confirmShipment() {
+		ShipmentDBIF shimpmentDBIF = new ShipmentDB;
+		shimpmentDBIF.persistShipment(this.shipment);
+		this.shipment = null;
+		return shipment;
+	}
 }

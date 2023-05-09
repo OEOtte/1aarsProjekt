@@ -6,6 +6,11 @@ public class ShipmentLine {
 	private Product product;
 	private Shipment shipment;
 
+	public ShipmentLine(Product product, int quantity) {
+		this.product = product;
+		this.quantity = quantity;
+	}
+
 	public Product getProduct() {
 		return product;
 	}
