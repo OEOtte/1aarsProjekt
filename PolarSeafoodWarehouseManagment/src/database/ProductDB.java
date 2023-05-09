@@ -9,6 +9,7 @@ import controller.DataAccessException;
 import database.DBConnection;
 import database.DBMessages;
 import model.Product;
+import model.BoxedProduct;
 
 public class ProductDB implements ProductDBIF {
 
@@ -28,7 +29,6 @@ public class ProductDB implements ProductDBIF {
 			findAllPS = connection.prepareStatement(FIND_ALL_Q);
 			findByBarcodePS = connection.prepareStatement(FIND_BY_BARCODE_Q);
 		} catch (SQLException e) {
-			// e.printStackTrace();
 			throw new DataAccessException(DBMessages.COULD_NOT_PREPARE_STATEMENT, e);
 		}
 	}		
@@ -52,16 +52,41 @@ public class ProductDB implements ProductDBIF {
 
 	private Product buildObject(ResultSet rs) throws DataAccessException {
 		Product res = null;
-//		try {
-//			res = new Product(
-//					rs.getInt("id"),
-//					rs.getString(""), 
-//					rs.getString(""), 
-//					rs.getString(""));
-//					
-//		} catch (SQLException e) {
-//			throw new DataAccessException(DBMessages.COULD_NOT_READ_RESULTSET, e);
-//		}
+		try {
+			String type = rs.getString("productType").toLowerCase();
+			
+			switch(type){
+			case ("product"):
+				res = new Product(rs.getString("name"),
+						rs.getString("itemNumber"),
+						rs.getString("barcode"), 
+						rs.getString("countryOfOrigin"), 
+						rs.getDouble("percentOfGlaze"), 
+						rs.getString("description"), 
+						rs.getInt("weight"), 
+						rs.getInt("minStock"),
+						rs.getBoolean("priority"));
+
+				break;
+			case ("boxedproduct"):
+				res = new BoxedProduct(rs.getString("name"),
+						rs.getString("itemNumber"),
+						rs.getString("barcode"), 
+						rs.getString("countryOfOrigin"), 
+						rs.getDouble("percentOfGlaze"), 
+						rs.getString("description"), 
+						rs.getInt("weight"), 
+						rs.getInt("minStock"),
+						rs.getBoolean("priority"),
+						rs.getInt("quantityInBox"),
+						rs.getString("parentBarcode"));
+				break;
+			default:
+			}
+			
+		} catch (SQLException e) {
+			throw new DataAccessException(DBMessages.COULD_NOT_READ_RESULTSET, e);
+		}
 
 		return res;
 	}

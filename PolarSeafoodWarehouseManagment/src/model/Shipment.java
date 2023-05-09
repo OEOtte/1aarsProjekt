@@ -14,7 +14,7 @@ public class Shipment {
 		this.staffOnShipment = staffs;
 	}
 	
-	public boolean addProductToAOrderline(Product product, int quantity) {
+	public boolean addProductToAShipmentline(Product product, int quantity) {
 		boolean res = false;
 		for(int i = 0; i < shipmentLines.size(); i++) {
 			if(shipmentLines.get(i).getProduct().equals(product)){
@@ -24,6 +24,7 @@ public class Shipment {
 		}
 		if(!res) {
 			ShipmentLine shipmentLine = new ShipmentLine(product, quantity);
+			shipmentLines.add(shipmentLine);
 		}
 		
 		return res;

@@ -16,18 +16,17 @@ public class ShipmentCtrl {
 	private ProductCtrl productCtrl;
 	private StorageCtrl storageCtrl;
 
-	public boolean createShipment(List<String> staffIds, String freightNumber) {
+	public boolean createShipment(List<String> staffNos, String freightNumber) throws DataAccessException {
 		boolean res = false;
 
 		StaffCtrl staffCtrl = new StaffCtrl();
 		FreightCtrl freightCtrl = new FreightCtrl();
 
-		List<Staff> staffs = staffCtrl.findStaffById(staffIds);
+		List<Staff> staffs = staffCtrl.findStaffById(staffNos);
 		Freight freight = freightCtrl.findFreightByFreightNumber(freightNumber);
 
-		Shipment shipment = new Shipment(staffs, freight);
-
-		if (shipment != null) {
+		if (staffs != null && freight != null) {
+			Shipment shipment = new Shipment(staffs, freight);
 			this.shipment = shipment;
 			res = true;
 		}
@@ -36,36 +35,30 @@ public class ShipmentCtrl {
 	}
 
 	public Product scanProduct(int quantity, String barcode) throws DataAccessException {
-		if(productCtrl == null) {
+		if (productCtrl == null) {
 			productCtrl = new ProductCtrl();
 		}
 		Product product = productCtrl.findProductByBarcode(barcode);
-		
-		if(product == null) {
-			System.out.println("brok"); //TODO implement thowable or error
-		}
-		
-		boolean accomplished = checkIfProductAlreadyScannedAndAddProductToOrderline(product, quantity);
-		
-		if(accomplished) {
-			addFoundProductToAvaliableLot(product);
-		}
-		
+
+		checkIfProductAlreadyScannedAndAddProductToOrderline(product, quantity);
+
+		addFoundProductToAvaliableLot(product, quantity);
+
 		return product;
 	}
 
 	private boolean checkIfProductAlreadyScannedAndAddProductToOrderline(Product product, int quantity) {
-		boolean res = shipment.addProductToAOrderline(product, quantity);
+		boolean res = this.shipment.addProductToAShipmentline(product, quantity);
 		return res;
 	}
 
-	private boolean addFoundProductToAvaliableLot(Product product) {
+	private boolean addFoundProductToAvaliableLot(Product product, int quantity) throws DataAccessException {
 		boolean res = false;
-		if(storageCtrl == null) {
+		if (storageCtrl == null) {
 			storageCtrl = new StorageCtrl();
 		}
-		
-		LotLine lotLine = storageCtrl.findAvailableLotByPriorityForProduct(product);
+
+		LotLine lotLine = storageCtrl.findAvailableLotByPriorityForProduct(product, quantity);
 		res = productCtrl.addLotLineToProduct(product, lotLine);
 
 		return res;

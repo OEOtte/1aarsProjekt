@@ -3,16 +3,18 @@ package model;
 public class Warehouse {
 
 	private String name;
-
-
 	private String address;
-	
+
 	public Warehouse(String name, String address) {
 		this.name = name;
 		this.address = address;
 	}
-	
-		public String getName() {
+
+	public Warehouse(String name) {
+		this.name = name;
+	}
+
+	public String getName() {
 		return name;
 	}
 
