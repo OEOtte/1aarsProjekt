@@ -1,9 +1,13 @@
 package controller;
 
+import model.*;
+
 public class StorageCtrl {
 
-	
-private Lot lot;
+	private Lot lot;
 
-public Lot findAvailableLotByPriorityForProduct(Product);
+	public LotLine findAvailableLotByPriorityForProduct(Product product) {
+		LotLine lotLine = new LotLine(product, 0, null, lot);
+		return lotLine;
+	}
 }

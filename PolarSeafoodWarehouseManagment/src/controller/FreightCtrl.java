@@ -4,7 +4,7 @@ import database.FreightDB;
 import database.FreightDBIF;
 import model.Freight;
 
-public class FreightController {
+public class FreightCtrl {
 	
 	public Freight findFreightByFreightNumber(String freightNumber) {
 		FreightDBIF freightDBIF = new FreightDB();

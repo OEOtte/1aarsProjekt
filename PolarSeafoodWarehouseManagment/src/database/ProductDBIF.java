@@ -1,6 +1,6 @@
 package database;
 
-import ctrl.DataAccessException;
+import controller.DataAccessException;
 import model.Product;
 
 

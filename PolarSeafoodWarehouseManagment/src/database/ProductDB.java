@@ -5,9 +5,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import ctrl.DataAccessException;
-import db.DBConnection;
-import db.DBMessages;
+import controller.DataAccessException;
+import database.DBConnection;
+import database.DBMessages;
 import model.Product;
 
 public class ProductDB implements ProductDBIF {
@@ -52,16 +52,16 @@ public class ProductDB implements ProductDBIF {
 
 	private Product buildObject(ResultSet rs) throws DataAccessException {
 		Product res = null;
-		try {
-			res = new Product(
-					rs.getInt("id"),
-					rs.getString(""), 
-					rs.getString(""), 
-					rs.getString(""),
-					
-		} catch (SQLException e) {
-			throw new DataAccessException(DBMessages.COULD_NOT_READ_RESULTSET, e);
-		}
+//		try {
+//			res = new Product(
+//					rs.getInt("id"),
+//					rs.getString(""), 
+//					rs.getString(""), 
+//					rs.getString(""));
+//					
+//		} catch (SQLException e) {
+//			throw new DataAccessException(DBMessages.COULD_NOT_READ_RESULTSET, e);
+//		}
 
 		return res;
 	}

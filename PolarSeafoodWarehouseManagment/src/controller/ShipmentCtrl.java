@@ -2,37 +2,42 @@ package controller;
 
 import java.util.List;
 
+import database.ShipmentDB;
+import database.ShipmentDBIF;
 import model.Freight;
+import model.LotLine;
+import model.Product;
 import model.Shipment;
 import model.Staff;
 
-public class ShipmentController {
+public class ShipmentCtrl {
 
 	private Shipment shipment;
 	private ProductCtrl productCtrl;
-	private StorageCrtl storageCtrl;
+	private StorageCtrl storageCtrl;
 
 	public boolean createShipment(List<String> staffIds, String freightNumber) {
-		boolean res = true;
+		boolean res = false;
 
 		StaffCtrl staffCtrl = new StaffCtrl();
 		FreightCtrl freightCtrl = new FreightCtrl();
 
-		List<Staff> staffs = staffCtrl.findStaffByID(staffIds);
+		List<Staff> staffs = staffCtrl.findStaffById(staffIds);
 		Freight freight = freightCtrl.findFreightByFreightNumber(freightNumber);
 
 		Shipment shipment = new Shipment(staffs, freight);
 
-		if (shipment == null) {
-			res = false;
+		if (shipment != null) {
+			this.shipment = shipment;
+			res = true;
 		}
 
 		return res;
 	}
 
-	public Product scanProduct(int quantity, String barcode) {
+	public Product scanProduct(int quantity, String barcode) throws DataAccessException {
 		if(productCtrl == null) {
-			productCtrl = new ProductCtrl;
+			productCtrl = new ProductCtrl();
 		}
 		Product product = productCtrl.findProductByBarcode(barcode);
 		
@@ -54,20 +59,20 @@ public class ShipmentController {
 		return res;
 	}
 
-	private LotLine addFoundProductToAvaliableLot(Product product) {
+	private boolean addFoundProductToAvaliableLot(Product product) {
 		boolean res = false;
 		if(storageCtrl == null) {
-			storageCtrl = new StorageCtrl;
+			storageCtrl = new StorageCtrl();
 		}
 		
 		LotLine lotLine = storageCtrl.findAvailableLotByPriorityForProduct(product);
-		boolean res = productCtrl.addLotLineToProduct(product, lotLine);
+		res = productCtrl.addLotLineToProduct(product, lotLine);
 
 		return res;
 	}
 
 	public Shipment confirmShipment() {
-		ShipmentDBIF shimpmentDBIF = new ShipmentDB;
+		ShipmentDBIF shimpmentDBIF = new ShipmentDB();
 		shimpmentDBIF.persistShipment(this.shipment);
 		this.shipment = null;
 		return shipment;

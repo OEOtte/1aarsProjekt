@@ -1,14 +1,16 @@
 package controller;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import model.Staff;
 
-public class StaffController {
+public class StaffCtrl {
 	private ArrayList<Staff> staffList;
 	
-	public ArrayList<Staff> findStaffById(String id){
+	public ArrayList<Staff> findStaffById(List<String> staffIds){
 		ArrayList<Staff> res = new ArrayList<>();
+		return res;
 		
 	}
 }
