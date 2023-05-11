@@ -5,14 +5,14 @@ public class Staff {
 	private String name;
 	private String phoneNo;
 	private boolean admin;
-	private String staffID;
+	private String staffNo;
 	
 	
-	public Staff(String name, String phoneNo, boolean admin, String staffID){
+	public Staff(String name, String phoneNo, boolean admin, String staffNo){
 		this.name = name;
 		this.phoneNo = phoneNo;
 		this.admin = admin;
-		this.staffID = staffID;
+		this.staffNo = staffNo;
 	}
 
 
@@ -46,12 +46,12 @@ public class Staff {
 	}
 
 
-	public String getStaffID() {
-		return staffID;
+	public String getStaffNo() {
+		return staffNo;
 	}
 
 
-	public void setStaffID(String staffID) {
-		this.staffID = staffID;
+	public void setStaffNo(String staffNo) {
+		this.staffNo = staffNo;
 	}
 }
