@@ -38,14 +38,15 @@ public class ShipmentCtrl {
 		}
 		Product product = productCtrl.findProductByBarcode(barcode);
 
-		checkIfProductAlreadyScannedAndAddProductToOrderline(product, quantity);
+		checkIfProductAlreadyScannedAndAddProductToShipmentline(product, quantity);
 
 		addFoundProductToAvaliableLot(product, quantity);
 
 		return product;
+		
 	}
 
-	private boolean checkIfProductAlreadyScannedAndAddProductToOrderline(Product product, int quantity) {
+	private boolean checkIfProductAlreadyScannedAndAddProductToShipmentline(Product product, int quantity) {
 		boolean res = this.currShipment.addProductToAShipmentline(product, quantity);
 		return res;
 	}
@@ -62,7 +63,7 @@ public class ShipmentCtrl {
 		return res;
 	}
 
-	public Shipment confirmShipment() {
+	public Shipment confirmShipment() throws DataAccessException {
 		ShipmentDBIF shimpmentDBIF = new ShipmentDB();
 		shimpmentDBIF.persistShipment(this.currShipment);
 		this.currShipment = null;

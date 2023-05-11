@@ -21,18 +21,22 @@ public class Shipment {
 	}
 	
 	public boolean addProductToAShipmentline(Product product, int quantity) {
-		boolean res = false;
+		boolean added = false;
 		for(int i = 0; i < shipmentLines.size(); i++) {
 			if(shipmentLines.get(i).getProduct().equals(product)){
 				shipmentLines.get(i).increaseQty(quantity);
-				res = true;
+				added = true;
 			}
 		}
-		if(!res) {
+		if(!added) {
 			ShipmentLine shipmentLine = new ShipmentLine(product, quantity);
 			shipmentLines.add(shipmentLine);
 		}
 		
-		return res;
+		return added;
+	}
+
+	public List<ShipmentLine> getShipmentLines() {
+		return shipmentLines;
 	}
 }
