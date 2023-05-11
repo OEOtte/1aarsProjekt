@@ -16,7 +16,9 @@ public class ProductDB implements ProductDBIF {
 	private static final String FIND_ALL_Q = "select * from Product";
 	private PreparedStatement findAllPS;
 
-	private static String FIND_BY_BARCODE_Q = "select * from product where barcode = ?;";
+	private static final String FIND_BY_BARCODE_Q = "SELECT * FROM Product "
+			+ "LEFT OUTER JOIN BoxedProduct "
+			+ "ON Product.id = BoxedProduct.product_id WHERE barcode = ?;";
 	private PreparedStatement findByBarcodePS;
 
 	public ProductDB() throws DataAccessException {
@@ -45,7 +47,7 @@ public class ProductDB implements ProductDBIF {
 			}
 
 		} catch (SQLException e) {
-			throw new DataAccessException("Could not find by phoneno = " + barcode, e);
+			throw new DataAccessException(DBMessages.COULD_NOT_BIND_OR_EXECUTE_QUERY, e);
 		}
 		return foundProduct;
 	}
@@ -53,7 +55,7 @@ public class ProductDB implements ProductDBIF {
 	private Product buildObject(ResultSet rs) throws DataAccessException {
 		Product res = null;
 		try {
-			String type = rs.getString("productType").toLowerCase();
+			String type = rs.getString("type").toLowerCase();
 			
 			switch(type){
 			case ("product"):

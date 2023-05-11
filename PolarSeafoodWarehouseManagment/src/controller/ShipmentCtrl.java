@@ -16,13 +16,13 @@ public class ShipmentCtrl {
 	private ProductCtrl productCtrl;
 	private StorageCtrl storageCtrl;
 
-	public Shipment createShipment(List<String> staffNos, String freightNumber) throws DataAccessException {
+	public Shipment createShipment(List<String> staffNos, String freightNo) throws DataAccessException {
 
 		StaffCtrl staffCtrl = new StaffCtrl();
 		FreightCtrl freightCtrl = new FreightCtrl();
 
 		List<Staff> staffs = staffCtrl.findStaffById(staffNos);
-		Freight freight = freightCtrl.findFreightByFreightNumber(freightNumber);
+		Freight freight = freightCtrl.findFreightByFreightNumber(freightNo);
 
 		if (staffs != null && freight != null) {
 			Shipment shipment = new Shipment(staffs, freight);
