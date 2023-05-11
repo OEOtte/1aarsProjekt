@@ -116,7 +116,7 @@ public class StorageDB implements StorageDBIF {
 		try {
 			insertProductOnLotToDatabasePS.setString(1,product.getBarcode());
 			
-			
+			//TODO skriv persist færdigt 
 		} catch (SQLException e) {
 			throw new DataAccessException(DBMessages.COULD_NOT_BIND_OR_EXECUTE_QUERY, e);
 		}

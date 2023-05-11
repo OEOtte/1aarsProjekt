@@ -13,6 +13,7 @@ public class StorageCtrl {
 		Lot lot = storageDBIF.findAvailableLotByPriority(priority, fullAssociation);
 		LotLine lotLine = new LotLine(product, quantity, null, lot); //TODO date relevant here?
 		boolean res = storageDBIF.persistProductOnLot(product, lotLine);
+		
 		return lotLine;
 	}
 }

@@ -28,10 +28,6 @@ public class Product {
 		return priority;
 	}
 
-	public String getBarcode() {
-		return barcode;
-	}
-
 	public String getProductName() {
 		return productName;
 	}
