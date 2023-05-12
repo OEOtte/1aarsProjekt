@@ -18,4 +18,25 @@ public class ShipmentLine {
 	public void increaseQty(int quantity) {
 		this.quantity += quantity;
 	}
+
+	public int getQuantity() {
+		return quantity;
+	}
+
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
+	}
+
+	public Shipment getShipment() {
+		return shipment;
+	}
+
+	public void setShipment(Shipment shipment) {
+		this.shipment = shipment;
+	}
+
+	public void setProduct(Product product) {
+		this.product = product;
+	}
+	
 }

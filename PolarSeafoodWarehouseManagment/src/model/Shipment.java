@@ -11,6 +11,9 @@ public class Shipment {
 	private LocalDate arrivalDate;
 	private Warehouse arrivalLocation; //TODO set warehouse on shipment
 	private LocalDate disbatchDate;
+	private int totalWeight;
+	private int amountOfDifferentProduct;
+	private String shipmentNo;
 	private List<ShipmentLine> shipmentLines;
 	
 	
@@ -36,7 +39,78 @@ public class Shipment {
 		return added;
 	}
 
+	public Warehouse getArrivalLocation() {
+		return arrivalLocation;
+	}
+	
 	public List<ShipmentLine> getShipmentLines() {
 		return shipmentLines;
 	}
+
+	public List<Staff> getStaffOnShipment() {
+		return staffOnShipment;
+	}
+
+	public void setStaffOnShipment(List<Staff> staffOnShipment) {
+		this.staffOnShipment = staffOnShipment;
+	}
+
+	public Freight getFreight() {
+		return freight;
+	}
+
+	public void setFreight(Freight freight) {
+		this.freight = freight;
+	}
+
+	public LocalDate getArrivalDate() {
+		return arrivalDate;
+	}
+
+	public void setArrivalDate(LocalDate arrivalDate) {
+		this.arrivalDate = arrivalDate;
+	}
+
+	public LocalDate getDisbatchDate() {
+		return disbatchDate;
+	}
+
+	public void setDisbatchDate(LocalDate disbatchDate) {
+		this.disbatchDate = disbatchDate;
+	}
+
+	public void setArrivalLocation(Warehouse arrivalLocation) {
+		this.arrivalLocation = arrivalLocation;
+	}
+
+	public void setShipmentLines(List<ShipmentLine> shipmentLines) {
+		this.shipmentLines = shipmentLines;
+	}
+
+	public int getTotalWeight() {
+		return totalWeight;
+	}
+
+	public void setTotalWeight(int totalWeight) {
+		this.totalWeight = totalWeight;
+	}
+
+	public int getAmountOfDifferentProduct() {
+		return amountOfDifferentProduct;
+	}
+
+	public void setAmountOfDifferentProduct(int amountOfDifferentProduct) {
+		this.amountOfDifferentProduct = amountOfDifferentProduct;
+	}
+
+	public String getShipmentNo() {
+		return shipmentNo;
+	}
+
+	public void setShipmentNo(String shipmentNo) {
+		this.shipmentNo = shipmentNo;
+	}
+	
+	
+	
 }

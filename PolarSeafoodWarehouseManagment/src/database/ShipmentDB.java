@@ -1,6 +1,7 @@
 package database;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
@@ -12,10 +13,10 @@ import model.ShipmentLine;
 
 public class ShipmentDB implements ShipmentDBIF {
 
-	private static String INSERT_SHIPMENT_TO_DATABASE_Q = "insert into SaleOrder(date, total, deliveryStatus, customer_id) values (GETDATE(), ?, ?, ?);";
+	private static final String INSERT_SHIPMENT_TO_DATABASE_Q = "insert into Shipment(arrivalDate, arrivalLocation,dispatchDate, totalWeight, amountOfDifferentProduct, shipmentNo, freight_id) values(GETDATE(),?,?,?,?,?,?);";
 	private PreparedStatement insertShipmentToDatabasePS;
 
-	private static String INSERT_SHIPMENTLINE_TO_DATABASE_Q = "insert into SaleOrderLine(saleOrder_id, product_id, quantity, subTotal) values (?, ?, ?, ?);";
+	private static final String INSERT_SHIPMENTLINE_TO_DATABASE_Q = "insert into ShipmentLine(quantity, shipment_id, product_id) values (?, ?, ?, ?);";
 	private PreparedStatement insertShipmentLineToDatabasePS;
 
 	public ShipmentDB() throws DataAccessException {
@@ -37,7 +38,13 @@ public class ShipmentDB implements ShipmentDBIF {
 	public void persistShipment(Shipment shipment) throws DataAccessException {
 		int id = -1;
 		try {
-			insertShipmentToDatabasePS.setString(1, "lol"); // TODO
+			insertShipmentToDatabasePS.setInt(1, shipment.getArrivalLocation().getId());
+			insertShipmentToDatabasePS.setDate(2, Date.valueOf(shipment.getDisbatchDate()));
+			insertShipmentToDatabasePS.setInt(3, shipment.getTotalWeight());
+			insertShipmentToDatabasePS.setInt(4, shipment.getAmountOfDifferentProduct());
+			insertShipmentToDatabasePS.setString(5, shipment.getShipmentNo());
+			insertShipmentToDatabasePS.setInt(6, shipment.getFreight().getId());
+
 			id = DBConnection.getInstance().executeInsertWithIdentity(insertShipmentToDatabasePS);
 
 			persistShipmentLine(shipment, id);
@@ -51,10 +58,11 @@ public class ShipmentDB implements ShipmentDBIF {
 
 		try {
 			for (ShipmentLine sl : shipmentLines) {
-				insertShipmentLineToDatabasePS.setInt(1, id);
-				//TODO
+				insertShipmentLineToDatabasePS.setInt(1, sl.getQuantity());
+				insertShipmentLineToDatabasePS.setInt(2, id);
+				insertShipmentLineToDatabasePS.setInt(3, sl.getProduct().getId()); 
 				
-				insertShipmentLineToDatabasePS.executeQuery();
+				insertShipmentLineToDatabasePS.executeUpdate();
 			}
 		} catch (SQLException e) {
 			throw new DataAccessException(DBMessages.COULD_NOT_BIND_OR_EXECUTE_QUERY, e);

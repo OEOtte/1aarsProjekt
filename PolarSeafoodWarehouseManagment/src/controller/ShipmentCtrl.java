@@ -1,5 +1,6 @@
 package controller;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import database.ShipmentDB;
@@ -32,7 +33,7 @@ public class ShipmentCtrl {
 		return currShipment;
 	}
 
-	public Product scanProduct(int quantity, String barcode) throws DataAccessException {
+	public Product scanProduct(int quantity, String barcode, LocalDate date) throws DataAccessException {
 		if (productCtrl == null) {
 			productCtrl = new ProductCtrl();
 		}
@@ -40,7 +41,7 @@ public class ShipmentCtrl {
 
 		checkIfProductAlreadyScannedAndAddProductToShipmentline(product, quantity);
 
-		addFoundProductToAvaliableLot(product, quantity);
+		addFoundProductToAvaliableLot(product, quantity, date);
 
 		return product;
 		
@@ -51,13 +52,13 @@ public class ShipmentCtrl {
 		return res;
 	}
 
-	private boolean addFoundProductToAvaliableLot(Product product, int quantity) throws DataAccessException {
+	private boolean addFoundProductToAvaliableLot(Product product, int quantity, LocalDate date) throws DataAccessException {
 		boolean res = false;
 		if (storageCtrl == null) {
 			storageCtrl = new StorageCtrl();
 		}
 
-		LotLine lotLine = storageCtrl.findAvailableLotByPriorityForProduct(product, quantity);
+		LotLine lotLine = storageCtrl.findAvailableLotByPriorityForProduct(product, quantity, date);
 		res = productCtrl.addLotLineToProduct(product, lotLine);
 
 		return res;
@@ -66,7 +67,6 @@ public class ShipmentCtrl {
 	public Shipment confirmShipment() throws DataAccessException {
 		ShipmentDBIF shimpmentDBIF = new ShipmentDB();
 		shimpmentDBIF.persistShipment(this.currShipment);
-		this.currShipment = null;
 		return currShipment;
 	}
 }

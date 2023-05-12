@@ -1,6 +1,7 @@
 package model;
 
 public class Freight {
+	private int id;
 	private String name;
 	private String nameOfCourier;
 	private String email;
@@ -9,7 +10,8 @@ public class Freight {
 	private String freightNumber;
 	
 	
-	public Freight(String name, String nameOfCourier, String email, String phoneNo, String address, String freightNumber) {
+	public Freight(int id, String name, String nameOfCourier, String email, String phoneNo, String address, String freightNumber) {
+		this.id = id;
 		this.name = name;
 		this.nameOfCourier = nameOfCourier;
 		this.email = email;
@@ -76,5 +78,10 @@ public class Freight {
 
 	public void setAddress(String address) {
 		this.address = address;
+	}
+
+
+	public int getId() {
+		return id;
 	}
 }

@@ -49,7 +49,8 @@ public class FreightDB implements FreightDBIF {
 	private Freight buildObject(ResultSet rs) throws DataAccessException {
 		Freight res = null;
 		try {
-			res = new Freight(rs.getString("name"), 
+			res = new Freight(rs.getInt("id"),
+					rs.getString("name"), 
 					rs.getString("nameOfCourier"), 
 					rs.getString("email"), 
 					rs.getString("phoneNo"), 

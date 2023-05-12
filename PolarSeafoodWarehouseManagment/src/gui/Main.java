@@ -18,8 +18,6 @@ public class Main {
 		Shipment shipment = sc.createShipment(sn, "1020");
 		System.out.println(shipment.toString());
 		
-		Product product = sc.scanProduct(60, "21931");
-		System.out.println(product);
 		
 		
 	}

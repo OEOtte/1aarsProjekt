@@ -13,7 +13,7 @@ import model.BoxedProduct;
 
 public class ProductDB implements ProductDBIF {
 
-	private static final String FIND_ALL_Q = "select * from Product";
+	private static final String FIND_ALL_Q = "select * from Product LEFT OUTER JOIN BoxedProduct;";
 	private PreparedStatement findAllPS;
 
 	private static final String FIND_BY_BARCODE_Q = "SELECT * FROM Product "
@@ -59,7 +59,8 @@ public class ProductDB implements ProductDBIF {
 			
 			switch(type){
 			case ("product"):
-				res = new Product(rs.getString("name"),
+				res = new Product(rs.getInt("id"),
+						rs.getString("name"),
 						rs.getString("itemNumber"),
 						rs.getString("barcode"), 
 						rs.getString("countryOfOrigin"), 
@@ -71,7 +72,8 @@ public class ProductDB implements ProductDBIF {
 
 				break;
 			case ("boxedproduct"):
-				res = new BoxedProduct(rs.getString("name"),
+				res = new BoxedProduct(rs.getInt("id"),
+						rs.getString("name"),
 						rs.getString("itemNumber"),
 						rs.getString("barcode"), 
 						rs.getString("countryOfOrigin"), 
