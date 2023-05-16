@@ -36,19 +36,22 @@ public class ShipmentDB implements ShipmentDBIF {
 
 	@Override
 	public void persistShipment(Shipment shipment) throws DataAccessException {
-		int id = -1;
 		try {
+			DBConnection.getInstance().startTransaction();
+
 			insertShipmentToDatabasePS.setInt(1, shipment.getArrivalLocation().getId());
 			insertShipmentToDatabasePS.setDate(2, Date.valueOf(shipment.getDisbatchDate()));
 			insertShipmentToDatabasePS.setInt(3, shipment.getTotalWeight());
 			insertShipmentToDatabasePS.setInt(4, shipment.getAmountOfDifferentProduct());
 			insertShipmentToDatabasePS.setString(5, shipment.getShipmentNo());
 			insertShipmentToDatabasePS.setInt(6, shipment.getFreight().getId());
-
-			id = DBConnection.getInstance().executeInsertWithIdentity(insertShipmentToDatabasePS);
+			int id = DBConnection.getInstance().executeInsertWithIdentity(insertShipmentToDatabasePS);
 
 			persistShipmentLine(shipment, id);
+
+			DBConnection.getInstance().commitTransaction();
 		} catch (SQLException e) {
+			DBConnection.getInstance().rollbackTransaction();
 			throw new DataAccessException(DBMessages.COULD_NOT_BIND_OR_EXECUTE_QUERY, e);
 		}
 	}
@@ -60,8 +63,7 @@ public class ShipmentDB implements ShipmentDBIF {
 			for (ShipmentLine sl : shipmentLines) {
 				insertShipmentLineToDatabasePS.setInt(1, sl.getQuantity());
 				insertShipmentLineToDatabasePS.setInt(2, id);
-				insertShipmentLineToDatabasePS.setInt(3, sl.getProduct().getId()); 
-				
+				insertShipmentLineToDatabasePS.setInt(3, sl.getProduct().getId());
 				insertShipmentLineToDatabasePS.executeUpdate();
 			}
 		} catch (SQLException e) {

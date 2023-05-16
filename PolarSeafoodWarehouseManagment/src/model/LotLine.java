@@ -1,15 +1,16 @@
 package model;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 public class LotLine {
 
 	private int quantity;
 	private Product product;
-	private Date expirationDate;
+	private LocalDate expirationDate;
 	private Lot lot;
 	
-	public LotLine(Product product, int quantity, Date expirationDate, Lot lot) {
+	public LotLine(Product product, int quantity, LocalDate expirationDate, Lot lot) {
 		this.product = product;
 		this.quantity = quantity;
 		this.expirationDate = expirationDate;

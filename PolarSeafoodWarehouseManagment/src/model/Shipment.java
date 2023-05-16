@@ -9,40 +9,43 @@ public class Shipment {
 	private List<Staff> staffOnShipment;
 	private Freight freight;
 	private LocalDate arrivalDate;
-	private Warehouse arrivalLocation; //TODO set warehouse on shipment
+	private Warehouse arrivalLocation; // TODO set warehouse on shipment
 	private LocalDate disbatchDate;
 	private int totalWeight;
 	private int amountOfDifferentProduct;
 	private String shipmentNo;
 	private List<ShipmentLine> shipmentLines;
-	
-	
-	public Shipment(List<Staff> staffs, Freight freight) {
+
+	public Shipment(List<Staff> staffs, Freight freight, Warehouse warehouse) {
 		this.freight = freight;
 		this.staffOnShipment = staffs;
+		this.arrivalLocation = warehouse;
 		this.arrivalDate = LocalDate.now();
 	}
-	
+
 	public boolean addProductToAShipmentline(Product product, int quantity) {
-		boolean added = false;
-		for(int i = 0; i < shipmentLines.size(); i++) {
-			if(shipmentLines.get(i).getProduct().equals(product)){
+		boolean addedToExisting = false;
+		for (int i = 0; i < shipmentLines.size(); i++) {
+			if (shipmentLines.get(i).getProduct().equals(product)) {
 				shipmentLines.get(i).increaseQty(quantity);
-				added = true;
-			}
+				totalWeight += quantity * product.getWeight();
+				addedToExisting = true;
+			}	
 		}
-		if(!added) {
+		if (!addedToExisting) {
 			ShipmentLine shipmentLine = new ShipmentLine(product, quantity);
 			shipmentLines.add(shipmentLine);
+			amountOfDifferentProduct++;
+			totalWeight += quantity * product.getWeight();
 		}
-		
-		return added;
+
+		return addedToExisting;
 	}
 
 	public Warehouse getArrivalLocation() {
 		return arrivalLocation;
 	}
-	
+
 	public List<ShipmentLine> getShipmentLines() {
 		return shipmentLines;
 	}
@@ -110,7 +113,5 @@ public class Shipment {
 	public void setShipmentNo(String shipmentNo) {
 		this.shipmentNo = shipmentNo;
 	}
-	
-	
-	
+
 }

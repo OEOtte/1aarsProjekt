@@ -15,8 +15,6 @@ public class Main {
 		sn.add("21");
 		
 		
-		Shipment shipment = sc.createShipment(sn, "1020");
-		System.out.println(shipment.toString());
 		
 		
 		
