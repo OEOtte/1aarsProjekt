@@ -19,7 +19,7 @@ public class StorageCtrl {
 		return lotLine;
 	}
 
-	public Warehouse findWarehouseByAddress(String name) throws DataAccessException {
+	public Warehouse findWarehouseByName(String name) throws DataAccessException {
 		StorageDBIF storageDBIF = new StorageDB();
 		Warehouse warehouse = storageDBIF.findWarehouseByName(name);
 		return warehouse;
