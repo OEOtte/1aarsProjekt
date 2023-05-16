@@ -73,4 +73,8 @@ public class ShipmentCtrl {
 		shimpmentDBIF.persistShipment(this.currShipment);
 		return currShipment;
 	}
+
+	public Shipment getCurrentShipment() {
+		return currShipment;
+	}
 }
