@@ -18,7 +18,8 @@ public class ProductCtrl {
 	}
 
 	public boolean addLotLineToProduct(Product product, LotLine lotLine) {
-		// TODO Auto-generated method stub
-		return false;
+		boolean res = false;
+		res = product.addLotLine(lotLine);
+		return res;
 	}
 }

@@ -1,5 +1,7 @@
 package database;
 
+import java.time.LocalDate;
+
 import controller.DataAccessException;
 import model.Lot;
 import model.LotLine;
@@ -9,7 +11,7 @@ public interface StorageDBIF {
 
 	public Lot findAvailableLotByPriority(boolean priority, boolean fullAssociation) throws DataAccessException;
 
-	public boolean persistProductOnLot(Product product, LotLine lotLine) throws DataAccessException;
+	public boolean persistProductOnLot(Product product, Lot lot, int quantity, LocalDate date) throws DataAccessException;
 
 
 }

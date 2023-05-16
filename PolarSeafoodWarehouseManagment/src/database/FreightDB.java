@@ -10,7 +10,7 @@ import controller.DataAccessException;
 import model.Freight;
 
 public class FreightDB implements FreightDBIF {
-	private static final String FIND_BY_FREIGHTNUMBER_Q = "select * from Freight where freightNumber = ?;";
+	private static final String FIND_BY_FREIGHTNUMBER_Q = "select * from Freight where freightNo = '?';";
 	private PreparedStatement findByFreightNumberPS;
 
 	private static final String FIND_ALL_Q = "select * from Freight";
@@ -49,12 +49,13 @@ public class FreightDB implements FreightDBIF {
 	private Freight buildObject(ResultSet rs) throws DataAccessException {
 		Freight res = null;
 		try {
-			res = new Freight(rs.getString("name"), 
+			res = new Freight(rs.getInt("id"),
+					rs.getString("name"), 
 					rs.getString("nameOfCourier"), 
 					rs.getString("email"), 
 					rs.getString("phoneNo"), 
 					rs.getString("address"), 
-					rs.getString("freightNumber"));
+					rs.getString("freightNo"));
 		
 		} catch (Exception e) {
 			throw new DataAccessException(DBMessages.COULD_NOT_READ_RESULTSET, e);

@@ -2,15 +2,17 @@ package model;
 
 public class Warehouse {
 
+	private int id;
 	private String name;
 	private String address;
 
-	public Warehouse(String name, String address) {
-		this.name = name;
-		this.address = address;
-	}
 
-	public Warehouse(String name) {
+	public Warehouse(int id) {
+		this.id = id;
+	}
+	
+	public Warehouse(int id, String name, String address) {
+		this.id = id;
 		this.name = name;
 	}
 
@@ -28,5 +30,9 @@ public class Warehouse {
 
 	public void setAddress(String address) {
 		this.address = address;
+	}
+
+	public int getId() {
+		return id;
 	}
 }
