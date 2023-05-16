@@ -14,7 +14,7 @@ public class StaffCtrl {
 		StaffDBIF staffDBIF = new StaffDB();
 		List<Staff> res = null;
 		if (!staffNos.isEmpty()) {
-			res = staffDBIF.findStaffByNo(staffNos);
+			res = staffDBIF.findStaffByNos(staffNos);
 			staffList = res;
 		}
 		return res;

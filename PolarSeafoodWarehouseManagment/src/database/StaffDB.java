@@ -30,7 +30,7 @@ public class StaffDB implements StaffDBIF {
 	}
 
 	@Override
-	public List<Staff> findStaffByNo(List<String> staffNos) throws DataAccessException {
+	public List<Staff> findStaffByNos(List<String> staffNos) throws DataAccessException {
 		List<Staff> foundStaff = null;
 
 		for (int i = 0; i < staffNos.size(); i++) {

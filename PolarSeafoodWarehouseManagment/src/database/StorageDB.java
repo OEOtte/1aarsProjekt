@@ -31,13 +31,14 @@ public class StorageDB implements StorageDBIF {
 	private static final String FIND_WAREHOUSE_BY_ID_Q = "select * from Warehouse where id = '?';";
 	private PreparedStatement findWarehouseByIdPS;
 
+	private static final String FIND_WAREHOUSE_BY_NAME_Q = "select * from Warehouse where name = '?';";
+	private PreparedStatement findWarehouseByNamePS;
+
 	private static final String INSERT_PRODUCT_ON_LOT_TO_DATABASE_Q = "insert into LotLine(quantity, expirationDate, lot_id, product_id) values (?,?,?,?);";
 	private PreparedStatement insertProductOnLotToDatabasePS;
 
-	private static final String FIND_ADDRESS_WITH_FULL_ASSOSIATION_FROM_ID_Q = "SELECT a.address, c.zipcode, c.name AS city_name, co.name AS country_name\r\n"
-			+ "FROM Address a\r\n" + "INNER JOIN City c ON a.city_id = c.id\r\n"
-			+ "INNER JOIN Country co ON c.country_id = co.id\r\n" + "WHERE a.id = ?;";
-	private PreparedStatement findAddressWithFullAssosiationFromIdPS;
+	private static final String FIND_ADDRESS_WITH_FULL_ASSOSIATION_FROM_ADDRESS_Q = "Select * from Address_view where address = '?'";
+	private PreparedStatement findAddressWithFullAssosiationFromAddressPS;
 
 	public StorageDB() throws DataAccessException {
 		init();
@@ -52,9 +53,12 @@ public class StorageDB implements StorageDBIF {
 			findAvailableLotByPriorityDecendingPS = connection
 					.prepareStatement(FIND_AVAILABLE_LOT_BY_PRIORITY_DECENDING_Q);
 			findWarehouseByIdPS = connection.prepareStatement(FIND_WAREHOUSE_BY_ID_Q);
+			findWarehouseByNamePS = connection.prepareStatement(FIND_WAREHOUSE_BY_NAME_Q);
 			findLotByIdAndUpdateToUnavailablePS = connection
 					.prepareStatement(FIND_LOT_BY_ID_AND_UPDATE_TO_UNAVAILABLE_Q);
 			insertProductOnLotToDatabasePS = connection.prepareStatement(INSERT_PRODUCT_ON_LOT_TO_DATABASE_Q);
+			findAddressWithFullAssosiationFromAddressPS = connection
+					.prepareStatement(FIND_ADDRESS_WITH_FULL_ASSOSIATION_FROM_ADDRESS_Q);
 
 		} catch (SQLException e) {
 			throw new DataAccessException(DBMessages.COULD_NOT_PREPARE_STATEMENT, e);
@@ -130,8 +134,8 @@ public class StorageDB implements StorageDBIF {
 	private String findAddress(int addressId) throws DataAccessException {
 		String address = null;
 		try {
-			findAddressWithFullAssosiationFromIdPS.setInt(1, addressId);
-			ResultSet rs = findAddressWithFullAssosiationFromIdPS.executeQuery();
+			findAddressWithFullAssosiationFromAddressPS.setInt(1, addressId);
+			ResultSet rs = findAddressWithFullAssosiationFromAddressPS.executeQuery();
 
 			address = buildAddress(rs);
 		} catch (SQLException e) {
@@ -155,16 +159,20 @@ public class StorageDB implements StorageDBIF {
 	public boolean persistProductOnLot(Product product, Lot lot, int quantity, LocalDate date)
 			throws DataAccessException {
 		try {
+			DBConnection.getInstance().startTransaction();
+
 			insertProductOnLotToDatabasePS.setInt(1, quantity);
 			insertProductOnLotToDatabasePS.setDate(2, Date.valueOf(date));
 			insertProductOnLotToDatabasePS.setInt(3, lot.getId());
 			insertProductOnLotToDatabasePS.setInt(4, product.getId());
-
 			insertProductOnLotToDatabasePS.executeUpdate();
 
 			setLotToUnavailable(lot);
 
+			DBConnection.getInstance().commitTransaction();
+
 		} catch (SQLException e) {
+			DBConnection.getInstance().rollbackTransaction();
 			throw new DataAccessException(DBMessages.COULD_NOT_BIND_OR_EXECUTE_QUERY, e);
 		}
 		// TODO return correct boolean
@@ -180,5 +188,20 @@ public class StorageDB implements StorageDBIF {
 			throw new DataAccessException(DBMessages.COULD_NOT_BIND_OR_EXECUTE_QUERY, e);
 		}
 
+	}
+
+	@Override
+	public Warehouse findWarehouseByName(String name) throws DataAccessException {
+		Warehouse warehouse = null;
+		try {
+			findWarehouseByNamePS.setString(1, name);
+			ResultSet rs = findWarehouseByNamePS.executeQuery();
+
+			warehouse = buildWarehouse(rs);
+		} catch (SQLException e) {
+			throw new DataAccessException(DBMessages.COULD_NOT_BIND_OR_EXECUTE_QUERY, e);
+		}
+
+		return warehouse;
 	}
 }

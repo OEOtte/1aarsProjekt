@@ -10,6 +10,7 @@ import model.LotLine;
 import model.Product;
 import model.Shipment;
 import model.Staff;
+import model.Warehouse;
 
 public class ShipmentCtrl {
 
@@ -17,16 +18,18 @@ public class ShipmentCtrl {
 	private ProductCtrl productCtrl;
 	private StorageCtrl storageCtrl;
 
-	public Shipment createShipment(List<String> staffNos, String freightNo) throws DataAccessException {
+	public Shipment createShipment(List<String> staffNos, String freightNo, String address) throws DataAccessException {
 
 		StaffCtrl staffCtrl = new StaffCtrl();
 		FreightCtrl freightCtrl = new FreightCtrl();
+		StorageCtrl storageCtrl = new StorageCtrl();
 
 		List<Staff> staffs = staffCtrl.findStaffById(staffNos);
 		Freight freight = freightCtrl.findFreightByFreightNumber(freightNo);
+		Warehouse warehouse = storageCtrl.findWarehouseByAddress(address);
 
 		if (staffs != null && freight != null) {
-			Shipment shipment = new Shipment(staffs, freight);
+			Shipment shipment = new Shipment(staffs, freight, warehouse);
 			this.currShipment = shipment;
 		}
 
@@ -60,6 +63,7 @@ public class ShipmentCtrl {
 
 		LotLine lotLine = storageCtrl.findAvailableLotByPriorityForProduct(product, quantity, date);
 		res = productCtrl.addLotLineToProduct(product, lotLine);
+		
 
 		return res;
 	}
