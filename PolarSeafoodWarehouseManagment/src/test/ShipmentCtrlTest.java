@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -25,9 +26,9 @@ class ShipmentCtrlTest {
 
 	@BeforeEach
 	void setUp() throws Exception {
-		ShipmentCtrl sc = new ShipmentCtrl();
-		FreightCtrl fc = new FreightCtrl();
-		StaffCtrl staffc = new StaffCtrl();
+		sc = new ShipmentCtrl();
+		fc = new FreightCtrl();
+		staffc = new StaffCtrl();
 	}
 	
 	@Test
@@ -45,43 +46,46 @@ class ShipmentCtrlTest {
 		assertTrue(shipment!=null);
 	}
 	
+	@Test
 	void testValidFreightNumberValidStaffIdsTwoStaffIdsValidWarehouseName() throws DataAccessException {
 		//Arrange
-		String freightNo = "123";
+		String freightNo = "9999";
 		List<String> staffNos = new ArrayList<>();
-		staffNos.add("4321");
-		staffNos.add("5432");
+		staffNos.add("5555");
+		staffNos.add("4444");
 		String warehouseName = "PSU1";
 		//Act
 		sc.createShipment(staffNos, freightNo, warehouseName);
 		Shipment shipment = sc.getCurrentShipment();
 		//Assert
 		assertTrue(shipment!=null);
-		assertEquals(fc.findFreightByFreightNumber(freightNo).getName(), "PostNord"); //Spørg alex
+		assertEquals(fc.findFreightByFreightNumber(freightNo).getName(), "Test");
 	}
 	
+	@Test
 	void testInvalidFreightNumber000ValidStaffIdsValidWarehouseName() throws DataAccessException {
 		//Arrange
 		String freightNo = "000";
 		List<String> staffNos = new ArrayList<>();
-		staffNos.add("4321");
-		staffNos.add("5432");
+		staffNos.add("5555");
+		staffNos.add("4444");
 		String warehouseName = "PSU1";
 		//Act
 		sc.createShipment(staffNos, freightNo, warehouseName);
 		Shipment shipment = sc.getCurrentShipment();
 		//Assert
 		assertNull(shipment);
-		assertEquals(null, freightNo);
+		assertEquals(null, shipment);
 		//Kig lige på den igen
 	}
 	
+	@Test
 	void testInvalidFreightNumberIsNullValidStaffidsValidWarehouseName() throws DataAccessException {
 		//Arrange
 		String freightNo = null;
 		List<String> staffNos = new ArrayList<>();
-		staffNos.add("4321");
-		staffNos.add("5432");
+		staffNos.add("5555");
+		staffNos.add("4444");
 		String warehouseName = "PSU1";
 		//Act
 		sc.createShipment(staffNos, freightNo, warehouseName);
@@ -90,9 +94,10 @@ class ShipmentCtrlTest {
 		assertNull(shipment);
 	}
 	
+	@Test
 	void testValidFreightNumberInvalidStaffidsIsNullValidWarehouseName() throws DataAccessException {
 		//Arrange
-		String freightNo = "123";
+		String freightNo = "9999";
 		List<String> staffNos = new ArrayList<>();
 		staffNos.add(null);
 		staffNos.add(null);
@@ -104,9 +109,10 @@ class ShipmentCtrlTest {
 		assertNull(shipment);
 	}
 	
+	@Test
 	void testValidFreightNumberInvalidStaffid0000ValidWarehouseName() throws DataAccessException {
 		//Arrange
-		String freightNo = "123";
+		String freightNo = "9999";
 		List<String> staffNos = new ArrayList<>();
 		staffNos.add("0000");
 		String warehouseName = "PSU1";
@@ -117,9 +123,10 @@ class ShipmentCtrlTest {
 		assertNull(shipment);
 	}
 	
+	@Test
 	void testValidFreightNumberInvalidStaffids0000and0001ValidWarehouseName() throws DataAccessException {
 		//Arrange
-		String freightNo = "123";
+		String freightNo = "9999";
 		List<String> staffNos = new ArrayList<>();
 		staffNos.add("0000");
 		staffNos.add("0001");
@@ -131,12 +138,13 @@ class ShipmentCtrlTest {
 		assertNull(shipment);
 	}
 	
+	@Test
 	void testValidFreightNumberValidStaffidsInvalidWarehouseNameIsNull() throws DataAccessException {
 		//Arrange
-		String freightNo = "123";
+		String freightNo = "9999";
 		List<String> staffNos = new ArrayList<>();
-		staffNos.add("4321");
-		staffNos.add("5432");
+		staffNos.add("5555");
+		staffNos.add("4444");
 		String warehouseName = null;
 		//Act
 		sc.createShipment(staffNos, freightNo, warehouseName);
@@ -145,12 +153,13 @@ class ShipmentCtrlTest {
 		assertNull(shipment);
 	}
 	
+	@Test
 	void testValidFreightNumberValidStaffidsInvalidWarehouseNameIsUkraine() throws DataAccessException {
 		//Arrange
-		String freightNo = "123";
+		String freightNo = "9999";
 		List<String> staffNos = new ArrayList<>();
-		staffNos.add("4321");
-		staffNos.add("5432");
+		staffNos.add("5555");
+		staffNos.add("4444");
 		String warehouseName = "Ukraine";
 		//Act
 		sc.createShipment(staffNos, freightNo, warehouseName);
