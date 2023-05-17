@@ -59,7 +59,7 @@ public class ShipmentCtrl {
 			storageCtrl = new StorageCtrl();
 		}
 
-		LotLine lotLine = storageCtrl.findAvailableLotByPriorityForProduct(product, quantity, date);
+		LotLine lotLine = storageCtrl.findAvailableLotByPriorityForProductInArrivalWarehouse(product, quantity, date,currShipment.getArrivalLocation());
 		res = productCtrl.addLotLineToProduct(product, lotLine);
 
 		return res;

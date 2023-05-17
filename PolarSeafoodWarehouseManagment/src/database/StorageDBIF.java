@@ -10,11 +10,11 @@ import model.Warehouse;
 
 public interface StorageDBIF {
 
-	public Lot findAvailableLotByPriority(boolean priority, boolean fullAssociation) throws DataAccessException;
+	public Lot findAvailableLotByPriorityInArrivalWarehouse(boolean priority, Warehouse warehouse) throws DataAccessException;
 
 	public boolean persistProductOnLot(Product product, Lot lot, int quantity, LocalDate date) throws DataAccessException;
 
-	public Warehouse findWarehouseByName(String name) throws DataAccessException;
+	public Warehouse findWarehouseByName(String warehouseName) throws DataAccessException;
 
 
 }
