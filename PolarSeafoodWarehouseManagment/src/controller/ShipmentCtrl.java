@@ -18,7 +18,8 @@ public class ShipmentCtrl {
 	private ProductCtrl productCtrl;
 	private StorageCtrl storageCtrl;
 
-	public Shipment createShipment(List<String> staffNos, String freightNo, String name) throws DataAccessException {
+	public Shipment createShipment(List<String> staffNos, String freightNo, String warehouseName)
+			throws DataAccessException {
 
 		StaffCtrl staffCtrl = new StaffCtrl();
 		FreightCtrl freightCtrl = new FreightCtrl();
@@ -26,7 +27,7 @@ public class ShipmentCtrl {
 
 		List<Staff> staffs = staffCtrl.findStaffById(staffNos);
 		Freight freight = freightCtrl.findFreightByFreightNumber(freightNo);
-		Warehouse warehouse = storageCtrl.findWarehouseByName(name);
+		Warehouse warehouse = storageCtrl.findWarehouseByName(warehouseName);
 
 		if (staffs != null && freight != null) {
 			Shipment shipment = new Shipment(staffs, freight, warehouse);
@@ -42,20 +43,17 @@ public class ShipmentCtrl {
 		}
 		Product product = productCtrl.findProductByBarcode(barcode);
 
-		checkIfProductAlreadyScannedAndAddProductToShipmentline(product, quantity);
-
-		addFoundProductToAvaliableLot(product, quantity, date);
+		if (currShipment != null) {
+			currShipment.addProductToAShipmentline(product, quantity);
+			addFoundProductToAvaliableLot(product, quantity, date);
+		}
 
 		return product;
-		
+
 	}
 
-	private boolean checkIfProductAlreadyScannedAndAddProductToShipmentline(Product product, int quantity) {
-		boolean res = this.currShipment.addProductToAShipmentline(product, quantity);
-		return res;
-	}
-
-	private boolean addFoundProductToAvaliableLot(Product product, int quantity, LocalDate date) throws DataAccessException {
+	private boolean addFoundProductToAvaliableLot(Product product, int quantity, LocalDate date)
+			throws DataAccessException {
 		boolean res = false;
 		if (storageCtrl == null) {
 			storageCtrl = new StorageCtrl();
@@ -63,7 +61,6 @@ public class ShipmentCtrl {
 
 		LotLine lotLine = storageCtrl.findAvailableLotByPriorityForProduct(product, quantity, date);
 		res = productCtrl.addLotLineToProduct(product, lotLine);
-		
 
 		return res;
 	}

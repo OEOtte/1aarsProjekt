@@ -23,23 +23,23 @@ public class Shipment {
 		this.arrivalDate = LocalDate.now();
 	}
 
-	public boolean addProductToAShipmentline(Product product, int quantity) {
-		boolean addedToExisting = false;
+	public ShipmentLine addProductToAShipmentline(Product product, int quantity) {
+		ShipmentLine res = null;
 		for (int i = 0; i < shipmentLines.size(); i++) {
 			if (shipmentLines.get(i).getProduct().equals(product)) {
 				shipmentLines.get(i).increaseQty(quantity);
 				totalWeight += quantity * product.getWeight();
-				addedToExisting = true;
+				res = shipmentLines.get(i);
 			}	
 		}
-		if (!addedToExisting) {
+		if (res == null) {
 			ShipmentLine shipmentLine = new ShipmentLine(product, quantity);
 			shipmentLines.add(shipmentLine);
 			amountOfDifferentProduct++;
 			totalWeight += quantity * product.getWeight();
 		}
 
-		return addedToExisting;
+		return res;
 	}
 
 	public Warehouse getArrivalLocation() {
