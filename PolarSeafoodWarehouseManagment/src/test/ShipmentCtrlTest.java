@@ -31,15 +31,16 @@ class ShipmentCtrlTest {
 	}
 	
 	@Test
-	void testValidFreightNumber123ValidStaffIdValidWarehouseName() throws DataAccessException {
+	void testValidFreightNumber9999ValidStaffIdValidWarehouseName() throws DataAccessException {
 		//Arrange
-		String freightNo = "123";
+		String freightNo = "9999";
 		List<String> staffNos = new ArrayList<>();
-		staffNos.add("4321");
+		staffNos.add("5555");
 		String warehouseName = "PSU1";
 		//Act
 		sc.createShipment(staffNos, freightNo, warehouseName);
 		Shipment shipment = sc.getCurrentShipment();
+		System.out.println(shipment.toString());
 		//Assert
 		assertTrue(shipment!=null);
 	}
