@@ -1,5 +1,6 @@
 package test;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,38 +16,42 @@ import model.Shipment;
 class PersistShipmentTest {
 	
 	private ShipmentCtrl sc;
-	
+	private LocalDate date;
 	
 	
 	@BeforeEach
 	void setUp() throws Exception {
-		ShipmentCtrl sc = new ShipmentCtrl();
+		//sc = new ShipmentCtrl();
 	}
 	
 	@Test
 	void testPersistShipmentWithValidInfo() throws DataAccessException {
 		//Arrange
-		
-		String freightNo = "123";
+		sc = new ShipmentCtrl();
+		String freightNo = "9999";
 		List<String> staffNos = new ArrayList<>();
-		staffNos.add("4321");
+		staffNos.add("5555");
 		String warehouseName = "PSU1";
 		
-		String productBarcode = "12345678";
+		String productBarcode = "4820226000099";
 		int productQty = 2;
+		LocalDate date = LocalDate.now();
+		
 		
 		ShipmentDBIF shimpmentDBIF = new ShipmentDB();
 		
 		//Act
 		sc.createShipment(staffNos, freightNo, warehouseName);
 		
-		sc.scanProduct(productQty, productBarcode, null);
+		sc.scanProduct(productQty, productBarcode, date);
 		
 		Shipment shipment = sc.getCurrentShipment();
 		
 		sc.confirmShipment();
 		shimpmentDBIF.persistShipment(shipment);
 		//Assert
+		
+		
 	}
 		
 }

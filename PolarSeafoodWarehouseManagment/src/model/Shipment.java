@@ -1,12 +1,12 @@
 package model;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 public class Shipment {
 
-	
 	private List<Staff> staffOnShipment;
 	private Freight freight;
 	private LocalDate arrivalDate;
@@ -26,6 +26,10 @@ public class Shipment {
 
 	public ShipmentLine addProductToAShipmentline(Product product, int quantity) {
 		ShipmentLine res = null;
+		if (shipmentLines == null) {
+			shipmentLines = new ArrayList<>();
+		}
+
 		for (int i = 0; i < shipmentLines.size(); i++) {
 			if (shipmentLines.get(i).getProduct().equals(product)) {
 				shipmentLines.get(i).increaseQty(quantity);
@@ -34,8 +38,8 @@ public class Shipment {
 			}
 		}
 		if (res == null) {
-			ShipmentLine shipmentLine = new ShipmentLine(product, quantity);
-			shipmentLines.add(shipmentLine);
+			res = new ShipmentLine(product, quantity);
+			shipmentLines.add(res);
 			amountOfDifferentProduct++;
 			totalWeight += quantity * product.getWeight();
 		}
