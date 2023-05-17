@@ -13,7 +13,7 @@ import model.ShipmentLine;
 
 public class ShipmentDB implements ShipmentDBIF {
 
-	private static final String INSERT_SHIPMENT_TO_DATABASE_Q = "insert into Shipment(arrivalDate, arrivalLocation,dispatchDate, totalWeight, amountOfDifferentProduct, shipmentNo, freight_id) values(GETDATE(),?,GETDATE(),?,?,?,?);";
+	private static final String INSERT_SHIPMENT_TO_DATABASE_Q = "insert into Shipment(arrivalDate, arrivalLocation,dispatchDate, totalWeight, amountOfDifferentProduct, shipmentNo, freight_id) values(?,?,?,?,?,?,?);";
 	private PreparedStatement insertShipmentToDatabasePS;
 
 	private static final String INSERT_SHIPMENTLINE_TO_DATABASE_Q = "insert into ShipmentLine(quantity, shipment_id, product_id) values (?, ?, ?);";
@@ -42,12 +42,13 @@ public class ShipmentDB implements ShipmentDBIF {
 		try {
 			DBConnection.getInstance().startTransaction();
 
-			insertShipmentToDatabasePS.setString(1, shipment.getArrivalLocation().getName());
-			//insertShipmentToDatabasePS.setDate(2, Date.valueOf(shipment.getDisbatchDate()));
-			insertShipmentToDatabasePS.setInt(2, shipment.getTotalWeight());
-			insertShipmentToDatabasePS.setInt(3, shipment.getAmountOfDifferentProduct());
-			insertShipmentToDatabasePS.setString(4, shipment.getShipmentNo());
-			insertShipmentToDatabasePS.setInt(5, shipment.getFreight().getId());
+			insertShipmentToDatabasePS.setDate(1, Date.valueOf(shipment.getArrivalDate()));
+			insertShipmentToDatabasePS.setString(2, shipment.getArrivalLocation().getName());
+			insertShipmentToDatabasePS.setDate(3, Date.valueOf(shipment.getDisbatchDate()));
+			insertShipmentToDatabasePS.setInt(4, shipment.getTotalWeight());
+			insertShipmentToDatabasePS.setInt(5, shipment.getAmountOfDifferentProduct());
+			insertShipmentToDatabasePS.setString(6, shipment.getShipmentNo());
+			insertShipmentToDatabasePS.setInt(7, shipment.getFreight().getId());
 			int id = DBConnection.getInstance().executeInsertWithIdentity(insertShipmentToDatabasePS);
 
 			persistShipmentLine(shipment, id);

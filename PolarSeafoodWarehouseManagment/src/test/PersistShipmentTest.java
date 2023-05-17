@@ -36,17 +36,14 @@ class PersistShipmentTest {
 		String productBarcode = "4820226000099";
 		int productQty = 2;
 		LocalDate date = LocalDate.now();
-		
-		
-		ShipmentDBIF shimpmentDBIF = new ShipmentDB();
-		
+				
 		//Act
 		sc.createShipment(staffNos, freightNo, warehouseName);
 		
 		sc.scanProduct(productQty, productBarcode, date);
 		
 		Shipment shipment = sc.getCurrentShipment();
-		shipment.setShipmentNo("7878");
+		shipment.setShipmentNo("5555");
 		
 		sc.confirmShipment();
 		//Assert
