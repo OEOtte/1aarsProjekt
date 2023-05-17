@@ -1,8 +1,6 @@
 package test;
 
-import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -15,7 +13,6 @@ import controller.DataAccessException;
 import controller.ProductCtrl;
 import controller.ShipmentCtrl;
 import controller.StorageCtrl;
-import model.LotLine;
 
 
 
@@ -27,9 +24,9 @@ class ScanProductTest {
 	
 	@BeforeEach
 	void SetUp() {
-	ShipmentCtrl sc = new ShipmentCtrl();
-	ProductCtrl pCtrl = new ProductCtrl();
-	StorageCtrl stoCtrl = new StorageCtrl();
+		sc = new ShipmentCtrl();
+		pc = new ProductCtrl();
+		stoCtrl = new StorageCtrl();
 	}
 	
 	@Test
