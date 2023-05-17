@@ -13,7 +13,7 @@ import model.Staff;
 
 public class StaffDB implements StaffDBIF {
 
-	private static final String FIND_STAFF_BY_NO_Q = "select * from Staff where staffNo = '?';";
+	private static final String FIND_STAFF_BY_NO_Q = "select * from Staff where staffNo = ?;";
 	private PreparedStatement findStaffByNoPS;
 
 	public StaffDB() throws DataAccessException {
@@ -62,7 +62,7 @@ public class StaffDB implements StaffDBIF {
 
 			res = new Staff(rs.getString("name"), 
 					rs.getString("phoneNo"), 
-					admin, 
+					true, 
 					rs.getString("staffNo"));
 			
 		} catch (SQLException e) {

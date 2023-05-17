@@ -29,7 +29,7 @@ public class ShipmentCtrl {
 		Freight freight = freightCtrl.findFreightByFreightNumber(freightNo);
 		Warehouse warehouse = storageCtrl.findWarehouseByName(warehouseName);
 
-		if (staffs != null && freight != null) {
+		if (staffs != null && freight != null && warehouse != null) {
 			Shipment shipment = new Shipment(staffs, freight, warehouse);
 			this.currShipment = shipment;
 		}
