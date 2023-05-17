@@ -19,6 +19,9 @@ public class ShipmentDB implements ShipmentDBIF {
 	private static final String INSERT_SHIPMENTLINE_TO_DATABASE_Q = "insert into ShipmentLine(quantity, shipment_id, product_id) values (?, ?, ?, ?);";
 	private PreparedStatement insertShipmentLineToDatabasePS;
 
+	private static final String INSERT_SHIPMENT_AND_WAREHOUSE_TO_JOIN_TABLE = "Insert into ShipmentWarehouseTable(shipment_id,warehouse_id) values(?,?);";
+	private PreparedStatement insertShipmentAndWarehouseToJoinTablePS;
+	
 	public ShipmentDB() throws DataAccessException {
 		init();
 	}
@@ -29,6 +32,7 @@ public class ShipmentDB implements ShipmentDBIF {
 			insertShipmentToDatabasePS = connection.prepareStatement(INSERT_SHIPMENT_TO_DATABASE_Q,
 					PreparedStatement.RETURN_GENERATED_KEYS);
 			insertShipmentLineToDatabasePS = connection.prepareStatement(INSERT_SHIPMENTLINE_TO_DATABASE_Q);
+			insertShipmentAndWarehouseToJoinTablePS = connection.prepareStatement(INSERT_SHIPMENT_AND_WAREHOUSE_TO_JOIN_TABLE);
 		} catch (SQLException e) {
 			throw new DataAccessException(DBMessages.COULD_NOT_PREPARE_STATEMENT, e);
 		}
@@ -48,10 +52,22 @@ public class ShipmentDB implements ShipmentDBIF {
 			int id = DBConnection.getInstance().executeInsertWithIdentity(insertShipmentToDatabasePS);
 
 			persistShipmentLine(shipment, id);
+			persistShipmentInWarehouse(shipment, id);
 
 			DBConnection.getInstance().commitTransaction();
 		} catch (SQLException e) {
 			DBConnection.getInstance().rollbackTransaction();
+			throw new DataAccessException(DBMessages.COULD_NOT_BIND_OR_EXECUTE_QUERY, e);
+		}
+	}
+
+	private void persistShipmentInWarehouse(Shipment shipment,int id) throws DataAccessException {
+		try {
+			insertShipmentAndWarehouseToJoinTablePS.setInt(1, id);
+			insertShipmentAndWarehouseToJoinTablePS.setInt(2, shipment.getArrivalLocation().getId());
+			insertShipmentAndWarehouseToJoinTablePS.executeUpdate();
+			
+		} catch (SQLException e) {
 			throw new DataAccessException(DBMessages.COULD_NOT_BIND_OR_EXECUTE_QUERY, e);
 		}
 	}

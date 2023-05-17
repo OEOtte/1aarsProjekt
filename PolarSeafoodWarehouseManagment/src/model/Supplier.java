@@ -1,13 +1,18 @@
 package model;
 
 public class Supplier {
+	private int id;
 	private String name;
 	private String phoneNo;
 	private String email;
 	private String country;
 	
+	
+	public Supplier(int id) {
+		this.id = id;
+	}
+	
 	public Supplier(String name, String phoneNo, String email, String country) {
-		super();
 		this.name = name;
 		this.phoneNo = phoneNo;
 		this.email = email;

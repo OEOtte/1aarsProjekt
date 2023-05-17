@@ -10,21 +10,22 @@ public class StorageCtrl {
 
 	private StorageDBIF storageDBIF;
 
-	public LotLine findAvailableLotByPriorityForProduct(Product product, int quantity, LocalDate date)
-			throws DataAccessException {
+	public LotLine findAvailableLotByPriorityForProductInArrivalWarehouse(Product product, int quantity, LocalDate date,
+			Warehouse warehouse) throws DataAccessException {
 		if (storageDBIF == null) {
 			storageDBIF = new StorageDB();
 		}
 
-		boolean priority = product.getPriority();
-		boolean fullAssociation = true; // TODO implement fullAssociation
-
-		Lot lot = storageDBIF.findAvailableLotByPriority(priority, fullAssociation);
+		Lot lot = storageDBIF.findAvailableLotByPriorityInArrivalWarehouse(product.getPriority(), warehouse);
 
 		LotLine lotLine = new LotLine(product, quantity, date, lot);
-		boolean res = storageDBIF.persistProductOnLot(product, lot, quantity, date);
 
+		if (lot != null) {
+			storageDBIF.persistProductOnLot(product, lot, quantity, date);
+
+		}
 		return lotLine;
+
 	}
 
 	public Warehouse findWarehouseByName(String name) throws DataAccessException {

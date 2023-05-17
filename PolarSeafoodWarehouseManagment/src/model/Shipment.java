@@ -6,10 +6,11 @@ import java.util.List;
 
 public class Shipment {
 
+	
 	private List<Staff> staffOnShipment;
 	private Freight freight;
 	private LocalDate arrivalDate;
-	private Warehouse arrivalLocation; // TODO set warehouse on shipment
+	private Warehouse arrivalLocation;
 	private LocalDate disbatchDate;
 	private int totalWeight;
 	private int amountOfDifferentProduct;
@@ -30,7 +31,7 @@ public class Shipment {
 				shipmentLines.get(i).increaseQty(quantity);
 				totalWeight += quantity * product.getWeight();
 				res = shipmentLines.get(i);
-			}	
+			}
 		}
 		if (res == null) {
 			ShipmentLine shipmentLine = new ShipmentLine(product, quantity);

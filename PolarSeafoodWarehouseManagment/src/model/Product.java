@@ -1,4 +1,4 @@
- package model;
+package model;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,16 +8,17 @@ public class Product {
 	private String productName;
 	private String itemNumber;
 	private String barcode;
-	private String countryOfOrigin;
-	private Double percentOfGlaze;
+	private int countryOfOrigin;
+	private int percentOfGlaze;
 	private String description;
-	private int weight;
+	private double weight;
 	private int minStock;
 	private boolean priority;
+	private Supplier suppliers;
 	private List<LotLine> lotLines;
 
-	public Product(int id, String productName, String itemNumber, String barcode, String countryOfOrigin, Double percentOfGlaze,
-			String description, int weight, int minStock, boolean priority) {
+	public Product(int id, String productName, String itemNumber, String barcode, int percentOfGlaze,
+			String description, double weight, int minStock, boolean priority, int countryOfOrigin, Supplier supplier) {
 		this.id = id;
 		this.productName = productName;
 		this.itemNumber = itemNumber;
@@ -27,6 +28,31 @@ public class Product {
 		this.description = description;
 		this.weight = weight;
 		this.minStock = minStock;
+		this.priority = priority;
+		this.suppliers = supplier;
+	}
+
+	public Supplier getSuppliers() {
+		return suppliers;
+	}
+
+	public void setSuppliers(Supplier suppliers) {
+		this.suppliers = suppliers;
+	}
+
+	public List<LotLine> getLotLines() {
+		return lotLines;
+	}
+
+	public void setLotLines(List<LotLine> lotLines) {
+		this.lotLines = lotLines;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public void setPriority(boolean priority) {
 		this.priority = priority;
 	}
 
@@ -58,19 +84,19 @@ public class Product {
 		this.barcode = barcode;
 	}
 
-	public String getCountryOfOrigin() {
+	public int getCountryOfOrigin() {
 		return countryOfOrigin;
 	}
 
-	public void setCountryOfOrigin(String countryOfOrigin) {
+	public void setCountryOfOrigin(int countryOfOrigin) {
 		this.countryOfOrigin = countryOfOrigin;
 	}
 
-	public Double getPercentOfGlaze() {
+	public int getPercentOfGlaze() {
 		return percentOfGlaze;
 	}
 
-	public void setPercentOfGlaze(Double percentOfGlaze) {
+	public void setPercentOfGlaze(int percentOfGlaze) {
 		this.percentOfGlaze = percentOfGlaze;
 	}
 
@@ -82,11 +108,11 @@ public class Product {
 		this.description = description;
 	}
 
-	public int getWeight() {
+	public double getWeight() {
 		return weight;
 	}
 
-	public void setWeight(int weight) {
+	public void setWeight(double weight) {
 		this.weight = weight;
 	}
 
@@ -99,13 +125,10 @@ public class Product {
 	}
 
 	public boolean addLotLine(LotLine lotLine) {
-		boolean res = false;
 		if (this.lotLines == null) {
 			this.lotLines = new ArrayList<>();
-		} else {
-			lotLines.add(lotLine);
-			res = true;
 		}
+		boolean res = lotLines.add(lotLine);
 		return res;
 	}
 

@@ -19,10 +19,10 @@ public class StorageDB implements StorageDBIF {
 	private static final String FIND_ALL_Q = "select * from Lot";
 	private PreparedStatement findAllPS;
 
-	private static final String FIND_AVAILABLE_LOT_BY_PRIORITY_ASCENDING_Q = "select * from Lot where available = 1 order by lotNo asc;";
+	private static final String FIND_AVAILABLE_LOT_BY_PRIORITY_ASCENDING_Q = "select * from Lot where available = 1 and warehouse_id = ? order by lotNo asc;";
 	private PreparedStatement findAvailableLotByPriorityAscendingPS;
 
-	private static final String FIND_AVAILABLE_LOT_BY_PRIORITY_DECENDING_Q = "select * from Lot where available = 1 order by lotNo desc;";
+	private static final String FIND_AVAILABLE_LOT_BY_PRIORITY_DECENDING_Q = "select * from Lot where available = 1 and warehouse_id = ? order by lotNo desc;";
 	private PreparedStatement findAvailableLotByPriorityDecendingPS;
 
 	private static final String FIND_LOT_BY_ID_AND_UPDATE_TO_UNAVAILABLE_Q = "update lot set available = 0 where id = ?;";
@@ -66,17 +66,20 @@ public class StorageDB implements StorageDBIF {
 	}
 
 	@Override
-	public Lot findAvailableLotByPriority(boolean priority, boolean fullAssociation) throws DataAccessException {
+	public Lot findAvailableLotByPriorityInArrivalWarehouse(boolean priority, Warehouse warehouse)
+			throws DataAccessException {
 		Lot foundLot = null;
 		ResultSet rs = null;
 		try {
 			if (priority) {
+				findAvailableLotByPriorityAscendingPS.setInt(1, warehouse.getId());
 				rs = findAvailableLotByPriorityAscendingPS.executeQuery();
 			} else {
+				findAvailableLotByPriorityDecendingPS.setInt(1, warehouse.getId());
 				rs = findAvailableLotByPriorityDecendingPS.executeQuery();
 			}
 			if (rs.next()) {
-				foundLot = buildObject(rs, fullAssociation);
+				foundLot = buildLot(rs, warehouse);
 			}
 
 		} catch (SQLException e) {
@@ -86,16 +89,11 @@ public class StorageDB implements StorageDBIF {
 		return foundLot;
 	}
 
-	private Lot buildObject(ResultSet rs, boolean fullAssociation) throws DataAccessException {
+	private Lot buildLot(ResultSet rs, Warehouse warehouse) throws DataAccessException {
 		Lot res = null;
 		try {
-			res = new Lot(rs.getInt("id"), rs.getString("lotNo"), rs.getBoolean("available"),
-					new Warehouse(rs.getInt("warehouse_id")));
+			res = new Lot(rs.getInt("id"), rs.getString("lotNo"), rs.getBoolean("available"), warehouse);
 
-			if (fullAssociation) {
-				Warehouse warehouse = findWarehouseById(res.getWarehouse().getId());
-				res.setWarehouse(warehouse);
-			}
 		} catch (SQLException e) {
 			throw new DataAccessException(DBMessages.COULD_NOT_READ_RESULTSET, e);
 		}
@@ -103,6 +101,9 @@ public class StorageDB implements StorageDBIF {
 		return res;
 	}
 
+	/*
+	 * Not a used method
+	 */
 	private Warehouse findWarehouseById(int id) throws DataAccessException {
 		Warehouse foundWarehouse = null;
 		try {
@@ -191,10 +192,10 @@ public class StorageDB implements StorageDBIF {
 	}
 
 	@Override
-	public Warehouse findWarehouseByName(String name) throws DataAccessException {
+	public Warehouse findWarehouseByName(String warehouseName) throws DataAccessException {
 		Warehouse warehouse = null;
 		try {
-			findWarehouseByNamePS.setString(1, name);
+			findWarehouseByNamePS.setString(1, warehouseName);
 			ResultSet rs = findWarehouseByNamePS.executeQuery();
 
 			warehouse = buildWarehouse(rs);
