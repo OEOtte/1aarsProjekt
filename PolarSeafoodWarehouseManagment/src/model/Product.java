@@ -8,17 +8,17 @@ public class Product {
 	private String productName;
 	private String itemNumber;
 	private String barcode;
-	private String countryOfOrigin;
-	private Double percentOfGlaze;
+	private int countryOfOrigin;
+	private int percentOfGlaze;
 	private String description;
-	private int weight;
+	private double weight;
 	private int minStock;
 	private boolean priority;
 	private Supplier suppliers;
 	private List<LotLine> lotLines;
 
-	public Product(int id, String productName, String itemNumber, String barcode, String countryOfOrigin,
-			Double percentOfGlaze, String description, int weight, int minStock, boolean priority, Supplier supplier) {
+	public Product(int id, String productName, String itemNumber, String barcode, int percentOfGlaze,
+			String description, double weight, int minStock, boolean priority, int countryOfOrigin, Supplier supplier) {
 		this.id = id;
 		this.productName = productName;
 		this.itemNumber = itemNumber;
@@ -84,19 +84,19 @@ public class Product {
 		this.barcode = barcode;
 	}
 
-	public String getCountryOfOrigin() {
+	public int getCountryOfOrigin() {
 		return countryOfOrigin;
 	}
 
-	public void setCountryOfOrigin(String countryOfOrigin) {
+	public void setCountryOfOrigin(int countryOfOrigin) {
 		this.countryOfOrigin = countryOfOrigin;
 	}
 
-	public Double getPercentOfGlaze() {
+	public int getPercentOfGlaze() {
 		return percentOfGlaze;
 	}
 
-	public void setPercentOfGlaze(Double percentOfGlaze) {
+	public void setPercentOfGlaze(int percentOfGlaze) {
 		this.percentOfGlaze = percentOfGlaze;
 	}
 
@@ -108,11 +108,11 @@ public class Product {
 		this.description = description;
 	}
 
-	public int getWeight() {
+	public double getWeight() {
 		return weight;
 	}
 
-	public void setWeight(int weight) {
+	public void setWeight(double weight) {
 		this.weight = weight;
 	}
 
