@@ -41,7 +41,6 @@ class ShipmentCtrlTest {
 		//Act
 		sc.createShipment(staffNos, freightNo, warehouseName);
 		Shipment shipment = sc.getCurrentShipment();
-		System.out.println(shipment.toString());
 		//Assert
 		assertTrue(shipment!=null);
 	}
