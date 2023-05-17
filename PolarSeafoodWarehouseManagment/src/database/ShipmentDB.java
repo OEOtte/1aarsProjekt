@@ -13,10 +13,10 @@ import model.ShipmentLine;
 
 public class ShipmentDB implements ShipmentDBIF {
 
-	private static final String INSERT_SHIPMENT_TO_DATABASE_Q = "insert into Shipment(arrivalDate, arrivalLocation,dispatchDate, totalWeight, amountOfDifferentProduct, shipmentNo, freight_id) values(GETDATE(),?,?,?,?,?,?);";
+	private static final String INSERT_SHIPMENT_TO_DATABASE_Q = "insert into Shipment(arrivalDate, arrivalLocation,dispatchDate, totalWeight, amountOfDifferentProduct, shipmentNo, freight_id) values(GETDATE(),?,GETDATE(),?,?,?,?);";
 	private PreparedStatement insertShipmentToDatabasePS;
 
-	private static final String INSERT_SHIPMENTLINE_TO_DATABASE_Q = "insert into ShipmentLine(quantity, shipment_id, product_id) values (?, ?, ?, ?);";
+	private static final String INSERT_SHIPMENTLINE_TO_DATABASE_Q = "insert into ShipmentLine(quantity, shipment_id, product_id) values (?, ?, ?);";
 	private PreparedStatement insertShipmentLineToDatabasePS;
 
 	private static final String INSERT_SHIPMENT_AND_WAREHOUSE_TO_JOIN_TABLE = "Insert into ShipmentWarehouseTable(shipment_id,warehouse_id) values(?,?);";
@@ -29,8 +29,7 @@ public class ShipmentDB implements ShipmentDBIF {
 	private void init() throws DataAccessException {
 		Connection connection = DBConnection.getInstance().getConnection();
 		try {
-			insertShipmentToDatabasePS = connection.prepareStatement(INSERT_SHIPMENT_TO_DATABASE_Q,
-					PreparedStatement.RETURN_GENERATED_KEYS);
+			insertShipmentToDatabasePS = connection.prepareStatement(INSERT_SHIPMENT_TO_DATABASE_Q, PreparedStatement.RETURN_GENERATED_KEYS);
 			insertShipmentLineToDatabasePS = connection.prepareStatement(INSERT_SHIPMENTLINE_TO_DATABASE_Q);
 			insertShipmentAndWarehouseToJoinTablePS = connection.prepareStatement(INSERT_SHIPMENT_AND_WAREHOUSE_TO_JOIN_TABLE);
 		} catch (SQLException e) {
@@ -43,12 +42,12 @@ public class ShipmentDB implements ShipmentDBIF {
 		try {
 			DBConnection.getInstance().startTransaction();
 
-			insertShipmentToDatabasePS.setInt(1, shipment.getArrivalLocation().getId());
-			insertShipmentToDatabasePS.setDate(2, Date.valueOf(shipment.getDisbatchDate()));
-			insertShipmentToDatabasePS.setInt(3, shipment.getTotalWeight());
-			insertShipmentToDatabasePS.setInt(4, shipment.getAmountOfDifferentProduct());
-			insertShipmentToDatabasePS.setString(5, shipment.getShipmentNo());
-			insertShipmentToDatabasePS.setInt(6, shipment.getFreight().getId());
+			insertShipmentToDatabasePS.setString(1, shipment.getArrivalLocation().getName());
+			//insertShipmentToDatabasePS.setDate(2, Date.valueOf(shipment.getDisbatchDate()));
+			insertShipmentToDatabasePS.setInt(2, shipment.getTotalWeight());
+			insertShipmentToDatabasePS.setInt(3, shipment.getAmountOfDifferentProduct());
+			insertShipmentToDatabasePS.setString(4, shipment.getShipmentNo());
+			insertShipmentToDatabasePS.setInt(5, shipment.getFreight().getId());
 			int id = DBConnection.getInstance().executeInsertWithIdentity(insertShipmentToDatabasePS);
 
 			persistShipmentLine(shipment, id);

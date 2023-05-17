@@ -46,9 +46,9 @@ class PersistShipmentTest {
 		sc.scanProduct(productQty, productBarcode, date);
 		
 		Shipment shipment = sc.getCurrentShipment();
+		shipment.setShipmentNo("7878");
 		
 		sc.confirmShipment();
-		shimpmentDBIF.persistShipment(shipment);
 		//Assert
 		
 		

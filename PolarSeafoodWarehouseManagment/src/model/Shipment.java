@@ -22,6 +22,7 @@ public class Shipment {
 		this.staffOnShipment = staffs;
 		this.arrivalLocation = warehouse;
 		this.arrivalDate = LocalDate.now();
+		this.disbatchDate = LocalDate.now();
 	}
 
 	public ShipmentLine addProductToAShipmentline(Product product, int quantity) {
