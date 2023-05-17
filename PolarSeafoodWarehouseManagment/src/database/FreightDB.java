@@ -10,7 +10,7 @@ import controller.DataAccessException;
 import model.Freight;
 
 public class FreightDB implements FreightDBIF {
-	private static final String FIND_BY_FREIGHTNUMBER_Q = "select * from Freight where freightNo = '?';";
+	private static final String FIND_BY_FREIGHTNUMBER_Q = "select * from Freight where freightNo = ?";
 	private PreparedStatement findByFreightNumberPS;
 
 	private static final String FIND_ALL_Q = "select * from Freight";
@@ -36,6 +36,7 @@ public class FreightDB implements FreightDBIF {
 		try {
 			findByFreightNumberPS.setString(1, freightNumber);
 			ResultSet rs = findByFreightNumberPS.executeQuery();
+
 			if (rs.next()) {
 				foundFreight = buildObject(rs);
 			}
@@ -49,18 +50,16 @@ public class FreightDB implements FreightDBIF {
 	private Freight buildObject(ResultSet rs) throws DataAccessException {
 		Freight res = null;
 		try {
-			res = new Freight(rs.getInt("id"),
-					rs.getString("name"), 
-					rs.getString("nameOfCourier"), 
-					rs.getString("email"), 
-					rs.getString("phoneNo"), 
-					rs.getString("address"), 
+			StorageDBIF storageDBIF = new StorageDB();
+
+			res = new Freight(rs.getInt("id"), rs.getString("name"), rs.getString("nameOfCourier"),
+					rs.getString("email"), rs.getString("phoneNo"), storageDBIF.findAddress(rs.getInt("address_id")),
 					rs.getString("freightNo"));
-		
+
 		} catch (Exception e) {
 			throw new DataAccessException(DBMessages.COULD_NOT_READ_RESULTSET, e);
 		}
-		
+
 		return res;
 	}
 }

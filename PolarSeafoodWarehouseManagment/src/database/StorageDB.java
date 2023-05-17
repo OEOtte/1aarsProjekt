@@ -31,13 +31,13 @@ public class StorageDB implements StorageDBIF {
 	private static final String FIND_WAREHOUSE_BY_ID_Q = "select * from Warehouse where id = '?';";
 	private PreparedStatement findWarehouseByIdPS;
 
-	private static final String FIND_WAREHOUSE_BY_NAME_Q = "select * from Warehouse where name = '?';";
+	private static final String FIND_WAREHOUSE_BY_NAME_Q = "select * from Warehouse where name = ?;";
 	private PreparedStatement findWarehouseByNamePS;
 
 	private static final String INSERT_PRODUCT_ON_LOT_TO_DATABASE_Q = "insert into LotLine(quantity, expirationDate, lot_id, product_id) values (?,?,?,?);";
 	private PreparedStatement insertProductOnLotToDatabasePS;
 
-	private static final String FIND_ADDRESS_WITH_FULL_ASSOSIATION_FROM_ADDRESS_Q = "Select * from Address_view where address = '?'";
+	private static final String FIND_ADDRESS_WITH_FULL_ASSOSIATION_FROM_ADDRESS_Q = "Select * from Address_view where id = ?";
 	private PreparedStatement findAddressWithFullAssosiationFromAddressPS;
 
 	public StorageDB() throws DataAccessException {
@@ -122,23 +122,24 @@ public class StorageDB implements StorageDBIF {
 	private Warehouse buildWarehouse(ResultSet rs) throws DataAccessException {
 		Warehouse warehouse = null;
 		try {
-			int addressId = rs.getInt("address_id");
-			String address = findAddress(addressId);
+//			int addressId = rs.getInt("address_id");
+//			String address = ;
 
-			warehouse = new Warehouse(rs.getInt("id"), rs.getString("name"), address);
+			warehouse = new Warehouse(rs.getInt("id"), rs.getString("name"), findAddress(rs.getInt("address_id")));
 		} catch (SQLException e) {
 			throw new DataAccessException(DBMessages.COULD_NOT_READ_RESULTSET, e);
 		}
 		return warehouse;
 	}
 
-	private String findAddress(int addressId) throws DataAccessException {
+	public String findAddress(int addressId) throws DataAccessException {
 		String address = null;
 		try {
 			findAddressWithFullAssosiationFromAddressPS.setInt(1, addressId);
 			ResultSet rs = findAddressWithFullAssosiationFromAddressPS.executeQuery();
-
-			address = buildAddress(rs);
+			if (rs.next()) {
+				address = buildAddress(rs);
+			}
 		} catch (SQLException e) {
 			throw new DataAccessException(DBMessages.COULD_NOT_BIND_OR_EXECUTE_QUERY, e);
 		}
@@ -148,6 +149,7 @@ public class StorageDB implements StorageDBIF {
 	private String buildAddress(ResultSet rs) throws DataAccessException {
 		String res = null;
 		try {
+
 			res = rs.getString("address") + ", " + rs.getString("zipcode") + " " + rs.getString("city_name") + ", "
 					+ rs.getString("country_name");
 		} catch (SQLException e) {
@@ -198,7 +200,9 @@ public class StorageDB implements StorageDBIF {
 			findWarehouseByNamePS.setString(1, warehouseName);
 			ResultSet rs = findWarehouseByNamePS.executeQuery();
 
-			warehouse = buildWarehouse(rs);
+			if (rs.next()) {
+				warehouse = buildWarehouse(rs);
+			}
 		} catch (SQLException e) {
 			throw new DataAccessException(DBMessages.COULD_NOT_BIND_OR_EXECUTE_QUERY, e);
 		}

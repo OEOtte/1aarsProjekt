@@ -15,6 +15,8 @@ public interface StorageDBIF {
 	public boolean persistProductOnLot(Product product, Lot lot, int quantity, LocalDate date) throws DataAccessException;
 
 	public Warehouse findWarehouseByName(String warehouseName) throws DataAccessException;
+	
+	public String findAddress(int addressId) throws DataAccessException;
 
 
 }
