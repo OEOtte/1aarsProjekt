@@ -75,7 +75,6 @@ class ShipmentCtrlTest {
 		//Assert
 		assertNull(shipment);
 		assertEquals(null, shipment);
-		//Kig lige på den igen
 	}
 	
 	@Test
