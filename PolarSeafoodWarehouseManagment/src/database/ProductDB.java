@@ -32,7 +32,6 @@ public class ProductDB implements ProductDBIF {
 		try {
 			findAllPS = connection.prepareStatement(FIND_ALL_Q);
 			findByBarcodePS = connection.prepareStatement(FIND_BY_BARCODE_Q);
-			findByPartialNamePS = connection.prepareStatement(FIND_BY_PARTIAL_NAME_Q);
 		} catch (SQLException e) {
 			throw new DataAccessException(DBMessages.COULD_NOT_PREPARE_STATEMENT, e);
 		}
