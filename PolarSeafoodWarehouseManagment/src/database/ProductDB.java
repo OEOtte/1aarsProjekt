@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import controller.DataAccessException;
 import database.DBConnection;
@@ -19,6 +20,9 @@ public class ProductDB implements ProductDBIF {
 
 	private static final String FIND_BY_BARCODE_Q = "SELECT * FROM Product LEFT OUTER JOIN BoxedProduct ON Product.id = BoxedProduct.product_id WHERE barcode = ? or parentBarcode = ?;";
 	private PreparedStatement findByBarcodePS;
+	
+	private static final String FIND_BY_PARTIAL_NAME_Q = "SELECT * FROM Product LEFT OUTER JOIN BoxedProduct ON Product.id = BoxedProduct.product_id Where name LIKE ?";
+	private PreparedStatement findByPartialNamePS;
 
 	public ProductDB() throws DataAccessException {
 		init();
@@ -29,6 +33,7 @@ public class ProductDB implements ProductDBIF {
 		try {
 			findAllPS = connection.prepareStatement(FIND_ALL_Q);
 			findByBarcodePS = connection.prepareStatement(FIND_BY_BARCODE_Q);
+			findByPartialNamePS = connection.prepareStatement(FIND_BY_PARTIAL_NAME_Q);
 		} catch (SQLException e) {
 			throw new DataAccessException(DBMessages.COULD_NOT_PREPARE_STATEMENT, e);
 		}
@@ -79,6 +84,28 @@ public class ProductDB implements ProductDBIF {
 			throw new DataAccessException(DBMessages.COULD_NOT_READ_RESULTSET, e);
 		}
 
+		return res;
+	}
+	
+	public ArrayList<Product> findProducts(String prod) throws DataAccessException{
+		ArrayList<Product> res = new ArrayList<>();
+		Product foundProduct = null;
+		try {
+			findByPartialNamePS.setString(1, prod);
+			ResultSet rs = findByPartialNamePS.executeQuery();
+			for(int i = 0; i > rs.getFetchSize(); i++) {
+				if(rs.next()) {
+					foundProduct = buildObject(rs);
+					res.add(foundProduct);
+				}
+			}
+			
+		} catch (SQLException e) {
+			throw new DataAccessException(DBMessages.COULD_NOT_BIND_OR_EXECUTE_QUERY, e);
+		}
+		
+		
+		
 		return res;
 	}
 
