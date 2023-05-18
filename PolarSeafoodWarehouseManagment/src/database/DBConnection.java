@@ -120,7 +120,7 @@ public class DBConnection {
 				res = rs.getInt(1);
 			}
 		} catch (SQLException e) {
-			//e.printStackTrace();
+			e.printStackTrace();
 			throw new DataAccessException("Could not execute insert", e);
 		}
 		return res;

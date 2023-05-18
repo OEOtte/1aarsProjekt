@@ -85,15 +85,15 @@ public class StaffDB implements StaffDBIF {
 		return foundStaffId;
 	}
 
-	private int getId(ResultSet rs) throws DataAccessException {
-		int res = -1;
-		try {
-			res = rs.getInt("id");
-		} catch (SQLException e) {
-			throw new DataAccessException(DBMessages.COULD_NOT_READ_RESULTSET, e);
-		}
-
-		return res;
-	}
+//	private int getId(ResultSet rs) throws DataAccessException {
+//		int res = -1;
+//		try {
+//			res = rs.getInt("id");
+//		} catch (SQLException e) {
+//			throw new DataAccessException(DBMessages.COULD_NOT_READ_RESULTSET, e);
+//		}
+//
+//		return res;
+//	}
 
 }
