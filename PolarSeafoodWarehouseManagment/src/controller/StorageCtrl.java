@@ -16,16 +16,15 @@ public class StorageCtrl {
 		if (storageDBIF == null) {
 			storageDBIF = new StorageDB();
 		}
-		LotLine res = null;
 		Lot lot = storageDBIF.findAvailableLotByPriorityInArrivalWarehouse(product.getPriority(), warehouse);
-		if (date != null) {
-			res = new LotLine(product, quantity, date, lot);
 
-			if (lot != null) {
-				storageDBIF.persistProductOnLot(product, lot, quantity, date);
-			}
+		LotLine lotLine = new LotLine(product, quantity, date, lot);
+
+		if (lot != null) {
+			storageDBIF.persistProductOnLot(product, lot, quantity, date);
 		}
-		return res;
+
+		return lotLine;
 
 	}
 

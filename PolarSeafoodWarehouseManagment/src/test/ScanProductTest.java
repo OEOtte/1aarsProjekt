@@ -92,7 +92,7 @@ class ScanProductTest {
 		sc.scanProduct(-1, "4820226000082", expiryDate);
 		
 		// assert
-		assertNotEquals(sc.getCurrentShipment().getAmountOfDifferentProduct() , 1);
+		assertEquals(sc.getCurrentShipment().getAmountOfDifferentProduct() , 0);
 	}
 	
 	
@@ -109,7 +109,7 @@ class ScanProductTest {
 		sc.scanProduct(0, "4820226000082", expiryDate);
 		
 		// assert
-		assertNotEquals(sc.getCurrentShipment().getAmountOfDifferentProduct() , 1);
+		assertEquals(sc.getCurrentShipment().getAmountOfDifferentProduct() , 0);
 	}
 	
 	@Test
@@ -124,7 +124,7 @@ class ScanProductTest {
 		sc.scanProduct(1, "4820226000082", null);
 		
 		// assert
-		assertNotEquals(sc.getCurrentShipment().getAmountOfDifferentProduct() , 0);
+		assertEquals(sc.getCurrentShipment().getAmountOfDifferentProduct() , 0);
 	}
 	
 	
