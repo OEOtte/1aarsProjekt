@@ -43,10 +43,10 @@ public class StorageDB implements StorageDBIF {
 	private static final String FIND_ADDRESS_WITH_FULL_ASSOSIATION_FROM_ADDRESS_Q = "Select * from Address_view where id = ?";
 	private PreparedStatement findAddressWithFullAssosiationFromAddressPS;
 	
-	private static final String FIND_PRODCUTS_IN_WAREHOUSE_BY_PARTIAL_NAME_Q = "SELECT * FROM Product LEFT OUTER JOIN BoxedProduct ON Product.id = BoxedProduct.product_id Where name LIKE ?";
-	private PreparedStatement findProductsInWarehouseByPartialNamePS;
+	private static final String FIND_PRODUCTS_IN_WAREHOUSE_BY_ID_Q = "SELECT * FROM LotLine Where product_id = ? ORDER BY expirationDate DESC ";
+	private PreparedStatement findProductsInWarehouseByIdPS;
 	
-	private static final String REMOVE_PRODUCT_FROM_LOT_Q = "SELECT * FROM  LEFT OUTER JOIN BoxedProduct ON Product.id = BoxedProduct.product_id Where name = ?";
+	private static final String REMOVE_PRODUCT_FROM_LOT_Q = "REMOVE * FROM LotLine WHERE id = ?";
 	private PreparedStatement removeProductFromLotPS;
 	
 	public StorageDB() throws DataAccessException {
@@ -68,6 +68,8 @@ public class StorageDB implements StorageDBIF {
 			insertProductOnLotToDatabasePS = connection.prepareStatement(INSERT_PRODUCT_ON_LOT_TO_DATABASE_Q);
 			findAddressWithFullAssosiationFromAddressPS = connection
 					.prepareStatement(FIND_ADDRESS_WITH_FULL_ASSOSIATION_FROM_ADDRESS_Q);
+			findProductsInWarehouseByIdPS = connection.prepareStatement(FIND_PRODUCTS_IN_WAREHOUSE_BY_ID_Q);
+			removeProductFromLotPS = connection.prepareStatement(REMOVE_PRODUCT_FROM_LOT_Q);
 
 		} catch (SQLException e) {
 			throw new DataAccessException(DBMessages.COULD_NOT_PREPARE_STATEMENT, e);
@@ -220,16 +222,19 @@ public class StorageDB implements StorageDBIF {
 	}
 	
 	@Override
-	public ArrayList<Product> findProducts(String prod) throws DataAccessException{
-		ArrayList<Product> res = new ArrayList<>();
-		Product foundProduct = null;
+	public ArrayList<LotLine> findAvailableProductsInWarehouse(int prod, int quantity) throws DataAccessException{
+		ArrayList<LotLine> res = new ArrayList<>();
+		LotLine foundLotLine = null;
+		int desiredAmount = 0;
 		try {
-			findProductsInWarehouseByPartialNamePS.setString(1, prod);
-			ResultSet rs = findProductsInWarehouseByPartialNamePS.executeQuery();
-			for(int i = 0; i > rs.getFetchSize(); i++) {
+			findProductsInWarehouseByIdPS.setInt(1, prod);
+			ResultSet rs = findProductsInWarehouseByIdPS.executeQuery();
+			
+			for(int i = 0; i > rs.getFetchSize() && desiredAmount > quantity; i++) {
 				if(rs.next()) {
-					foundProduct = buildObject(rs);
-					res.add(foundProduct);
+					foundLotLine = builLotLine(rs);
+					desiredAmount += foundLotLine.getQuantity();
+					res.add(foundLotLine);
 				}
 			}
 			
@@ -242,39 +247,18 @@ public class StorageDB implements StorageDBIF {
 		return res;
 	}
 	
+
+	private LotLine builLotLine(ResultSet rs) {
+		LotLine res = new LotLine(rs.getInt("id"), rs.getInt("quantity"), rs.get);
+		
+		
+		return null;
+	}
+
 	@Override
 	public void removeProduct(Product prod) {
 		
 	}
 	
-	private Product buildObject(ResultSet rs) throws DataAccessException {
-		Product res = null;
-		try {
-			String type = rs.getString("type").toLowerCase();
-
-			switch (type) {
-			case ("product"):
-				res = new Product(rs.getInt("id"), rs.getString("productName"), rs.getString("itemNumber"),
-						rs.getString("barcode"), rs.getInt("percentOfGlaze"), rs.getString("description"),
-						rs.getDouble("weight"), rs.getInt("minStock"), rs.getBoolean("priority"),
-						rs.getInt("countryOfOrigin_Id"), new Supplier(rs.getInt("supplier_id")));
-
-				break;
-			case ("boxedproduct"):
-				res = new BoxedProduct(rs.getInt("id"), rs.getString("productName"), rs.getString("itemNumber"),
-						rs.getString("barcode"), rs.getInt("percentOfGlaze"), rs.getString("description"),
-						rs.getDouble("weight"), rs.getInt("minStock"), rs.getBoolean("priority"),
-						rs.getInt("countryOfOrigin_Id"), new Supplier(rs.getInt("supplier_id")),
-						rs.getInt("quantityInBox"), rs.getString("parentBarcode"));
-
-				break;
-			default:
-			}
-
-		} catch (SQLException e) {
-			throw new DataAccessException(DBMessages.COULD_NOT_READ_RESULTSET, e);
-		}
-
-		return res;
-	}
+	
 }

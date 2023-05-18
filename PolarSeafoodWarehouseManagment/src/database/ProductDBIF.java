@@ -10,5 +10,7 @@ public interface ProductDBIF {
 	
 	public Product findProductByBarcode(String barcode) throws DataAccessException;
 	
+	public ArrayList<Product> findProduct(String prod) throws DataAccessException;
+	
 
 }
