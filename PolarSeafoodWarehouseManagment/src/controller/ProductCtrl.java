@@ -25,8 +25,5 @@ public class ProductCtrl {
 		return res;
 	}
 	
-	public ArrayList<Product> findProducts(String prod) throws DataAccessException {
-		ProductDBIF productDBIF = new ProductDB();
-		return productDBIF.findProducts(prod);
-	}
+
 }

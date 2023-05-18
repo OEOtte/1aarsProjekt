@@ -36,11 +36,12 @@ public class StorageCtrl {
 	}
 	
 	public ArrayList<Product> findProduct(String prod) throws DataAccessException {
-		ProductCtrl productCtrl = new ProductCtrl();
-		return productCtrl.findProducts(prod);
+		StorageDBIF storageDBIF = new StorageDB();
+		return storageDBIF.findProducts(prod);
 	}
 	
-	public void removeProduct(String barcode) {
-		
+	public void removeProduct(Product prod) throws DataAccessException {
+		StorageDBIF storageDBIF = new StorageDB();
+		storageDBIF.removeProduct(prod);
 	}
 }
