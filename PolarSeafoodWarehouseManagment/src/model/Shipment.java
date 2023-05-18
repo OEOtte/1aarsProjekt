@@ -30,21 +30,21 @@ public class Shipment {
 		if (shipmentLines == null) {
 			shipmentLines = new ArrayList<>();
 		}
-
-		for (int i = 0; i < shipmentLines.size(); i++) {
-			if (shipmentLines.get(i).getProduct().equals(product)) {
-				shipmentLines.get(i).increaseQty(quantity);
+		if (quantity > 0) {
+			for (int i = 0; i < shipmentLines.size(); i++) {
+				if (shipmentLines.get(i).getProduct().equals(product)) {
+					shipmentLines.get(i).increaseQty(quantity);
+					totalWeight += (quantity * product.getWeight());
+					res = shipmentLines.get(i);
+				}
+			}
+			if (res == null) {
+				res = new ShipmentLine(product, quantity);
+				shipmentLines.add(res);
+				amountOfDifferentProduct++;
 				totalWeight += (quantity * product.getWeight());
-				res = shipmentLines.get(i);
 			}
 		}
-		if (res == null) {
-			res = new ShipmentLine(product, quantity);
-			shipmentLines.add(res);
-			amountOfDifferentProduct++;
-			totalWeight += (quantity * product.getWeight());
-		}
-
 		return res;
 	}
 
