@@ -41,9 +41,9 @@ public class ShipmentCtrl {
 		if (productCtrl == null) {
 			productCtrl = new ProductCtrl();
 		}
-		Product product = productCtrl.findProductByBarcode(barcode);
-
-		if (currShipment != null) {
+		Product product = null;
+		if (currShipment != null && date != null && quantity > 0) {
+			product = productCtrl.findProductByBarcode(barcode);
 			currShipment.addProductToAShipmentline(product, quantity);
 			addFoundProductToAvaliableLot(product, quantity, date);
 		}
@@ -59,7 +59,8 @@ public class ShipmentCtrl {
 			storageCtrl = new StorageCtrl();
 		}
 
-		LotLine lotLine = storageCtrl.findAvailableLotByPriorityForProductInArrivalWarehouse(product, quantity, date,currShipment.getArrivalLocation());
+		LotLine lotLine = storageCtrl.findAvailableLotByPriorityForProductInArrivalWarehouse(product, quantity, date,
+				currShipment.getArrivalLocation());
 		res = productCtrl.addLotLineToProduct(product, lotLine);
 
 		return res;

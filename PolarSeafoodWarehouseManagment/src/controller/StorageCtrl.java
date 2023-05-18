@@ -17,15 +17,14 @@ public class StorageCtrl {
 		if (storageDBIF == null) {
 			storageDBIF = new StorageDB();
 		}
-
 		Lot lot = storageDBIF.findAvailableLotByPriorityInArrivalWarehouse(product.getPriority(), warehouse);
 
 		LotLine lotLine = new LotLine(product, quantity, date, lot);
 
 		if (lot != null) {
 			storageDBIF.persistProductOnLot(product, lot, quantity, date);
-
 		}
+
 		return lotLine;
 
 	}
@@ -35,7 +34,7 @@ public class StorageCtrl {
 		Warehouse warehouse = storageDBIF.findWarehouseByName(name);
 		return warehouse;
 	}
-	
+
 	public ArrayList<Product> findProduct(String prod) throws DataAccessException {
 		ProductCtrl prodCtrl = new ProductCtrl();
 		return prodCtrl.findProducts(prod);
@@ -45,7 +44,7 @@ public class StorageCtrl {
 		StorageDBIF storageDBIF = new StorageDB();
 		return storageDBIF.findAvailableProductsInWarehouse(prod, quantity);
 	}
-	
+
 	public void removeProduct(Product prod) throws DataAccessException {
 		StorageDBIF storageDBIF = new StorageDB();
 		storageDBIF.removeProduct(prod);

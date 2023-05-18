@@ -30,9 +30,9 @@ public class Shipment {
 		if (shipmentLines == null) {
 			shipmentLines = new ArrayList<>();
 		}
-		if (quantity > 0) {
+		
 			for (int i = 0; i < shipmentLines.size(); i++) {
-				if (shipmentLines.get(i).getProduct().equals(product)) {
+				if (shipmentLines.get(i).getProduct().getBarcode().equals(product.getBarcode())) {
 					shipmentLines.get(i).increaseQty(quantity);
 					totalWeight += (quantity * product.getWeight());
 					res = shipmentLines.get(i);
@@ -44,7 +44,6 @@ public class Shipment {
 				amountOfDifferentProduct++;
 				totalWeight += (quantity * product.getWeight());
 			}
-		}
 		return res;
 	}
 
