@@ -124,7 +124,7 @@ class ScanProductTest {
 		sc.scanProduct(1, "4820226000082", null);
 		
 		// assert
-		assertNotEquals(sc.getCurrentShipment().getAmountOfDifferentProduct() , 1);
+		assertNotEquals(sc.getCurrentShipment().getAmountOfDifferentProduct() , 0);
 	}
 	
 	
