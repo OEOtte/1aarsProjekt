@@ -34,7 +34,7 @@ class PersistShipmentTest {
 		String warehouseName = "PSU1";
 		
 		String productBarcode = "4820226000099";
-		int productQty = 2;
+		int productQty = 500;
 		LocalDate date = LocalDate.now();
 				
 		//Act
@@ -42,8 +42,8 @@ class PersistShipmentTest {
 		
 		sc.scanProduct(productQty, productBarcode, date);
 		
-		Shipment shipment = sc.getCurrentShipment();
-		shipment.setShipmentNo("5555");
+//		Shipment shipment = sc.getCurrentShipment();
+//		shipment.setShipmentNo("5555");
 		
 		sc.confirmShipment();
 		//Assert

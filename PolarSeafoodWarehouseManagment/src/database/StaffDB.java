@@ -16,6 +16,9 @@ public class StaffDB implements StaffDBIF {
 	private static final String FIND_STAFF_BY_NO_Q = "select * from Staff where staffNo = ?;";
 	private PreparedStatement findStaffByNoPS;
 
+	private static final String FIND_STAFF_BY_NO_AND_RETURN_ID_Q = "select id from Staff where staffNo = ?;";
+	private PreparedStatement findStaffByNoAndReturnIdPS;
+
 	public StaffDB() throws DataAccessException {
 		init();
 	}
@@ -24,6 +27,7 @@ public class StaffDB implements StaffDBIF {
 		Connection connection = DBConnection.getInstance().getConnection();
 		try {
 			findStaffByNoPS = connection.prepareStatement(FIND_STAFF_BY_NO_Q);
+			findStaffByNoAndReturnIdPS = connection.prepareStatement(FIND_STAFF_BY_NO_AND_RETURN_ID_Q);
 		} catch (SQLException e) {
 			throw new DataAccessException(DBMessages.COULD_NOT_PREPARE_STATEMENT, e);
 		}
@@ -55,21 +59,41 @@ public class StaffDB implements StaffDBIF {
 		Staff res = null;
 
 		try {
-			boolean admin = true;
-			if (rs.getInt("admin") == 0) {
-				admin = false;
-			}
 
-			res = new Staff(rs.getString("name"), 
-					rs.getString("phoneNo"), 
-					true, 
+			res = new Staff(rs.getString("name"), rs.getString("phoneNo"), rs.getBoolean("admin"),
 					rs.getString("staffNo"));
-			
+
 		} catch (SQLException e) {
 			throw new DataAccessException(DBMessages.COULD_NOT_READ_RESULTSET, e);
 		}
 
 		return res;
 	}
+
+	@Override
+	public int findStaffIdByNo(String staffNo) throws DataAccessException {
+		int foundStaffId = -1;
+		try {
+			findStaffByNoAndReturnIdPS.setString(1, staffNo);
+			ResultSet rs = findStaffByNoAndReturnIdPS.executeQuery();
+			if (rs.next()) {
+				foundStaffId = rs.getInt(1);
+			}
+		} catch (SQLException e) {
+			throw new DataAccessException(DBMessages.COULD_NOT_BIND_OR_EXECUTE_QUERY, e);
+		}
+		return foundStaffId;
+	}
+
+//	private int getId(ResultSet rs) throws DataAccessException {
+//		int res = -1;
+//		try {
+//			res = rs.getInt("id");
+//		} catch (SQLException e) {
+//			throw new DataAccessException(DBMessages.COULD_NOT_READ_RESULTSET, e);
+//		}
+//
+//		return res;
+//	}
 
 }

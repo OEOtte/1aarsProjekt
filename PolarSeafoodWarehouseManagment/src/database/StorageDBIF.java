@@ -1,6 +1,7 @@
 package database;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 import controller.DataAccessException;
 import model.Lot;
@@ -17,6 +18,10 @@ public interface StorageDBIF {
 	public Warehouse findWarehouseByName(String warehouseName) throws DataAccessException;
 	
 	public String findAddress(int addressId) throws DataAccessException;
+	
+	public ArrayList<Product> findProducts(String prod) throws DataAccessException;
+	
+	public void removeProduct(Product prod) throws DataAccessException;
 
 
 }

@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import controller.DataAccessException;
 import database.DBConnection;
@@ -19,6 +20,8 @@ public class ProductDB implements ProductDBIF {
 
 	private static final String FIND_BY_BARCODE_Q = "SELECT * FROM Product LEFT OUTER JOIN BoxedProduct ON Product.id = BoxedProduct.product_id WHERE barcode = ? or parentBarcode = ?;";
 	private PreparedStatement findByBarcodePS;
+	
+
 
 	public ProductDB() throws DataAccessException {
 		init();
@@ -81,5 +84,6 @@ public class ProductDB implements ProductDBIF {
 
 		return res;
 	}
-
+	
+	
 }

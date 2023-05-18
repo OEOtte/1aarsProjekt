@@ -1,6 +1,7 @@
 package controller;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 import database.StorageDB;
 import database.StorageDBIF;
@@ -32,5 +33,15 @@ public class StorageCtrl {
 		StorageDBIF storageDBIF = new StorageDB();
 		Warehouse warehouse = storageDBIF.findWarehouseByName(name);
 		return warehouse;
+	}
+	
+	public ArrayList<Product> findProduct(String prod) throws DataAccessException {
+		StorageDBIF storageDBIF = new StorageDB();
+		return storageDBIF.findProducts(prod);
+	}
+	
+	public void removeProduct(Product prod) throws DataAccessException {
+		StorageDBIF storageDBIF = new StorageDB();
+		storageDBIF.removeProduct(prod);
 	}
 }

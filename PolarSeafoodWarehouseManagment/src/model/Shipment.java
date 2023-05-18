@@ -14,7 +14,7 @@ public class Shipment {
 	private LocalDate disbatchDate;
 	private int totalWeight;
 	private int amountOfDifferentProduct;
-	private String shipmentNo;
+	private int shipmentNo;
 	private List<ShipmentLine> shipmentLines;
 
 	public Shipment(List<Staff> staffs, Freight freight, Warehouse warehouse) {
@@ -30,21 +30,21 @@ public class Shipment {
 		if (shipmentLines == null) {
 			shipmentLines = new ArrayList<>();
 		}
-
-		for (int i = 0; i < shipmentLines.size(); i++) {
-			if (shipmentLines.get(i).getProduct().equals(product)) {
-				shipmentLines.get(i).increaseQty(quantity);
-				totalWeight += quantity * product.getWeight();
-				res = shipmentLines.get(i);
+		if (quantity > 0) {
+			for (int i = 0; i < shipmentLines.size(); i++) {
+				if (shipmentLines.get(i).getProduct().getBarcode().equals(product.getBarcode())) {
+					shipmentLines.get(i).increaseQty(quantity);
+					totalWeight += (quantity * product.getWeight());
+					res = shipmentLines.get(i);
+				}
+			}
+			if (res == null) {
+				res = new ShipmentLine(product, quantity);
+				shipmentLines.add(res);
+				amountOfDifferentProduct++;
+				totalWeight += (quantity * product.getWeight());
 			}
 		}
-		if (res == null) {
-			res = new ShipmentLine(product, quantity);
-			shipmentLines.add(res);
-			amountOfDifferentProduct++;
-			totalWeight += quantity * product.getWeight();
-		}
-
 		return res;
 	}
 
@@ -112,11 +112,11 @@ public class Shipment {
 		this.amountOfDifferentProduct = amountOfDifferentProduct;
 	}
 
-	public String getShipmentNo() {
+	public int getShipmentNo() {
 		return shipmentNo;
 	}
 
-	public void setShipmentNo(String shipmentNo) {
+	public void setShipmentNo(int shipmentNo) {
 		this.shipmentNo = shipmentNo;
 	}
 

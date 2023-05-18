@@ -6,12 +6,15 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 import controller.DataAccessException;
 import database.*;
+import model.BoxedProduct;
 import model.Lot;
 import model.LotLine;
 import model.Product;
+import model.Supplier;
 import model.Warehouse;
 
 public class StorageDB implements StorageDBIF {
@@ -39,7 +42,13 @@ public class StorageDB implements StorageDBIF {
 
 	private static final String FIND_ADDRESS_WITH_FULL_ASSOSIATION_FROM_ADDRESS_Q = "Select * from Address_view where id = ?";
 	private PreparedStatement findAddressWithFullAssosiationFromAddressPS;
-
+	
+	private static final String FIND_PRODCUTS_IN_WAREHOUSE_BY_PARTIAL_NAME_Q = "SELECT * FROM Product LEFT OUTER JOIN BoxedProduct ON Product.id = BoxedProduct.product_id Where name LIKE ?";
+	private PreparedStatement findProductsInWarehouseByPartialNamePS;
+	
+	private static final String REMOVE_PRODUCT_FROM_LOT_Q = "SELECT * FROM  LEFT OUTER JOIN BoxedProduct ON Product.id = BoxedProduct.product_id Where name = ?";
+	private PreparedStatement removeProductFromLotPS;
+	
 	public StorageDB() throws DataAccessException {
 		init();
 	}
@@ -208,5 +217,64 @@ public class StorageDB implements StorageDBIF {
 		}
 
 		return warehouse;
+	}
+	
+	@Override
+	public ArrayList<Product> findProducts(String prod) throws DataAccessException{
+		ArrayList<Product> res = new ArrayList<>();
+		Product foundProduct = null;
+		try {
+			findProductsInWarehouseByPartialNamePS.setString(1, prod);
+			ResultSet rs = findProductsInWarehouseByPartialNamePS.executeQuery();
+			for(int i = 0; i > rs.getFetchSize(); i++) {
+				if(rs.next()) {
+					foundProduct = buildObject(rs);
+					res.add(foundProduct);
+				}
+			}
+			
+		} catch (SQLException e) {
+			throw new DataAccessException(DBMessages.COULD_NOT_BIND_OR_EXECUTE_QUERY, e);
+		}
+		
+		
+		
+		return res;
+	}
+	
+	@Override
+	public void removeProduct(Product prod) {
+		
+	}
+	
+	private Product buildObject(ResultSet rs) throws DataAccessException {
+		Product res = null;
+		try {
+			String type = rs.getString("type").toLowerCase();
+
+			switch (type) {
+			case ("product"):
+				res = new Product(rs.getInt("id"), rs.getString("productName"), rs.getString("itemNumber"),
+						rs.getString("barcode"), rs.getInt("percentOfGlaze"), rs.getString("description"),
+						rs.getDouble("weight"), rs.getInt("minStock"), rs.getBoolean("priority"),
+						rs.getInt("countryOfOrigin_Id"), new Supplier(rs.getInt("supplier_id")));
+
+				break;
+			case ("boxedproduct"):
+				res = new BoxedProduct(rs.getInt("id"), rs.getString("productName"), rs.getString("itemNumber"),
+						rs.getString("barcode"), rs.getInt("percentOfGlaze"), rs.getString("description"),
+						rs.getDouble("weight"), rs.getInt("minStock"), rs.getBoolean("priority"),
+						rs.getInt("countryOfOrigin_Id"), new Supplier(rs.getInt("supplier_id")),
+						rs.getInt("quantityInBox"), rs.getString("parentBarcode"));
+
+				break;
+			default:
+			}
+
+		} catch (SQLException e) {
+			throw new DataAccessException(DBMessages.COULD_NOT_READ_RESULTSET, e);
+		}
+
+		return res;
 	}
 }

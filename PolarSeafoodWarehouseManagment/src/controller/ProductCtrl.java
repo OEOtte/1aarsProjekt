@@ -1,5 +1,7 @@
 package controller;
 
+import java.util.ArrayList;
+
 import controller.DataAccessException;
 import database.ProductDB;
 import database.ProductDBIF;
@@ -22,4 +24,6 @@ public class ProductCtrl {
 		res = product.addLotLine(lotLine);
 		return res;
 	}
+	
+
 }
