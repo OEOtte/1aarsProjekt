@@ -32,7 +32,7 @@ public class Shipment {
 		}
 		if (quantity > 0) {
 			for (int i = 0; i < shipmentLines.size(); i++) {
-				if (shipmentLines.get(i).getProduct().equals(product)) {
+				if (shipmentLines.get(i).getProduct().getBarcode().equals(product.getBarcode())) {
 					shipmentLines.get(i).increaseQty(quantity);
 					totalWeight += (quantity * product.getWeight());
 					res = shipmentLines.get(i);
