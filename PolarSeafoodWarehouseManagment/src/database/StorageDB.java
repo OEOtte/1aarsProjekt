@@ -242,6 +242,11 @@ public class StorageDB implements StorageDBIF {
 		return res;
 	}
 	
+	@Override
+	public void removeProduct(Product prod) {
+		
+	}
+	
 	private Product buildObject(ResultSet rs) throws DataAccessException {
 		Product res = null;
 		try {
