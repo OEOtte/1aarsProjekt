@@ -1,5 +1,7 @@
 package test;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,46 +13,42 @@ import controller.DataAccessException;
 import controller.ShipmentCtrl;
 import database.ShipmentDB;
 import database.ShipmentDBIF;
-import model.Shipment;
 
 class PersistShipmentTest {
-	
+
 	private ShipmentCtrl sc;
 	private LocalDate date;
-	
-	
+	private ShipmentDBIF SDB;
+	private int before;
+
 	@BeforeEach
 	void setUp() throws Exception {
-		//sc = new ShipmentCtrl();
+		SDB = new ShipmentDB();
+		before = SDB.getLatestShipmentNo();
 	}
-	
+
 	@Test
 	void testPersistShipmentWithValidInfo() throws DataAccessException {
-		//Arrange
+		// Arrange
 		sc = new ShipmentCtrl();
 		String freightNo = "9999";
 		List<String> staffNos = new ArrayList<>();
 		staffNos.add("5555");
 		String warehouseName = "PSU1";
-		
 		String productBarcode = "4820226000099";
 		int productQty = 500;
 		LocalDate date = LocalDate.now();
-				
-		//Act
+		
+		
+		// Act
 		sc.createShipment(staffNos, freightNo, warehouseName);
-		
 		sc.scanProduct(productQty, productBarcode, date);
-		
-//		Shipment shipment = sc.getCurrentShipment();
-//		shipment.setShipmentNo("5555");
-		
 		sc.confirmShipment();
-		//Assert
+		int after = SDB.getLatestShipmentNo();
 		
-		
+		// Assert
+		assertTrue((before + 1) == after);
+
 	}
-		
+
 }
-
-
