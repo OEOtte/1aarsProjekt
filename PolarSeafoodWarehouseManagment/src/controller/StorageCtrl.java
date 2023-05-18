@@ -1,6 +1,7 @@
 package controller;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 import database.StorageDB;
 import database.StorageDBIF;
@@ -32,5 +33,14 @@ public class StorageCtrl {
 		StorageDBIF storageDBIF = new StorageDB();
 		Warehouse warehouse = storageDBIF.findWarehouseByName(name);
 		return warehouse;
+	}
+	
+	public ArrayList<Product> findProduct(String prod) throws DataAccessException {
+		ProductCtrl productCtrl = new ProductCtrl();
+		return productCtrl.findProducts(prod);
+	}
+	
+	public void removeProduct(String barcode) {
+		
 	}
 }
