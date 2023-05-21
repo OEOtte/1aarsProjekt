@@ -2,6 +2,7 @@ package database;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 
 import controller.DataAccessException;
 import model.Lot;
@@ -19,9 +20,9 @@ public interface StorageDBIF {
 	
 	public String findAddress(int addressId) throws DataAccessException;
 	
-	public ArrayList<LotLine> findAvailableProductsInWarehouse(int prod, int quantity) throws DataAccessException;
+	public List<LotLine> findAvailableProductsInWarehouse(Product product, int quantity, String warehouseName) throws DataAccessException;
 	
-	public void removeProduct(Product prod) throws DataAccessException;
+	public boolean removalOfProductInWarehouseWithQuantity(Product product, int quantity, String warehouseName) throws DataAccessException;
 
 
 }

@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 
 import controller.DataAccessException;
 import database.*;
@@ -42,13 +43,16 @@ public class StorageDB implements StorageDBIF {
 
 	private static final String FIND_ADDRESS_WITH_FULL_ASSOSIATION_FROM_ADDRESS_Q = "Select * from Address_view where id = ?";
 	private PreparedStatement findAddressWithFullAssosiationFromAddressPS;
-	
-	private static final String FIND_PRODUCTS_IN_WAREHOUSE_BY_ID_Q = "SELECT * FROM LotLine Where product_id = ? ORDER BY expirationDate DESC ";
+
+	private static final String FIND_PRODUCTS_IN_WAREHOUSE_BY_ID_Q = "SELECT LotLine.* FROM LotLine INNER JOIN Lot ON LotLine.lot_id = Lot.id WHERE LotLine.product_id = ? AND Lot.warehouse_id = ? ORDER BY LotLine.expirationDate DESC; ";
 	private PreparedStatement findProductsInWarehouseByIdPS;
-	
+
 	private static final String REMOVE_PRODUCT_FROM_LOT_Q = "REMOVE * FROM LotLine WHERE id = ?";
 	private PreparedStatement removeProductFromLotPS;
-	
+
+	private static final String FIND_LOT_FROM_ID_Q = "Select * from Lot where id = ?";
+	private PreparedStatement findLotFromIdPS;
+
 	public StorageDB() throws DataAccessException {
 		init();
 	}
@@ -70,6 +74,7 @@ public class StorageDB implements StorageDBIF {
 					.prepareStatement(FIND_ADDRESS_WITH_FULL_ASSOSIATION_FROM_ADDRESS_Q);
 			findProductsInWarehouseByIdPS = connection.prepareStatement(FIND_PRODUCTS_IN_WAREHOUSE_BY_ID_Q);
 			removeProductFromLotPS = connection.prepareStatement(REMOVE_PRODUCT_FROM_LOT_Q);
+			findLotFromIdPS = connection.prepareStatement(FIND_LOT_FROM_ID_Q);
 
 		} catch (SQLException e) {
 			throw new DataAccessException(DBMessages.COULD_NOT_PREPARE_STATEMENT, e);
@@ -220,45 +225,69 @@ public class StorageDB implements StorageDBIF {
 
 		return warehouse;
 	}
-	
+
 	@Override
-	public ArrayList<LotLine> findAvailableProductsInWarehouse(int prod, int quantity) throws DataAccessException{
-		ArrayList<LotLine> res = new ArrayList<>();
+	public List<LotLine> findAvailableProductsInWarehouse(Product product, int quantity, String warehouseName)
+			throws DataAccessException {
+		List<LotLine> res = new ArrayList<LotLine>();
+		Warehouse currentWarehouse = findWarehouseByName(warehouseName);
 		LotLine foundLotLine = null;
-		int desiredAmount = 0;
+
 		try {
-			findProductsInWarehouseByIdPS.setInt(1, prod);
+			findProductsInWarehouseByIdPS.setInt(1, product.getId());
+			findProductsInWarehouseByIdPS.setInt(2, currentWarehouse.getId());
 			ResultSet rs = findProductsInWarehouseByIdPS.executeQuery();
-			
-			for(int i = 0; i > rs.getFetchSize() && desiredAmount > quantity; i++) {
-				if(rs.next()) {
-					foundLotLine = builLotLine(rs);
-					desiredAmount += foundLotLine.getQuantity();
-					res.add(foundLotLine);
-				}
+
+			// GOOD IMPLEMENTATION? 
+			while (rs.next() && quantity != 0) {
+				foundLotLine = buildLotLine(rs, product, currentWarehouse);
+				//Make it save the new updated quantity on lotline object
+				quantity -= foundLotLine.getQuantity();
+				
+				res.add(foundLotLine);
 			}
-			
+
 		} catch (SQLException e) {
 			throw new DataAccessException(DBMessages.COULD_NOT_BIND_OR_EXECUTE_QUERY, e);
 		}
-		
-		
-		
+
 		return res;
 	}
-	
 
-	private LotLine builLotLine(ResultSet rs) {
-		LotLine res = new LotLine(rs.getInt("id"), rs.getInt("quantity"), rs.get);
-		
-		
-		return null;
+	private LotLine buildLotLine(ResultSet rs, Product product, Warehouse warehouse) throws DataAccessException {
+
+		LotLine res = null;
+		try {
+			res = new LotLine(product, rs.getInt("quantity"), rs.getDate("expirationDate").toLocalDate(),
+					findLotFromID(rs.getInt("lot_id"), warehouse));
+		} catch (SQLException e) {
+			throw new DataAccessException(DBMessages.COULD_NOT_READ_RESULTSET, e);
+		}
+		return res;
 	}
 
+	private Lot findLotFromID(int id, Warehouse warehouse) throws DataAccessException {
+		Lot res = null;
+
+		try {
+			findLotFromIdPS.setInt(1, id);
+			ResultSet rs = findLotFromIdPS.executeQuery();
+
+			if (rs.next()) {
+				res = buildLot(rs, warehouse);
+			}
+		} catch (SQLException e) {
+			throw new DataAccessException(DBMessages.COULD_NOT_BIND_OR_EXECUTE_QUERY, e);
+		}
+		return res;
+	}
+
+	//UPDATE method
 	@Override
-	public void removeProduct(Product prod) {
-		
+	public boolean removalOfProductInWarehouseWithQuantity(Product product, int quantity, String warehouseName)
+			throws DataAccessException {
+		// TODO Auto-generated method stub
+		return false;
 	}
-	
-	
+
 }

@@ -2,6 +2,7 @@ package controller;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 
 import database.ProductDBIF;
 import database.StorageDB;
@@ -11,6 +12,7 @@ import model.*;
 public class StorageCtrl {
 
 	private StorageDBIF storageDBIF;
+	private ProductCtrl productCtrl;
 
 	public LotLine findAvailableLotByPriorityForProductInArrivalWarehouse(Product product, int quantity, LocalDate date,
 			Warehouse warehouse) throws DataAccessException {
@@ -30,23 +32,33 @@ public class StorageCtrl {
 	}
 
 	public Warehouse findWarehouseByName(String name) throws DataAccessException {
-		StorageDBIF storageDBIF = new StorageDB();
+		if (storageDBIF == null) {
+			storageDBIF = new StorageDB();
+		}
 		Warehouse warehouse = storageDBIF.findWarehouseByName(name);
 		return warehouse;
 	}
 
-	public ArrayList<Product> findProduct(String prod) throws DataAccessException {
-		ProductCtrl prodCtrl = new ProductCtrl();
-		return prodCtrl.findProducts(prod);
-	}
-	
-	public ArrayList<LotLine> findAvailableProductInWarehouse(int prod, int quantity) throws DataAccessException {
-		StorageDBIF storageDBIF = new StorageDB();
-		return storageDBIF.findAvailableProductsInWarehouse(prod, quantity);
+	public List<Product> findProductsByPartialName(String productName) throws DataAccessException {
+		if (productCtrl == null) {
+			productCtrl = new ProductCtrl();
+		}
+		return productCtrl.findProductsByPartialName(productName);
 	}
 
-	public void removeProduct(Product prod) throws DataAccessException {
-		StorageDBIF storageDBIF = new StorageDB();
-		storageDBIF.removeProduct(prod);
+	public List<LotLine> findAvailableProductInWarehouse(Product product, int quantity, String warehouseName) throws DataAccessException {
+		if (storageDBIF == null) {
+			storageDBIF = new StorageDB();
+		}
+		return storageDBIF.findAvailableProductsInWarehouse(product, quantity, warehouseName);
+	}
+
+	public boolean confirmRemovalOfProductInWarehouse(Product product, String warehouseName, int quantity) throws DataAccessException {
+		if (storageDBIF == null) {
+			storageDBIF = new StorageDB();
+		}
+		boolean res = storageDBIF.removalOfProductInWarehouseWithQuantity(product, quantity, warehouseName);
+	
+		return res;
 	}
 }
