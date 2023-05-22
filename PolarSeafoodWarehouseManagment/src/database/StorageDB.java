@@ -288,7 +288,6 @@ public class StorageDB implements StorageDBIF {
 		return res;
 	}
 
-	// UPDATE method
 	@Override
 	public boolean removalOfProductInWarehouse(List<LotLine> lotLines) throws DataAccessException {
 		boolean res = true;
