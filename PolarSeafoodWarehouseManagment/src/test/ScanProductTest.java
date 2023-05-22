@@ -44,7 +44,7 @@ class ScanProductTest {
 		sc.scanProduct(1, "4820226000082", expiryDate);
 		
 		// assert
-		assertEquals(sc.getCurrentShipment().getAmountOfDifferentProduct() , 1);
+		assertEquals(sc.getCurrentShipment().getShipmentLines().get(0).getProduct().getBarcode() , "4820226000082");
 	}
 
 	@Test
