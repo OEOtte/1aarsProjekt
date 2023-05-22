@@ -49,6 +49,21 @@ public class Main {
 //		StaffDBIF s = new StaffDB();
 //		int i = s.findStaffIdByNo("5555");
 //		System.out.println(i);
+		
+//		
+//		ProductCtrl pc = new ProductCtrl();
+//		List<Product> p = pc.findProductsByPartialName("tuna");
+//		Product cp = null;
+//		for(Product ps : p) {
+//			cp = ps;
+//			System.out.println(ps.toString());
+//		}
+//		
+//		StorageCtrl sc = new StorageCtrl();
+//		sc.confirmRemovalOfProductInWarehouse(sc.findAvailableProductInWarehouse(cp,200, "PSU1"));
+//		
+//		
+		
 	}
 }
  

@@ -231,7 +231,7 @@ public class StorageDB implements StorageDBIF {
 	}
 
 	@Override
-	public List<LotLine> findAvailableProductsInWarehouse(Product product, int quantity, String warehouseName)
+	public List<LotLine> findAvailableProductsInWarehouseAndPrepareToRemove(Product product, int quantity, String warehouseName)
 			throws DataAccessException {
 		List<LotLine> res = new ArrayList<LotLine>();
 		Warehouse currentWarehouse = findWarehouseByName(warehouseName);

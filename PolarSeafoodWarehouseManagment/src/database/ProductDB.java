@@ -22,7 +22,7 @@ public class ProductDB implements ProductDBIF {
 	private static final String FIND_BY_BARCODE_Q = "SELECT * FROM Product LEFT OUTER JOIN BoxedProduct ON Product.id = BoxedProduct.product_id WHERE barcode = ? or parentBarcode = ?;";
 	private PreparedStatement findByBarcodePS;
 
-	private static final String FIND_BY_PARTIAL_NAME_Q = "SELECT * FROM Product LEFT OUTER JOIN BoxedProduct ON Product.id = BoxedProduct.product_id WHERE productName LIKE %?%";
+	private static final String FIND_BY_PARTIAL_NAME_Q = "SELECT * FROM Product LEFT OUTER JOIN BoxedProduct ON Product.id = BoxedProduct.product_id WHERE productName LIKE ?;";
 	private PreparedStatement findByPartialNamePS;
 
 	public ProductDB() throws DataAccessException {
@@ -91,9 +91,9 @@ public class ProductDB implements ProductDBIF {
 	@Override
 	public List<Product> findProductByPartialName(String productName) throws DataAccessException {
 		List<Product> products = new ArrayList<>();
-		Product foundProduct = null;
+		Product foundProduct;
 		try {
-			findByPartialNamePS.setString(1, productName);
+			findByPartialNamePS.setString(1, "%" + productName + "%");
 			ResultSet rs = findByPartialNamePS.executeQuery();
 			while (rs.next()) {
 				foundProduct = buildObject(rs);

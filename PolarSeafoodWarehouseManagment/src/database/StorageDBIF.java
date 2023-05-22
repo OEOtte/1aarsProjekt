@@ -20,7 +20,7 @@ public interface StorageDBIF {
 	
 	public String findAddress(int addressId) throws DataAccessException;
 	
-	public List<LotLine> findAvailableProductsInWarehouse(Product product, int quantity, String warehouseName) throws DataAccessException;
+	public List<LotLine> findAvailableProductsInWarehouseAndPrepareToRemove(Product product, int quantity, String warehouseName) throws DataAccessException;
 	
 	public boolean removalOfProductInWarehouse(List<LotLine> lotLines) throws DataAccessException;
 
