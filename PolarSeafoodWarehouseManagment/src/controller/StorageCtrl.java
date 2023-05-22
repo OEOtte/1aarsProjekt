@@ -53,11 +53,11 @@ public class StorageCtrl {
 		return storageDBIF.findAvailableProductsInWarehouse(product, quantity, warehouseName);
 	}
 
-	public boolean confirmRemovalOfProductInWarehouse(Product product, String warehouseName, int quantity) throws DataAccessException {
+	public boolean confirmRemovalOfProductInWarehouse(List<LotLine> lotLines) throws DataAccessException {
 		if (storageDBIF == null) {
 			storageDBIF = new StorageDB();
 		}
-		boolean res = storageDBIF.removalOfProductInWarehouseWithQuantity(product, quantity, warehouseName);
+		boolean res = storageDBIF.removalOfProductInWarehouse(lotLines);
 	
 		return res;
 	}

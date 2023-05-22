@@ -22,7 +22,7 @@ public interface StorageDBIF {
 	
 	public List<LotLine> findAvailableProductsInWarehouse(Product product, int quantity, String warehouseName) throws DataAccessException;
 	
-	public boolean removalOfProductInWarehouseWithQuantity(Product product, int quantity, String warehouseName) throws DataAccessException;
+	public boolean removalOfProductInWarehouse(List<LotLine> lotLines) throws DataAccessException;
 
 
 }

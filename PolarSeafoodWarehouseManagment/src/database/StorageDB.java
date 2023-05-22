@@ -47,11 +47,14 @@ public class StorageDB implements StorageDBIF {
 	private static final String FIND_PRODUCTS_IN_WAREHOUSE_BY_ID_Q = "SELECT LotLine.* FROM LotLine INNER JOIN Lot ON LotLine.lot_id = Lot.id WHERE LotLine.product_id = ? AND Lot.warehouse_id = ? ORDER BY LotLine.expirationDate DESC; ";
 	private PreparedStatement findProductsInWarehouseByIdPS;
 
-	private static final String REMOVE_PRODUCT_FROM_LOT_Q = "REMOVE * FROM LotLine WHERE id = ?";
-	private PreparedStatement removeProductFromLotPS;
-
 	private static final String FIND_LOT_FROM_ID_Q = "Select * from Lot where id = ?";
 	private PreparedStatement findLotFromIdPS;
+
+	private static final String REMOVE_LOT_LINE_FROM_DATBASE_WITH_IDS_Q = "Delete from LotLine where product_id = ? and lot_id = ?;";
+	private PreparedStatement removeLotLineFromDatabaseWithIdsPS;
+
+	private static final String UPDATE_QUANTITY_ON_LOTLINE_Q = "Update LotLine set quantity = ? where product_id = ? and lot_id = ?;";
+	private PreparedStatement updateQuantityOnLotLinePS;
 
 	public StorageDB() throws DataAccessException {
 		init();
@@ -73,8 +76,9 @@ public class StorageDB implements StorageDBIF {
 			findAddressWithFullAssosiationFromAddressPS = connection
 					.prepareStatement(FIND_ADDRESS_WITH_FULL_ASSOSIATION_FROM_ADDRESS_Q);
 			findProductsInWarehouseByIdPS = connection.prepareStatement(FIND_PRODUCTS_IN_WAREHOUSE_BY_ID_Q);
-			removeProductFromLotPS = connection.prepareStatement(REMOVE_PRODUCT_FROM_LOT_Q);
+			removeLotLineFromDatabaseWithIdsPS = connection.prepareStatement(REMOVE_LOT_LINE_FROM_DATBASE_WITH_IDS_Q);
 			findLotFromIdPS = connection.prepareStatement(FIND_LOT_FROM_ID_Q);
+			updateQuantityOnLotLinePS = connection.prepareStatement(UPDATE_QUANTITY_ON_LOTLINE_Q);
 
 		} catch (SQLException e) {
 			throw new DataAccessException(DBMessages.COULD_NOT_PREPARE_STATEMENT, e);
@@ -238,19 +242,21 @@ public class StorageDB implements StorageDBIF {
 			findProductsInWarehouseByIdPS.setInt(2, currentWarehouse.getId());
 			ResultSet rs = findProductsInWarehouseByIdPS.executeQuery();
 
-			// GOOD IMPLEMENTATION? 
 			while (rs.next() && quantity != 0) {
 				foundLotLine = buildLotLine(rs, product, currentWarehouse);
-				//Make it save the new updated quantity on lotline object
-				quantity -= foundLotLine.getQuantity();
-				
+				if (quantity >= foundLotLine.getQuantity()) {
+					foundLotLine.setRemovedQty(foundLotLine.getQuantity());
+					quantity -= foundLotLine.getQuantity();
+				} else if (quantity < foundLotLine.getQuantity()) {
+					foundLotLine.setRemovedQty(quantity);
+					quantity = 0;
+				}
 				res.add(foundLotLine);
 			}
 
 		} catch (SQLException e) {
 			throw new DataAccessException(DBMessages.COULD_NOT_BIND_OR_EXECUTE_QUERY, e);
 		}
-
 		return res;
 	}
 
@@ -282,12 +288,34 @@ public class StorageDB implements StorageDBIF {
 		return res;
 	}
 
-	//UPDATE method
+	// UPDATE method
 	@Override
-	public boolean removalOfProductInWarehouseWithQuantity(Product product, int quantity, String warehouseName)
-			throws DataAccessException {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean removalOfProductInWarehouse(List<LotLine> lotLines) throws DataAccessException {
+		boolean res = true;
+		try {
+			DBConnection.getInstance().startTransaction();
+
+			for (LotLine ll : lotLines) {
+				if (ll.getQuantity() == ll.getRemovedQty()) {
+					removeLotLineFromDatabaseWithIdsPS.setInt(1, ll.getProduct().getId());
+					removeLotLineFromDatabaseWithIdsPS.setInt(2, ll.getLot().getId());
+					removeLotLineFromDatabaseWithIdsPS.executeUpdate();
+				} else {
+					int leftQty = ll.getQuantity() - ll.getRemovedQty();
+					updateQuantityOnLotLinePS.setInt(1, leftQty);
+					updateQuantityOnLotLinePS.setInt(2, ll.getProduct().getId());
+					updateQuantityOnLotLinePS.setInt(3, ll.getLot().getId());
+					updateQuantityOnLotLinePS.executeUpdate();
+				}
+			}
+			DBConnection.getInstance().commitTransaction();
+
+		} catch (SQLException e) {
+			DBConnection.getInstance().rollbackTransaction();
+			res = false;
+			throw new DataAccessException(DBMessages.COULD_NOT_BIND_OR_EXECUTE_QUERY, e);
+		}
+		return res;
 	}
 
 }
