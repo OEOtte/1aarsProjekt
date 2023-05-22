@@ -97,6 +97,11 @@ public class MainGui extends JFrame {
 		txtLot.setColumns(10);
 		
 		JButton btnRegisterShipment = new JButton("Register Shipment");
+		btnRegisterShipment.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				RegisterShipmentClicked();
+			}
+		});
 		btnRegisterShipment.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		GridBagConstraints gbc_btnRegisterShipment = new GridBagConstraints();
 		gbc_btnRegisterShipment.insets = new Insets(0, 0, 5, 0);
@@ -197,6 +202,11 @@ public class MainGui extends JFrame {
 		gbc_btnSearch.gridx = 1;
 		gbc_btnSearch.gridy = 3;
 		panel_2.add(btnSearch, gbc_btnSearch);
+	}
+
+	protected void RegisterShipmentClicked() {
+		PopUpRegisterShipment ps = new PopUpRegisterShipment();
+		ps.setVisible(true);
 	}
 
 }

@@ -8,6 +8,11 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import controller.DataAccessException;
+import controller.ShipmentCtrl;
+import model.ShipmentLine;
+
 import java.awt.BorderLayout;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
@@ -15,22 +20,30 @@ import java.awt.Insets;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import java.awt.Font;
+import javax.swing.JList;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+
+import java.awt.event.ActionListener;
+import java.time.LocalDate;
+import java.util.List;
+import java.awt.event.ActionEvent;
 
 public class RegisterShipmentGui extends JFrame {
 
 	private JPanel contentPane;
-	private JTextField textField;
-	private JTextField textField_1;
-	private JTextField textField_2;
-	private JTextField textField_3;
-	private JTextField textField_4;
-	private JTextField txtProductName;
+	private JTextField txtLot;
+	private JTextField txtProduct;
+	private JTextField txtWarehouse;
 	private JTextField txtBarcode;
 	private JTextField txtQuantity;
-	private JTextField txtExpira;
-	private JTextField textField_5;
-	private JTextField textField_6;
-	private JTextField textField_7;
+	private ShipmentCtrl sc;
+	private ShipmentListTableModel sltm;
+	private List<ShipmentLine> sl;
+	private JTable tblShipmentLine;
+	private JTextField txtYear;
+	private JTextField txtMonth;
+	private JTextField txtDay;
 
 	/**
 	 * Launch the application.
@@ -53,7 +66,7 @@ public class RegisterShipmentGui extends JFrame {
 	 */
 	public RegisterShipmentGui() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 597, 531);
+		setBounds(100, 100, 685, 507);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -80,9 +93,9 @@ public class RegisterShipmentGui extends JFrame {
 		JPanel panel_1 = new JPanel();
 		contentPane.add(panel_1, BorderLayout.CENTER);
 		GridBagLayout gbl_panel_1 = new GridBagLayout();
-		gbl_panel_1.columnWidths = new int[]{49, 66, 52, 0, 115, 38, 85, 32, 105, 25, 0};
-		gbl_panel_1.rowHeights = new int[]{37, 0, 0, 0, 54, 0, 0, 0, 0};
-		gbl_panel_1.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, Double.MIN_VALUE};
+		gbl_panel_1.columnWidths = new int[]{49, 66, 52, 0, 115, 47, 60, 32, 49, 57, 41, 0};
+		gbl_panel_1.rowHeights = new int[]{22, 0, 0, 0, 34, 0, 0, 29, 0};
+		gbl_panel_1.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 1.0, 1.0, Double.MIN_VALUE};
 		gbl_panel_1.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		panel_1.setLayout(gbl_panel_1);
 		
@@ -94,31 +107,15 @@ public class RegisterShipmentGui extends JFrame {
 		gbc_lot.gridy = 1;
 		panel_1.add(lot, gbc_lot);
 		
-		textField = new JTextField();
-		GridBagConstraints gbc_textField = new GridBagConstraints();
-		gbc_textField.insets = new Insets(0, 0, 5, 5);
-		gbc_textField.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textField.gridx = 2;
-		gbc_textField.gridy = 1;
-		panel_1.add(textField, gbc_textField);
-		textField.setColumns(10);
-		
-		JLabel freight = new JLabel("Freight:");
-		GridBagConstraints gbc_freight = new GridBagConstraints();
-		gbc_freight.anchor = GridBagConstraints.EAST;
-		gbc_freight.insets = new Insets(0, 0, 5, 5);
-		gbc_freight.gridx = 5;
-		gbc_freight.gridy = 1;
-		panel_1.add(freight, gbc_freight);
-		
-		textField_3 = new JTextField();
-		GridBagConstraints gbc_textField_3 = new GridBagConstraints();
-		gbc_textField_3.insets = new Insets(0, 0, 5, 5);
-		gbc_textField_3.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textField_3.gridx = 7;
-		gbc_textField_3.gridy = 1;
-		panel_1.add(textField_3, gbc_textField_3);
-		textField_3.setColumns(10);
+		txtLot = new JTextField();
+		GridBagConstraints gbc_txtLot = new GridBagConstraints();
+		gbc_txtLot.gridwidth = 2;
+		gbc_txtLot.insets = new Insets(0, 0, 5, 5);
+		gbc_txtLot.fill = GridBagConstraints.BOTH;
+		gbc_txtLot.gridx = 2;
+		gbc_txtLot.gridy = 1;
+		panel_1.add(txtLot, gbc_txtLot);
+		txtLot.setColumns(10);
 		
 		JLabel product = new JLabel("Product:");
 		GridBagConstraints gbc_product = new GridBagConstraints();
@@ -128,31 +125,15 @@ public class RegisterShipmentGui extends JFrame {
 		gbc_product.gridy = 2;
 		panel_1.add(product, gbc_product);
 		
-		textField_1 = new JTextField();
-		GridBagConstraints gbc_textField_1 = new GridBagConstraints();
-		gbc_textField_1.insets = new Insets(0, 0, 5, 5);
-		gbc_textField_1.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textField_1.gridx = 2;
-		gbc_textField_1.gridy = 2;
-		panel_1.add(textField_1, gbc_textField_1);
-		textField_1.setColumns(10);
-		
-		JLabel staff = new JLabel("Staff:");
-		GridBagConstraints gbc_staff = new GridBagConstraints();
-		gbc_staff.insets = new Insets(0, 0, 5, 5);
-		gbc_staff.anchor = GridBagConstraints.EAST;
-		gbc_staff.gridx = 5;
-		gbc_staff.gridy = 2;
-		panel_1.add(staff, gbc_staff);
-		
-		textField_4 = new JTextField();
-		GridBagConstraints gbc_textField_4 = new GridBagConstraints();
-		gbc_textField_4.insets = new Insets(0, 0, 5, 5);
-		gbc_textField_4.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textField_4.gridx = 7;
-		gbc_textField_4.gridy = 2;
-		panel_1.add(textField_4, gbc_textField_4);
-		textField_4.setColumns(10);
+		txtProduct = new JTextField();
+		GridBagConstraints gbc_txtProduct = new GridBagConstraints();
+		gbc_txtProduct.gridwidth = 2;
+		gbc_txtProduct.insets = new Insets(0, 0, 5, 5);
+		gbc_txtProduct.fill = GridBagConstraints.HORIZONTAL;
+		gbc_txtProduct.gridx = 2;
+		gbc_txtProduct.gridy = 2;
+		panel_1.add(txtProduct, gbc_txtProduct);
+		txtProduct.setColumns(10);
 		
 		JLabel warehouse = new JLabel("Warehouse:");
 		GridBagConstraints gbc_warehouse = new GridBagConstraints();
@@ -162,14 +143,15 @@ public class RegisterShipmentGui extends JFrame {
 		gbc_warehouse.gridy = 3;
 		panel_1.add(warehouse, gbc_warehouse);
 		
-		textField_2 = new JTextField();
-		GridBagConstraints gbc_textField_2 = new GridBagConstraints();
-		gbc_textField_2.insets = new Insets(0, 0, 5, 5);
-		gbc_textField_2.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textField_2.gridx = 2;
-		gbc_textField_2.gridy = 3;
-		panel_1.add(textField_2, gbc_textField_2);
-		textField_2.setColumns(10);
+		txtWarehouse = new JTextField();
+		GridBagConstraints gbc_txtWarehouse = new GridBagConstraints();
+		gbc_txtWarehouse.gridwidth = 2;
+		gbc_txtWarehouse.insets = new Insets(0, 0, 5, 5);
+		gbc_txtWarehouse.fill = GridBagConstraints.HORIZONTAL;
+		gbc_txtWarehouse.gridx = 2;
+		gbc_txtWarehouse.gridy = 3;
+		panel_1.add(txtWarehouse, gbc_txtWarehouse);
+		txtWarehouse.setColumns(10);
 		
 		JLabel registerShipment = new JLabel("Register Shipment");
 		registerShipment.setFont(new Font("Tahoma", Font.BOLD, 12));
@@ -179,28 +161,32 @@ public class RegisterShipmentGui extends JFrame {
 		gbc_registerShipment.gridy = 5;
 		panel_1.add(registerShipment, gbc_registerShipment);
 		
-		JLabel productName = new JLabel("Product Name:");
-		GridBagConstraints gbc_productName = new GridBagConstraints();
-		gbc_productName.insets = new Insets(0, 0, 5, 5);
-		gbc_productName.anchor = GridBagConstraints.EAST;
-		gbc_productName.gridx = 1;
-		gbc_productName.gridy = 6;
-		panel_1.add(productName, gbc_productName);
+		JLabel lblNewLabel = new JLabel("Year");
+		GridBagConstraints gbc_lblNewLabel = new GridBagConstraints();
+		gbc_lblNewLabel.insets = new Insets(0, 0, 5, 5);
+		gbc_lblNewLabel.gridx = 8;
+		gbc_lblNewLabel.gridy = 5;
+		panel_1.add(lblNewLabel, gbc_lblNewLabel);
 		
-		txtProductName = new JTextField();
-		GridBagConstraints gbc_txtProductName = new GridBagConstraints();
-		gbc_txtProductName.insets = new Insets(0, 0, 5, 5);
-		gbc_txtProductName.fill = GridBagConstraints.HORIZONTAL;
-		gbc_txtProductName.gridx = 2;
-		gbc_txtProductName.gridy = 6;
-		panel_1.add(txtProductName, gbc_txtProductName);
-		txtProductName.setColumns(10);
+		JLabel lblNewLabel_1 = new JLabel("Month");
+		GridBagConstraints gbc_lblNewLabel_1 = new GridBagConstraints();
+		gbc_lblNewLabel_1.insets = new Insets(0, 0, 5, 5);
+		gbc_lblNewLabel_1.gridx = 9;
+		gbc_lblNewLabel_1.gridy = 5;
+		panel_1.add(lblNewLabel_1, gbc_lblNewLabel_1);
+		
+		JLabel lblNewLabel_2 = new JLabel("Day");
+		GridBagConstraints gbc_lblNewLabel_2 = new GridBagConstraints();
+		gbc_lblNewLabel_2.insets = new Insets(0, 0, 5, 0);
+		gbc_lblNewLabel_2.gridx = 10;
+		gbc_lblNewLabel_2.gridy = 5;
+		panel_1.add(lblNewLabel_2, gbc_lblNewLabel_2);
 		
 		JLabel Barcode = new JLabel("Barcode:");
 		GridBagConstraints gbc_Barcode = new GridBagConstraints();
 		gbc_Barcode.insets = new Insets(0, 0, 5, 5);
 		gbc_Barcode.anchor = GridBagConstraints.EAST;
-		gbc_Barcode.gridx = 3;
+		gbc_Barcode.gridx = 2;
 		gbc_Barcode.gridy = 6;
 		panel_1.add(Barcode, gbc_Barcode);
 		
@@ -238,16 +224,44 @@ public class RegisterShipmentGui extends JFrame {
 		gbc_expiryDate.gridy = 6;
 		panel_1.add(expiryDate, gbc_expiryDate);
 		
-		txtExpira = new JTextField();
-		GridBagConstraints gbc_txtExpira = new GridBagConstraints();
-		gbc_txtExpira.insets = new Insets(0, 0, 5, 5);
-		gbc_txtExpira.fill = GridBagConstraints.HORIZONTAL;
-		gbc_txtExpira.gridx = 8;
-		gbc_txtExpira.gridy = 6;
-		panel_1.add(txtExpira, gbc_txtExpira);
-		txtExpira.setColumns(10);
+		txtYear = new JTextField();
+		GridBagConstraints gbc_txtYear = new GridBagConstraints();
+		gbc_txtYear.insets = new Insets(0, 0, 5, 5);
+		gbc_txtYear.fill = GridBagConstraints.HORIZONTAL;
+		gbc_txtYear.gridx = 8;
+		gbc_txtYear.gridy = 6;
+		panel_1.add(txtYear, gbc_txtYear);
+		txtYear.setColumns(10);
+		
+		txtMonth = new JTextField();
+		GridBagConstraints gbc_txtMonth = new GridBagConstraints();
+		gbc_txtMonth.insets = new Insets(0, 0, 5, 5);
+		gbc_txtMonth.fill = GridBagConstraints.HORIZONTAL;
+		gbc_txtMonth.gridx = 9;
+		gbc_txtMonth.gridy = 6;
+		panel_1.add(txtMonth, gbc_txtMonth);
+		txtMonth.setColumns(10);
 		
 		JButton btnRegister = new JButton("Register");
+		btnRegister.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					RegisterShipmentClicked();
+				} catch (DataAccessException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
+		
+		txtDay = new JTextField();
+		GridBagConstraints gbc_txtDay = new GridBagConstraints();
+		gbc_txtDay.insets = new Insets(0, 0, 5, 0);
+		gbc_txtDay.fill = GridBagConstraints.HORIZONTAL;
+		gbc_txtDay.gridx = 10;
+		gbc_txtDay.gridy = 6;
+		panel_1.add(txtDay, gbc_txtDay);
+		txtDay.setColumns(10);
 		GridBagConstraints gbc_btnRegister = new GridBagConstraints();
 		gbc_btnRegister.insets = new Insets(0, 0, 0, 5);
 		gbc_btnRegister.gridx = 1;
@@ -257,87 +271,76 @@ public class RegisterShipmentGui extends JFrame {
 		JPanel panel_2 = new JPanel();
 		contentPane.add(panel_2, BorderLayout.SOUTH);
 		GridBagLayout gbl_panel_2 = new GridBagLayout();
-		gbl_panel_2.columnWidths = new int[]{0, 73, 84, 71, 75, 80, 77, 83, 0};
-		gbl_panel_2.rowHeights = new int[]{30, 0, 0, 0, 0};
-		gbl_panel_2.columnWeights = new double[]{0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
-		gbl_panel_2.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_panel_2.columnWidths = new int[]{332, 63, 0};
+		gbl_panel_2.rowHeights = new int[]{133, 0, 0};
+		gbl_panel_2.columnWeights = new double[]{1.0, 0.0, Double.MIN_VALUE};
+		gbl_panel_2.rowWeights = new double[]{1.0, 0.0, Double.MIN_VALUE};
 		panel_2.setLayout(gbl_panel_2);
 		
-		JLabel lblNewLabel = new JLabel("No. Pallet");
-		GridBagConstraints gbc_lblNewLabel = new GridBagConstraints();
-		gbc_lblNewLabel.insets = new Insets(0, 0, 5, 5);
-		gbc_lblNewLabel.gridx = 1;
-		gbc_lblNewLabel.gridy = 0;
-		panel_2.add(lblNewLabel, gbc_lblNewLabel);
+		JScrollPane scrollPane = new JScrollPane();
+		GridBagConstraints gbc_scrollPane = new GridBagConstraints();
+		gbc_scrollPane.insets = new Insets(0, 0, 5, 5);
+		gbc_scrollPane.fill = GridBagConstraints.BOTH;
+		gbc_scrollPane.gridx = 0;
+		gbc_scrollPane.gridy = 0;
+		panel_2.add(scrollPane, gbc_scrollPane);
 		
-		JLabel productbottom = new JLabel("Product");
-		GridBagConstraints gbc_productbottom = new GridBagConstraints();
-		gbc_productbottom.insets = new Insets(0, 0, 5, 5);
-		gbc_productbottom.gridx = 2;
-		gbc_productbottom.gridy = 0;
-		panel_2.add(productbottom, gbc_productbottom);
+		tblShipmentLine = new JTable();
+		scrollPane.setRowHeaderView(tblShipmentLine);
 		
-		JLabel barcodebottom = new JLabel("Barcode");
-		GridBagConstraints gbc_barcodebottom = new GridBagConstraints();
-		gbc_barcodebottom.insets = new Insets(0, 0, 5, 5);
-		gbc_barcodebottom.gridx = 3;
-		gbc_barcodebottom.gridy = 0;
-		panel_2.add(barcodebottom, gbc_barcodebottom);
+		JButton btnConfirm = new JButton("CONFIRM");
+		btnConfirm.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
 		
-		JLabel NoOfBoxes = new JLabel("No. of Boxes");
-		GridBagConstraints gbc_NoOfBoxes = new GridBagConstraints();
-		gbc_NoOfBoxes.insets = new Insets(0, 0, 5, 5);
-		gbc_NoOfBoxes.gridx = 4;
-		gbc_NoOfBoxes.gridy = 0;
-		panel_2.add(NoOfBoxes, gbc_NoOfBoxes);
-		
-		JLabel ExpirationDateBottom = new JLabel("Expiration Date");
-		GridBagConstraints gbc_ExpirationDateBottom = new GridBagConstraints();
-		gbc_ExpirationDateBottom.insets = new Insets(0, 0, 5, 5);
-		gbc_ExpirationDateBottom.gridx = 5;
-		gbc_ExpirationDateBottom.gridy = 0;
-		panel_2.add(ExpirationDateBottom, gbc_ExpirationDateBottom);
-		
-		JLabel Weight = new JLabel("Weight");
-		GridBagConstraints gbc_Weight = new GridBagConstraints();
-		gbc_Weight.insets = new Insets(0, 0, 5, 5);
-		gbc_Weight.gridx = 6;
-		gbc_Weight.gridy = 0;
-		panel_2.add(Weight, gbc_Weight);
-		
-		JLabel LotNo = new JLabel("Lot No.");
-		GridBagConstraints gbc_LotNo = new GridBagConstraints();
-		gbc_LotNo.insets = new Insets(0, 0, 5, 0);
-		gbc_LotNo.gridx = 7;
-		gbc_LotNo.gridy = 0;
-		panel_2.add(LotNo, gbc_LotNo);
-		
-		textField_5 = new JTextField();
-		GridBagConstraints gbc_textField_5 = new GridBagConstraints();
-		gbc_textField_5.insets = new Insets(0, 0, 5, 5);
-		gbc_textField_5.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textField_5.gridx = 1;
-		gbc_textField_5.gridy = 1;
-		panel_2.add(textField_5, gbc_textField_5);
-		textField_5.setColumns(10);
-		
-		textField_6 = new JTextField();
-		GridBagConstraints gbc_textField_6 = new GridBagConstraints();
-		gbc_textField_6.insets = new Insets(0, 0, 5, 5);
-		gbc_textField_6.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textField_6.gridx = 1;
-		gbc_textField_6.gridy = 2;
-		panel_2.add(textField_6, gbc_textField_6);
-		textField_6.setColumns(10);
-		
-		textField_7 = new JTextField();
-		GridBagConstraints gbc_textField_7 = new GridBagConstraints();
-		gbc_textField_7.insets = new Insets(0, 0, 0, 5);
-		gbc_textField_7.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textField_7.gridx = 1;
-		gbc_textField_7.gridy = 3;
-		panel_2.add(textField_7, gbc_textField_7);
-		textField_7.setColumns(10);
+		JButton btnCancel = new JButton("CANCEL");
+		btnCancel.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				cancelClicked();
+			}
+		});
+		GridBagConstraints gbc_btnCancel = new GridBagConstraints();
+		gbc_btnCancel.anchor = GridBagConstraints.EAST;
+		gbc_btnCancel.insets = new Insets(0, 0, 0, 5);
+		gbc_btnCancel.gridx = 0;
+		gbc_btnCancel.gridy = 1;
+		panel_2.add(btnCancel, gbc_btnCancel);
+		GridBagConstraints gbc_btnConfirm = new GridBagConstraints();
+		gbc_btnConfirm.gridx = 1;
+		gbc_btnConfirm.gridy = 1;
+		panel_2.add(btnConfirm, gbc_btnConfirm);
+	}	
+	{
+		init();
 	}
-
+	
+	private void init() {
+		sc = new ShipmentCtrl();
+		//sltm = new ShipmentListTableModel(sl);
+		//tblShipmentLine.setModel(sltm);
+		
+	}
+	
+	protected void RegisterShipmentClicked() throws DataAccessException {
+		if(txtBarcode != null && txtQuantity!= null) {		
+		String barcode = txtBarcode.getText();
+		int year = Integer.parseInt(txtYear.getText());
+		int month = Integer.parseInt(txtMonth.getText());
+		int day = Integer.parseInt(txtDay.getText());
+		LocalDate d = LocalDate.of(year, month, day);
+		int qnty = Integer.parseInt(txtQuantity.getText());
+		
+		
+		//LocalDate date = txtExpiryDate.getText()
+		
+		sc.scanProduct(qnty, barcode, d);
+		
+		
+	}
+}
+	protected void cancelClicked() {
+		super.setVisible(false);
+		super.dispose();
+	}
 }
