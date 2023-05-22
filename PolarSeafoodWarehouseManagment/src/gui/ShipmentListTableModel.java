@@ -10,13 +10,13 @@ import model.ShipmentLine;
 
 public class ShipmentListTableModel extends AbstractTableModel {
 	
-	private static final String[] COL_NAMES = { "Qty", "Name", "Barcode", "Cost price", "Sales price", "Total" };
-	private List<ShipmentLine> sl;
+	private static final String[] COL_NAMES = { "Barcode" };
+	private List<ShipmentLine> data;
 
 	public ShipmentListTableModel(List<ShipmentLine> sl) {
-		this.sl = sl;
-		if (this.sl == null) {
-			this.sl = new ArrayList<>();
+		this.data = sl;
+		if (this.data == null) {
+			this.data = new ArrayList<>();
 		}
 	}
 	
@@ -27,7 +27,7 @@ public class ShipmentListTableModel extends AbstractTableModel {
 	
 	@Override
 	public int getRowCount() {
-		return sl.size();
+		return data.size();
 	}
 
 	@Override
@@ -37,7 +37,7 @@ public class ShipmentListTableModel extends AbstractTableModel {
 
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
-		ShipmentLine sml = sl.get(rowIndex);
+		ShipmentLine sml = data.get(rowIndex);
 		String res = "";		
 	
 		switch(columnIndex) {
@@ -51,11 +51,11 @@ public class ShipmentListTableModel extends AbstractTableModel {
 	return res;
 }
 	public ShipmentLine getDataAt(int rowIndex) {
-		return sl.get(rowIndex);
+		return data.get(rowIndex);
 	}
 
 	public void setData(List<ShipmentLine> sl) {
-		this.sl = sl;
+		this.data = sl;
 		super.fireTableDataChanged();
 	}
 

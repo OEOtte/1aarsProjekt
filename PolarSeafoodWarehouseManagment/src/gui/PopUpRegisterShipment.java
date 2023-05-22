@@ -13,6 +13,8 @@ import controller.ShipmentCtrl;
 
 import java.awt.GridBagLayout;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import javax.swing.JTextField;
@@ -190,8 +192,8 @@ public class PopUpRegisterShipment extends JDialog {
 	}
 
 	protected void cancelClicked() {
-		// TODO Auto-generated method stub
-
+		super.setVisible(false);
+		super.dispose();
 	}
 
 	protected void addStaffClicked() {
@@ -222,11 +224,15 @@ public class PopUpRegisterShipment extends JDialog {
 			String warehouse = textWarehouse.getText();
 
 			sc.createShipment(staffNos, freight, warehouse);
-
+			
+			rsg.setShipmentCtrl(this.sc);
+			
 			rsg.setVisible(true);
 			super.setVisible(false);
 		} else {
 			// pop could not create
+			String st = "Could not create shipment, make sure to input correct information";
+			JOptionPane.showMessageDialog(null, st);
 		}
 	}
 

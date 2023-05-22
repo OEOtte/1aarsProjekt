@@ -72,7 +72,8 @@ public class ShipmentCtrl {
 		return currShipment;
 	}
 
-	public Shipment getCurrentShipment() {
+	public Shipment getCurrShipment() {
 		return currShipment;
 	}
+	
 }
