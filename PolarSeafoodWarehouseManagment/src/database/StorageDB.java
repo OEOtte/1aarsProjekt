@@ -250,7 +250,7 @@ public class StorageDB implements StorageDBIF {
 				} else if (quantity < foundLotLine.getQuantity()) {
 					foundLotLine.setRemovedQty(quantity);
 					quantity = 0;
-				}
+				} //TODO make else statement that allows the method to work if no lotlines are available
 				res.add(foundLotLine);
 			}
 
