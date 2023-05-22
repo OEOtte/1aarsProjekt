@@ -11,6 +11,7 @@ import javax.swing.border.EmptyBorder;
 
 import controller.DataAccessException;
 import controller.ShipmentCtrl;
+import model.LotLine;
 import model.Product;
 import model.ShipmentLine;
 
@@ -22,6 +23,7 @@ import javax.swing.JTextField;
 import javax.swing.JButton;
 import java.awt.Font;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
@@ -30,6 +32,17 @@ import java.time.LocalDate;
 import java.util.List;
 import java.awt.event.ActionEvent;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.SwingConstants;
+import java.awt.FlowLayout;
+import java.awt.Component;
+import javax.swing.BoxLayout;
+import java.awt.GridLayout;
+import javax.swing.SpringLayout;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.ColumnSpec;
+import com.jgoodies.forms.layout.RowSpec;
+import net.miginfocom.swing.MigLayout;
+import java.awt.CardLayout;
 
 public class RegisterShipmentGui extends JFrame {
 
@@ -78,29 +91,43 @@ public class RegisterShipmentGui extends JFrame {
 
 		JPanel panel = new JPanel();
 		Image img = new ImageIcon(this.getClass().getResource("/PolarSeafood1.png")).getImage();
-		GridBagLayout gbl_panel = new GridBagLayout();
-		gbl_panel.columnWidths = new int[] { 145, 311, 0 };
-		gbl_panel.rowHeights = new int[] { 85, 0 };
-		gbl_panel.columnWeights = new double[] { 0.0, 0.0, Double.MIN_VALUE };
-		gbl_panel.rowWeights = new double[] { 0.0, Double.MIN_VALUE };
-		panel.setLayout(gbl_panel);
-		contentPane.add(panel, BorderLayout.NORTH);
-		JLabel PolarSeafood = new JLabel("");
-		PolarSeafood.setIcon(new ImageIcon(img));
-		GridBagConstraints gbc_PolarSeafood = new GridBagConstraints();
-		gbc_PolarSeafood.anchor = GridBagConstraints.WEST;
-		gbc_PolarSeafood.gridx = 1;
-		gbc_PolarSeafood.gridy = 0;
-		panel.add(PolarSeafood, gbc_PolarSeafood);
+		contentPane.add(panel, BorderLayout.SOUTH);
+										panel.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 5));
+								
+										JButton btnCancel = new JButton("CANCEL");
+										btnCancel.setAlignmentX(Component.CENTER_ALIGNMENT);
+										panel.add(btnCancel);
+										btnCancel.addActionListener(new ActionListener() {
+											public void actionPerformed(ActionEvent e) {
+												cancelClicked();
+											}
+										});
+								
+								JLabel label = new JLabel("");
+								panel.add(label);
+						
+								JButton btnConfirm = new JButton("CONFIRM");
+								btnConfirm.setAlignmentX(Component.RIGHT_ALIGNMENT);
+								panel.add(btnConfirm);
+						btnConfirm.addActionListener(new ActionListener() {
+							public void actionPerformed(ActionEvent e) {
+								try {
+									confirmClicked();
+								} catch (DataAccessException e1) {
+									// TODO Auto-generated catch block
+									e1.printStackTrace();
+								}
+							}
+						});
 
 		JPanel panel_1 = new JPanel();
-		contentPane.add(panel_1, BorderLayout.CENTER);
+		contentPane.add(panel_1, BorderLayout.NORTH);
 		GridBagLayout gbl_panel_1 = new GridBagLayout();
 		gbl_panel_1.columnWidths = new int[] { 67, 109, 66, 44, 47, 32, 49, 57, 41, 0, 0 };
-		gbl_panel_1.rowHeights = new int[] { 39, 0, 0, 18, 34, 0, 0 };
+		gbl_panel_1.rowHeights = new int[] { 39, 0, 0, 18, 34, 0, 0, 0 };
 		gbl_panel_1.columnWeights = new double[] { 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 1.0, 1.0, 0.0,
 				Double.MIN_VALUE };
-		gbl_panel_1.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
+		gbl_panel_1.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
 		panel_1.setLayout(gbl_panel_1);
 								
 										JLabel registerShipment = new JLabel("Product information");
@@ -257,75 +284,62 @@ public class RegisterShipmentGui extends JFrame {
 				gbc_txtDay.gridy = 4;
 				panel_1.add(txtDay, gbc_txtDay);
 				txtDay.setColumns(10);
-		
-				JButton btnScan = new JButton("SCAN");
-				btnScan.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						try {
-							RegisterShipmentClicked();
-						} catch (DataAccessException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
-						}
-					}
-				});
-				GridBagConstraints gbc_btnScan = new GridBagConstraints();
-				gbc_btnScan.insets = new Insets(0, 0, 0, 5);
-				gbc_btnScan.gridx = 1;
-				gbc_btnScan.gridy = 5;
-				panel_1.add(btnScan, gbc_btnScan);
+						
+								JButton btnScan = new JButton("SCAN");
+								btnScan.setToolTipText("");
+								btnScan.addActionListener(new ActionListener() {
+									public void actionPerformed(ActionEvent e) {
+										try {
+											RegisterShipmentClicked();
+										} catch (DataAccessException e1) {
+											// TODO Auto-generated catch block
+											e1.printStackTrace();
+										}
+									}
+								});
+								GridBagConstraints gbc_btnScan = new GridBagConstraints();
+								gbc_btnScan.insets = new Insets(0, 0, 5, 5);
+								gbc_btnScan.gridx = 3;
+								gbc_btnScan.gridy = 5;
+								panel_1.add(btnScan, gbc_btnScan);
 
 		JPanel panel_2 = new JPanel();
-		contentPane.add(panel_2, BorderLayout.SOUTH);
+		contentPane.add(panel_2, BorderLayout.CENTER);
 		GridBagLayout gbl_panel_2 = new GridBagLayout();
-		gbl_panel_2.columnWidths = new int[] { 332, 63, 0 };
-		gbl_panel_2.rowHeights = new int[] { 133, 0, 0 };
-		gbl_panel_2.columnWeights = new double[] { 1.0, 0.0, Double.MIN_VALUE };
-		gbl_panel_2.rowWeights = new double[] { 1.0, 0.0, Double.MIN_VALUE };
+		gbl_panel_2.columnWidths = new int[]{659, 0};
+		gbl_panel_2.rowHeights = new int[]{219, 0};
+		gbl_panel_2.columnWeights = new double[]{0.0, Double.MIN_VALUE};
+		gbl_panel_2.rowWeights = new double[]{0.0, Double.MIN_VALUE};
 		panel_2.setLayout(gbl_panel_2);
-
-		JScrollPane scrollPane = new JScrollPane();
-		GridBagConstraints gbc_scrollPane = new GridBagConstraints();
-		gbc_scrollPane.insets = new Insets(0, 0, 5, 5);
-		gbc_scrollPane.fill = GridBagConstraints.BOTH;
-		gbc_scrollPane.gridx = 0;
-		gbc_scrollPane.gridy = 0;
-		panel_2.add(scrollPane, gbc_scrollPane);
-
-		tblShipmentLine = new JTable();
-		tblShipmentLine.setModel(new DefaultTableModel(new Object[][] {}, new String[] {}));
-		scrollPane.setRowHeaderView(tblShipmentLine);
-
-		JButton btnConfirm = new JButton("CONFIRM");
-		btnConfirm.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
-
-		JButton btnCancel = new JButton("CANCEL");
-		btnCancel.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				cancelClicked();
-			}
-		});
-		GridBagConstraints gbc_btnCancel = new GridBagConstraints();
-		gbc_btnCancel.anchor = GridBagConstraints.EAST;
-		gbc_btnCancel.insets = new Insets(0, 0, 0, 5);
-		gbc_btnCancel.gridx = 0;
-		gbc_btnCancel.gridy = 1;
-		panel_2.add(btnCancel, gbc_btnCancel);
-		GridBagConstraints gbc_btnConfirm = new GridBagConstraints();
-		gbc_btnConfirm.gridx = 1;
-		gbc_btnConfirm.gridy = 1;
-		panel_2.add(btnConfirm, gbc_btnConfirm);
+		
+				JScrollPane scrollPane = new JScrollPane();
+				GridBagConstraints gbc_scrollPane = new GridBagConstraints();
+				gbc_scrollPane.fill = GridBagConstraints.BOTH;
+				gbc_scrollPane.gridx = 0;
+				gbc_scrollPane.gridy = 0;
+				panel_2.add(scrollPane, gbc_scrollPane);
+				
+						tblShipmentLine = new JTable();
+						scrollPane.setViewportView(tblShipmentLine);
 		
 		init();
+	}
+
+	protected void confirmClicked() throws DataAccessException {
+		try {
+			sc.confirmShipment();
+			JOptionPane.showMessageDialog(this, "The shipment has been succesfully saved");
+			cancelClicked();
+		} catch (Exception e) {
+			//TODO show that shipment couldnt be created
+		}
+		
 	}
 
 	private void init() {
 		sltm = new ShipmentListTableModel(sl);
 		tblShipmentLine.setModel(sltm);
-		sl = null;
+		//sl = null;
 
 	}
 
@@ -339,18 +353,17 @@ public class RegisterShipmentGui extends JFrame {
 			int qnty = Integer.parseInt(txtQuantity.getText());
 			
 			Product temp = sc.scanProduct(qnty, barcode, expiryDate);
-			System.out.println(temp.getProductName());
 			fillOutInformation(temp);
-			
+			sltm.setData(sc.getCurrShipment().getShipmentLines());
 			
 			
 		}
 	}
 
 	private void fillOutInformation(Product temp) {
-			txtLot.setText(temp.getLotLines().get(temp.getLotLines().size()).getLot().getLotNumber());
+			txtLot.setText(temp.getLotLines().get(temp.getLotLines().size()-1).getLot().getLotNumber());
 			txtProduct.setText(temp.getProductName());
-			txtWarehouse.setText(temp.getLotLines().get(temp.getLotLines().size()).getLot().getWarehouse().getName());
+			txtWarehouse.setText(temp.getLotLines().get(temp.getLotLines().size()-1).getLot().getWarehouse().getName());
 	}
 
 	protected void cancelClicked() {

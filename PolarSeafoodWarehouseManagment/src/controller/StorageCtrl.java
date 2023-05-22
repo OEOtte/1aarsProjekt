@@ -20,7 +20,6 @@ public class StorageCtrl {
 			storageDBIF = new StorageDB();
 		}
 		Lot lot = storageDBIF.findAvailableLotByPriorityInArrivalWarehouse(product.getPriority(), warehouse);
-
 		LotLine lotLine = new LotLine(product, quantity, date, lot);
 
 		if (lot != null) {
@@ -46,7 +45,8 @@ public class StorageCtrl {
 		return productCtrl.findProductsByPartialName(productName);
 	}
 
-	public List<LotLine> findAvailableProductInWarehouse(Product product, int quantity, String warehouseName) throws DataAccessException {
+	public List<LotLine> findAvailableProductInWarehouse(Product product, int quantity, String warehouseName)
+			throws DataAccessException {
 		if (storageDBIF == null) {
 			storageDBIF = new StorageDB();
 		}

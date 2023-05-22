@@ -5,6 +5,7 @@ public class ShipmentLine {
 	private int quantity;
 	private Product product;
 	private Shipment shipment;
+	private double weight;
 
 	public ShipmentLine(Product product, int quantity) {
 		this.product = product;
@@ -38,5 +39,13 @@ public class ShipmentLine {
 	public void setProduct(Product product) {
 		this.product = product;
 	}
+
+	public void setWeight(double shipmentLineWeight) {
+		this.weight += shipmentLineWeight;
+	}
 	
+	public double getWeight() {
+		return weight;
+	}
+
 }

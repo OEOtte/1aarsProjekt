@@ -40,7 +40,7 @@ class ShipmentCtrlTest {
 		String warehouseName = "PSU1";
 		//Act
 		sc.createShipment(staffNos, freightNo, warehouseName);
-		Shipment shipment = sc.getCurrentShipment();
+		Shipment shipment = sc.getCurrShipment();
 		//Assert
 		assertTrue(shipment!=null);
 	}
@@ -55,7 +55,7 @@ class ShipmentCtrlTest {
 		String warehouseName = "PSU1";
 		//Act
 		sc.createShipment(staffNos, freightNo, warehouseName);
-		Shipment shipment = sc.getCurrentShipment();
+		Shipment shipment = sc.getCurrShipment();
 		//Assert
 		assertTrue(shipment!=null);
 		assertEquals(fc.findFreightByFreightNumber(freightNo).getName(), "Test");
@@ -71,7 +71,7 @@ class ShipmentCtrlTest {
 		String warehouseName = "PSU1";
 		//Act
 		sc.createShipment(staffNos, freightNo, warehouseName);
-		Shipment shipment = sc.getCurrentShipment();
+		Shipment shipment = sc.getCurrShipment();
 		//Assert
 		assertNull(shipment);
 		assertEquals(null, shipment);
@@ -87,7 +87,7 @@ class ShipmentCtrlTest {
 		String warehouseName = "PSU1";
 		//Act
 		sc.createShipment(staffNos, freightNo, warehouseName);
-		Shipment shipment = sc.getCurrentShipment();
+		Shipment shipment = sc.getCurrShipment();
 		//Assert
 		assertNull(shipment);
 	}
@@ -102,7 +102,7 @@ class ShipmentCtrlTest {
 		String warehouseName = "PSU1";
 		//Act
 		sc.createShipment(staffNos, freightNo, warehouseName);
-		Shipment shipment = sc.getCurrentShipment();
+		Shipment shipment = sc.getCurrShipment();
 		//Assert
 		assertNull(shipment);
 	}
@@ -116,7 +116,7 @@ class ShipmentCtrlTest {
 		String warehouseName = "PSU1";
 		//Act
 		sc.createShipment(staffNos, freightNo, warehouseName);
-		Shipment shipment = sc.getCurrentShipment();
+		Shipment shipment = sc.getCurrShipment();
 		//Assert
 		assertNull(shipment);
 	}
@@ -131,7 +131,7 @@ class ShipmentCtrlTest {
 		String warehouseName = "PSU1";
 		//Act
 		sc.createShipment(staffNos, freightNo, warehouseName);
-		Shipment shipment = sc.getCurrentShipment();
+		Shipment shipment = sc.getCurrShipment();
 		//Assert
 		assertNull(shipment);
 	}
@@ -146,7 +146,7 @@ class ShipmentCtrlTest {
 		String warehouseName = null;
 		//Act
 		sc.createShipment(staffNos, freightNo, warehouseName);
-		Shipment shipment = sc.getCurrentShipment();
+		Shipment shipment = sc.getCurrShipment();
 		//Assert
 		assertNull(shipment);
 	}
@@ -161,7 +161,7 @@ class ShipmentCtrlTest {
 		String warehouseName = "Ukraine";
 		//Act
 		sc.createShipment(staffNos, freightNo, warehouseName);
-		Shipment shipment = sc.getCurrentShipment();
+		Shipment shipment = sc.getCurrShipment();
 		//Assert
 		assertNull(shipment);
 	}

@@ -36,7 +36,9 @@ public class ShipmentCtrl {
 
 		return currShipment;
 	}
-	//TODO: Write logic to make sure date is after LocalDate.now() to ensure products are not expired.
+
+	// TODO: Write logic to make sure date is after LocalDate.now() to ensure
+	// products are not expired.
 	public Product scanProduct(int quantity, String barcode, LocalDate date) throws DataAccessException {
 		if (productCtrl == null) {
 			productCtrl = new ProductCtrl();
@@ -75,5 +77,5 @@ public class ShipmentCtrl {
 	public Shipment getCurrShipment() {
 		return currShipment;
 	}
-	
+
 }

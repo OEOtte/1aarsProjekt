@@ -39,7 +39,7 @@ public class confirmRemovalOfProductInWarehouseTest {
 		
 		stoCtrl.confirmRemovalOfProductInWarehouse(null);
 		// assert
-		assertEquals(sc.getCurrentShipment().getShipmentLines().get(0).getProduct().getBarcode() , "4820226000082");
+		assertEquals(sc.getCurrShipment().getShipmentLines().get(0).getProduct().getBarcode() , "4820226000082");
 	}
 
 }
