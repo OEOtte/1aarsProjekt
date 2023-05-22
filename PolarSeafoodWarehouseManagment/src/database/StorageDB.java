@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 
 import controller.DataAccessException;
 import database.*;
@@ -42,13 +43,19 @@ public class StorageDB implements StorageDBIF {
 
 	private static final String FIND_ADDRESS_WITH_FULL_ASSOSIATION_FROM_ADDRESS_Q = "Select * from Address_view where id = ?";
 	private PreparedStatement findAddressWithFullAssosiationFromAddressPS;
-	
-	private static final String FIND_PRODCUTS_IN_WAREHOUSE_BY_PARTIAL_NAME_Q = "SELECT * FROM Product LEFT OUTER JOIN BoxedProduct ON Product.id = BoxedProduct.product_id Where name LIKE ?";
-	private PreparedStatement findProductsInWarehouseByPartialNamePS;
-	
-	private static final String REMOVE_PRODUCT_FROM_LOT_Q = "SELECT * FROM  LEFT OUTER JOIN BoxedProduct ON Product.id = BoxedProduct.product_id Where name = ?";
-	private PreparedStatement removeProductFromLotPS;
-	
+
+	private static final String FIND_PRODUCTS_IN_WAREHOUSE_BY_ID_Q = "SELECT LotLine.* FROM LotLine INNER JOIN Lot ON LotLine.lot_id = Lot.id WHERE LotLine.product_id = ? AND Lot.warehouse_id = ? ORDER BY LotLine.expirationDate DESC; ";
+	private PreparedStatement findProductsInWarehouseByIdPS;
+
+	private static final String FIND_LOT_FROM_ID_Q = "Select * from Lot where id = ?";
+	private PreparedStatement findLotFromIdPS;
+
+	private static final String REMOVE_LOT_LINE_FROM_DATBASE_WITH_IDS_Q = "Delete from LotLine where product_id = ? and lot_id = ?;";
+	private PreparedStatement removeLotLineFromDatabaseWithIdsPS;
+
+	private static final String UPDATE_QUANTITY_ON_LOTLINE_Q = "Update LotLine set quantity = ? where product_id = ? and lot_id = ?;";
+	private PreparedStatement updateQuantityOnLotLinePS;
+
 	public StorageDB() throws DataAccessException {
 		init();
 	}
@@ -68,6 +75,10 @@ public class StorageDB implements StorageDBIF {
 			insertProductOnLotToDatabasePS = connection.prepareStatement(INSERT_PRODUCT_ON_LOT_TO_DATABASE_Q);
 			findAddressWithFullAssosiationFromAddressPS = connection
 					.prepareStatement(FIND_ADDRESS_WITH_FULL_ASSOSIATION_FROM_ADDRESS_Q);
+			findProductsInWarehouseByIdPS = connection.prepareStatement(FIND_PRODUCTS_IN_WAREHOUSE_BY_ID_Q);
+			removeLotLineFromDatabaseWithIdsPS = connection.prepareStatement(REMOVE_LOT_LINE_FROM_DATBASE_WITH_IDS_Q);
+			findLotFromIdPS = connection.prepareStatement(FIND_LOT_FROM_ID_Q);
+			updateQuantityOnLotLinePS = connection.prepareStatement(UPDATE_QUANTITY_ON_LOTLINE_Q);
 
 		} catch (SQLException e) {
 			throw new DataAccessException(DBMessages.COULD_NOT_PREPARE_STATEMENT, e);
@@ -218,63 +229,92 @@ public class StorageDB implements StorageDBIF {
 
 		return warehouse;
 	}
-	
+
 	@Override
-	public ArrayList<Product> findProducts(String prod) throws DataAccessException{
-		ArrayList<Product> res = new ArrayList<>();
-		Product foundProduct = null;
+	public List<LotLine> findAvailableProductsInWarehouse(Product product, int quantity, String warehouseName)
+			throws DataAccessException {
+		List<LotLine> res = new ArrayList<LotLine>();
+		Warehouse currentWarehouse = findWarehouseByName(warehouseName);
+		LotLine foundLotLine = null;
+
 		try {
-			findProductsInWarehouseByPartialNamePS.setString(1, prod);
-			ResultSet rs = findProductsInWarehouseByPartialNamePS.executeQuery();
-			for(int i = 0; i > rs.getFetchSize(); i++) {
-				if(rs.next()) {
-					foundProduct = buildObject(rs);
-					res.add(foundProduct);
+			findProductsInWarehouseByIdPS.setInt(1, product.getId());
+			findProductsInWarehouseByIdPS.setInt(2, currentWarehouse.getId());
+			ResultSet rs = findProductsInWarehouseByIdPS.executeQuery();
+
+			while (rs.next() && quantity != 0) {
+				foundLotLine = buildLotLine(rs, product, currentWarehouse);
+				if (quantity >= foundLotLine.getQuantity()) {
+					foundLotLine.setRemovedQty(foundLotLine.getQuantity());
+					quantity -= foundLotLine.getQuantity();
+				} else if (quantity < foundLotLine.getQuantity()) {
+					foundLotLine.setRemovedQty(quantity);
+					quantity = 0;
 				}
+				res.add(foundLotLine);
 			}
-			
+
 		} catch (SQLException e) {
 			throw new DataAccessException(DBMessages.COULD_NOT_BIND_OR_EXECUTE_QUERY, e);
 		}
-		
-		
-		
 		return res;
 	}
-	
-	@Override
-	public void removeProduct(Product prod) {
-		
-	}
-	
-	private Product buildObject(ResultSet rs) throws DataAccessException {
-		Product res = null;
+
+	private LotLine buildLotLine(ResultSet rs, Product product, Warehouse warehouse) throws DataAccessException {
+
+		LotLine res = null;
 		try {
-			String type = rs.getString("type").toLowerCase();
-
-			switch (type) {
-			case ("product"):
-				res = new Product(rs.getInt("id"), rs.getString("productName"), rs.getString("itemNumber"),
-						rs.getString("barcode"), rs.getInt("percentOfGlaze"), rs.getString("description"),
-						rs.getDouble("weight"), rs.getInt("minStock"), rs.getBoolean("priority"),
-						rs.getInt("countryOfOrigin_Id"), new Supplier(rs.getInt("supplier_id")));
-
-				break;
-			case ("boxedproduct"):
-				res = new BoxedProduct(rs.getInt("id"), rs.getString("productName"), rs.getString("itemNumber"),
-						rs.getString("barcode"), rs.getInt("percentOfGlaze"), rs.getString("description"),
-						rs.getDouble("weight"), rs.getInt("minStock"), rs.getBoolean("priority"),
-						rs.getInt("countryOfOrigin_Id"), new Supplier(rs.getInt("supplier_id")),
-						rs.getInt("quantityInBox"), rs.getString("parentBarcode"));
-
-				break;
-			default:
-			}
-
+			res = new LotLine(product, rs.getInt("quantity"), rs.getDate("expirationDate").toLocalDate(),
+					findLotFromID(rs.getInt("lot_id"), warehouse));
 		} catch (SQLException e) {
 			throw new DataAccessException(DBMessages.COULD_NOT_READ_RESULTSET, e);
 		}
-
 		return res;
 	}
+
+	private Lot findLotFromID(int id, Warehouse warehouse) throws DataAccessException {
+		Lot res = null;
+
+		try {
+			findLotFromIdPS.setInt(1, id);
+			ResultSet rs = findLotFromIdPS.executeQuery();
+
+			if (rs.next()) {
+				res = buildLot(rs, warehouse);
+			}
+		} catch (SQLException e) {
+			throw new DataAccessException(DBMessages.COULD_NOT_BIND_OR_EXECUTE_QUERY, e);
+		}
+		return res;
+	}
+
+	@Override
+	public boolean removalOfProductInWarehouse(List<LotLine> lotLines) throws DataAccessException {
+		boolean res = true;
+		try {
+			DBConnection.getInstance().startTransaction();
+
+			for (LotLine ll : lotLines) {
+				if (ll.getQuantity() == ll.getRemovedQty()) {
+					removeLotLineFromDatabaseWithIdsPS.setInt(1, ll.getProduct().getId());
+					removeLotLineFromDatabaseWithIdsPS.setInt(2, ll.getLot().getId());
+					removeLotLineFromDatabaseWithIdsPS.executeUpdate();
+				} else {
+					int leftQty = ll.getQuantity() - ll.getRemovedQty();
+					updateQuantityOnLotLinePS.setInt(1, leftQty);
+					updateQuantityOnLotLinePS.setInt(2, ll.getProduct().getId());
+					updateQuantityOnLotLinePS.setInt(3, ll.getLot().getId());
+					updateQuantityOnLotLinePS.executeUpdate();
+				}
+			}
+			DBConnection.getInstance().commitTransaction();
+
+		} catch (SQLException e) {
+			DBConnection.getInstance().rollbackTransaction();
+			res = false;
+			throw new DataAccessException(DBMessages.COULD_NOT_BIND_OR_EXECUTE_QUERY, e);
+		}
+		return res;
+	}
+
 }

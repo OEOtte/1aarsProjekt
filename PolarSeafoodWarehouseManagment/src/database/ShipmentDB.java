@@ -8,7 +8,6 @@ import java.sql.SQLException;
 import java.util.List;
 
 import controller.DataAccessException;
-import database.*;
 import model.Shipment;
 import model.ShipmentLine;
 import model.Staff;
@@ -89,6 +88,20 @@ public class ShipmentDB implements ShipmentDBIF {
 		return foundShipmentNo;
 	}
 
+	@Override
+	public int getLatestShipmentNo() throws DataAccessException {
+		int foundShipmentNo = 0;
+		try {
+			ResultSet rs = latestShipmentNoPS.executeQuery();
+			if (rs.next()) {
+				foundShipmentNo = rs.getInt(1);
+			}
+		} catch (SQLException e) {
+			throw new DataAccessException(DBMessages.COULD_NOT_BIND_OR_EXECUTE_QUERY, e);
+		}
+		return foundShipmentNo;
+	}
+
 	private void persistStaffOnShipment(int id, List<Staff> staffOnShipment) throws DataAccessException {
 		try {
 			StaffDBIF staffDBIF = new StaffDB();
@@ -129,5 +142,4 @@ public class ShipmentDB implements ShipmentDBIF {
 			throw new DataAccessException(DBMessages.COULD_NOT_BIND_OR_EXECUTE_QUERY, e);
 		}
 	}
-
 }

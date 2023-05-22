@@ -1,6 +1,6 @@
 package controller;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import controller.DataAccessException;
 import database.ProductDB;
@@ -23,6 +23,11 @@ public class ProductCtrl {
 		boolean res = false;
 		res = product.addLotLine(lotLine);
 		return res;
+	}
+	
+	public List<Product> findProductsByPartialName(String prod) throws DataAccessException{
+		ProductDBIF prodDBIF = new ProductDB();
+		return prodDBIF.findProductByPartialName(prod);
 	}
 	
 
