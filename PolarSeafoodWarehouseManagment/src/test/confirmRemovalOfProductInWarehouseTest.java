@@ -28,7 +28,7 @@ public class confirmRemovalOfProductInWarehouseTest {
 	}
 	
 	@Test
-	void testScanProductWithValidInputs() throws DataAccessException {
+	void testRemovalOfProductInWarehouseWithValidInput() throws DataAccessException {
 		// Arrange
 		LocalDate expiryDate = LocalDate.of(2023, 07, 01);
 		String freightNo = "9999";
@@ -36,9 +36,8 @@ public class confirmRemovalOfProductInWarehouseTest {
 		staffNos.add("5555");
 		String warehouseName = "PSU1";
 		// act
-		sc.createShipment(staffNos, freightNo, warehouseName);
-		sc.scanProduct(1, "4820226000082", expiryDate);
 		
+		stoCtrl.confirmRemovalOfProductInWarehouse(null);
 		// assert
 		assertEquals(sc.getCurrentShipment().getShipmentLines().get(0).getProduct().getBarcode() , "4820226000082");
 	}
