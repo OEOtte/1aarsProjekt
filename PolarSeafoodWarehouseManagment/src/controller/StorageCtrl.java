@@ -50,7 +50,7 @@ public class StorageCtrl {
 		if (storageDBIF == null) {
 			storageDBIF = new StorageDB();
 		}
-		return storageDBIF.findAvailableProductsInWarehouse(product, quantity, warehouseName);
+		return storageDBIF.findAvailableProductsInWarehouseAndPrepareToRemove(product, quantity, warehouseName);
 	}
 
 	public boolean confirmRemovalOfProductInWarehouse(List<LotLine> lotLines) throws DataAccessException {
@@ -58,7 +58,6 @@ public class StorageCtrl {
 			storageDBIF = new StorageDB();
 		}
 		boolean res = storageDBIF.removalOfProductInWarehouse(lotLines);
-	
 		return res;
 	}
 }

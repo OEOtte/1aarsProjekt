@@ -231,7 +231,7 @@ public class StorageDB implements StorageDBIF {
 	}
 
 	@Override
-	public List<LotLine> findAvailableProductsInWarehouse(Product product, int quantity, String warehouseName)
+	public List<LotLine> findAvailableProductsInWarehouseAndPrepareToRemove(Product product, int quantity, String warehouseName)
 			throws DataAccessException {
 		List<LotLine> res = new ArrayList<LotLine>();
 		Warehouse currentWarehouse = findWarehouseByName(warehouseName);
@@ -250,7 +250,7 @@ public class StorageDB implements StorageDBIF {
 				} else if (quantity < foundLotLine.getQuantity()) {
 					foundLotLine.setRemovedQty(quantity);
 					quantity = 0;
-				}
+				} //TODO make else statement that allows the method to work if no lotlines are available
 				res.add(foundLotLine);
 			}
 

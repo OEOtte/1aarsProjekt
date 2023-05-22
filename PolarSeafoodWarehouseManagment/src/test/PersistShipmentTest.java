@@ -28,7 +28,7 @@ class PersistShipmentTest {
 	}
 
 	@Test
-	void testPersistShipmentWithValidInfo() throws DataAccessException {
+	void testConfirmShipmentWithValidInfo() throws DataAccessException {
 		// Arrange
 		sc = new ShipmentCtrl();
 		String freightNo = "9999";
