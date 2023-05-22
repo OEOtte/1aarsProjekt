@@ -57,7 +57,7 @@ public class ShipmentDB implements ShipmentDBIF {
 
 			insertShipmentToDatabasePS.setDate(1, Date.valueOf(shipment.getArrivalDate()));
 			insertShipmentToDatabasePS.setString(2, shipment.getArrivalLocation().getName());
-			insertShipmentToDatabasePS.setDate(3, Date.valueOf(shipment.getDisbatchDate()));
+			insertShipmentToDatabasePS.setDate(3, Date.valueOf(shipment.getDispatchDate()));
 			insertShipmentToDatabasePS.setInt(4, shipment.getTotalWeight());
 			insertShipmentToDatabasePS.setInt(5, shipment.getAmountOfDifferentProduct());
 			insertShipmentToDatabasePS.setInt(6, shipmentNo);

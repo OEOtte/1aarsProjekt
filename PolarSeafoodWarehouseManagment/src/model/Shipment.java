@@ -11,7 +11,7 @@ public class Shipment {
 	private Freight freight;
 	private LocalDate arrivalDate;
 	private Warehouse arrivalLocation;
-	private LocalDate disbatchDate;
+	private LocalDate dispatchDate;
 	private int totalWeight;
 	private int amountOfDifferentProduct;
 	private int shipmentNo;
@@ -22,7 +22,7 @@ public class Shipment {
 		this.staffOnShipment = staffs;
 		this.arrivalLocation = warehouse;
 		this.arrivalDate = LocalDate.now();
-		this.disbatchDate = LocalDate.now();
+		this.dispatchDate = LocalDate.now();
 	}
 
 	public ShipmentLine addProductToAShipmentline(Product product, int quantity) {
@@ -79,12 +79,12 @@ public class Shipment {
 		this.arrivalDate = arrivalDate;
 	}
 
-	public LocalDate getDisbatchDate() {
-		return disbatchDate;
+	public LocalDate getDispatchDate() {
+		return dispatchDate;
 	}
 
-	public void setDisbatchDate(LocalDate disbatchDate) {
-		this.disbatchDate = disbatchDate;
+	public void setDispatchDate(LocalDate dispatchDate) {
+		this.dispatchDate = dispatchDate;
 	}
 
 	public void setArrivalLocation(Warehouse arrivalLocation) {
