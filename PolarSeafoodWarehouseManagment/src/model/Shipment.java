@@ -25,21 +25,25 @@ public class Shipment {
 	}
 
 	
-	//DOES NOT WORK OPTIMALLY 
+	//DER BURDE IKKE VÆRE FORRETNINGSLOGIC HER, MEN PGA. SHIPEMTNLINES kendskab i shipment er det ok
 	public ShipmentLine addProductToAShipmentline(Product product, int quantity) {
 		ShipmentLine res = null;
 		if (shipmentLines == null) {
 			shipmentLines = new ArrayList<>();
 		}
 
-		boolean boxed = product instanceof BoxedProduct;
+		System.out.println(product.getClass().getName());
+		boolean boxed = false;
+		if(product instanceof BoxedProduct) {
+			boxed = true;
+			System.out.println("This is a BoxedProduct" + product.getItemNumber());
+		}
 
 		for (int i = 0; i < shipmentLines.size(); i++) {
 			if (boxed && ((BoxedProduct) shipmentLines.get(i).getProduct()).getParentBarcode()
 					.equals(((BoxedProduct) product).getParentBarcode())) {
 				shipmentLines.get(i).increaseQty(quantity);
 				double weightForBox = quantity * (((BoxedProduct) product).getQuantityInBox() * product.getWeight());
-				System.out.println(weightForBox);
 				shipmentLines.get(i).setWeight(weightForBox);
 				totalWeight += weightForBox;
 				res = shipmentLines.get(i);

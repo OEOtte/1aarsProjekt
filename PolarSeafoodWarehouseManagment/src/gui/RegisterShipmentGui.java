@@ -41,7 +41,7 @@ import javax.swing.SpringLayout;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.RowSpec;
-import net.miginfocom.swing.MigLayout;
+//import net.miginfocom.swing.MigLayout;
 import java.awt.CardLayout;
 
 public class RegisterShipmentGui extends JFrame {
@@ -338,7 +338,6 @@ public class RegisterShipmentGui extends JFrame {
 	private void init() {
 		sltm = new ShipmentListTableModel(sl);
 		tblShipmentLine.setModel(sltm);
-		//sl = null;
 
 	}
 

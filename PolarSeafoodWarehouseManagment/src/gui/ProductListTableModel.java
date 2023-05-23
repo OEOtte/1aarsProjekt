@@ -7,14 +7,15 @@ import javax.swing.table.AbstractTableModel;
 
 import model.LotLine;
 import model.Product;
+import model.ShipmentLine;
 
-public class LotLineListTableModel extends AbstractTableModel {
+public class ProductListTableModel extends AbstractTableModel {
 
-	private static final String[] COL_NAMES = { "Staff Number" };
-	private List<LotLine> data;
+	private static final String[] COL_NAMES = { "Item number", "Barcode" , "Product", "Weight" };
+	private List<Product> data;
 
-	public LotLineListTableModel(List<LotLine> lotLines) {
-		this.data = lotLines;
+	public ProductListTableModel(List<Product> products) {
+		this.data = products;
 		if (this.data == null) {
 			this.data = new ArrayList<>();
 		}
@@ -37,11 +38,21 @@ public class LotLineListTableModel extends AbstractTableModel {
 
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
-		String staffNumber = data.get(rowIndex);
+		Product p = data.get(rowIndex);
 		String res = "";
+
 		switch (columnIndex) {
 		case 0:
-			res = staffNumber;
+			res = p.getItemNumber();
+			break;
+		case 1:
+			res = p.getBarcode();
+			break;
+		case 2:
+			res = p.getProductName();
+			break;
+		case 3:
+			res = Double.toString(p.getWeight());
 			break;
 		default:
 			res = "<UNKOWN " + columnIndex + ">";
@@ -50,12 +61,12 @@ public class LotLineListTableModel extends AbstractTableModel {
 
 	}
 
-	public String getDataAt(int rowIndex) {
+	public Product getDataAt(int rowIndex) {
 		return data.get(rowIndex);
 	}
 
-	public void setData(String staffNos) {
-		this.data.add(staffNos);
+	public void setData(List<Product> product) {
+		this.data = product;
 		super.fireTableDataChanged();
 	}
 

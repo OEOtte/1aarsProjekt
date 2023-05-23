@@ -13,18 +13,24 @@ import controller.DataAccessException;
 import controller.ProductCtrl;
 import controller.ShipmentCtrl;
 import controller.StorageCtrl;
+import database.StorageDB;
+import model.LotLine;
 
-public class confirmRemovalOfProductInWarehouseTest {
+
+
+public class RemovalOfProductInWarehouseTest {
 
 	private ShipmentCtrl sc;
 	private ProductCtrl pc;
 	private StorageCtrl stoCtrl;
+	private StorageDB SDB;
 	
 	@BeforeEach
-	void SetUp() {
+	void SetUp() throws DataAccessException {
 		sc = new ShipmentCtrl();
 		pc = new ProductCtrl();
 		stoCtrl = new StorageCtrl();
+		SDB = new StorageDB();
 	}
 	
 	@Test
@@ -35,11 +41,15 @@ public class confirmRemovalOfProductInWarehouseTest {
 		List<String> staffNos = new ArrayList<>();
 		staffNos.add("5555");
 		String warehouseName = "PSU1";
+		List<LotLine> ll = new ArrayList<>();
 		// act
-		
-		stoCtrl.confirmRemovalOfProductInWarehouse(null);
+		sc.createShipment(staffNos, freightNo, warehouseName);
+		sc.scanProduct(1, "4820226000082", expiryDate);
+		sc.confirmShipment();
+		ll.add(pc.findProductsByPartialName("tuna").get(0).getLotLines().get(0));
+		SDB.removalOfProductInWarehouse(ll);
 		// assert
-		assertEquals(sc.getCurrShipment().getShipmentLines().get(0).getProduct().getBarcode() , "4820226000082");
+		assertEquals(pc.findProductByBarcode("4820226000082").getBarcode() , "4820226000082");
 	}
 
 }
