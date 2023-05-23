@@ -52,17 +52,22 @@ public class MainGui extends JFrame {
 			}
 		});
 		
-		new Thread(() -> {
-			while(true) {
-				try {
-					Thread.sleep(2000);
-				} catch (InterruptedException e) {
-					// should not happen - we don't interrupt this thread
-					e.printStackTrace();
-				}
-				frame.updateNewsList();
-			}
-		}).start();
+//		new Thread(() -> {
+//			while(true) {
+//				try {
+//					Thread.sleep(2000);
+//				} catch (InterruptedException e) {
+//					// should not happen - we don't interrupt this thread
+//					e.printStackTrace();
+//				}
+//				frame.updateProductList	();
+//			}
+//		}).start();
+	}
+
+	private void updateProductList() {
+		// TODO Auto-generated method stub
+		
 	}
 
 	/**

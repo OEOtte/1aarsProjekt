@@ -37,11 +37,11 @@ public class LotLineListTableModel extends AbstractTableModel {
 
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
-		String staffNumber = data.get(rowIndex);
+		//String staffNumber = data.get(rowIndex);
 		String res = "";
 		switch (columnIndex) {
 		case 0:
-			res = staffNumber;
+			//res = staffNumber "TODO";
 			break;
 		default:
 			res = "<UNKOWN " + columnIndex + ">";
@@ -51,12 +51,13 @@ public class LotLineListTableModel extends AbstractTableModel {
 	}
 
 	public String getDataAt(int rowIndex) {
-		return data.get(rowIndex);
+//		return data.get(rowIndex);
+		return null;
 	}
 
 	public void setData(String staffNos) {
-		this.data.add(staffNos);
-		super.fireTableDataChanged();
+//		this.data.add(staffNos);
+//		super.fireTableDataChanged();
 	}
 
 }
