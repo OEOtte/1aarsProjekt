@@ -60,7 +60,7 @@ public class PopUpRegisterShipment extends JDialog {
 	public PopUpRegisterShipment() {
 		setIconImage(Toolkit.getDefaultToolkit().getImage("C:\\Users\\oscar\\OneDrive\\Dokumenter\\PolarSeafood1.png"));
 		setTitle("Create Shipment");
-		setBounds(100, 100, 678, 335);
+		setBounds(100, 100, 479, 309);
 		getContentPane().setLayout(new BorderLayout(0, 0));
 
 		JPanel contentPanel = new JPanel();
@@ -68,7 +68,8 @@ public class PopUpRegisterShipment extends JDialog {
 		contentPanel.setLayout(new BorderLayout(0, 0));
 
 		JPanel panel = new JPanel();
-		contentPanel.add(panel, BorderLayout.EAST);
+		panel.setBorder(new EmptyBorder(5, 5, 5, 5));
+		contentPanel.add(panel, BorderLayout.CENTER);
 
 		JScrollPane scrollPane = new JScrollPane();
 		panel.add(scrollPane);
@@ -78,12 +79,12 @@ public class PopUpRegisterShipment extends JDialog {
 
 		JPanel panel_2 = new JPanel();
 		panel_2.setBorder(new EmptyBorder(5, 5, 5, 5));
-		contentPanel.add(panel_2, BorderLayout.WEST);
+		contentPanel.add(panel_2, BorderLayout.NORTH);
 		GridBagLayout gbl_panel_2 = new GridBagLayout();
-		gbl_panel_2.columnWidths = new int[] { 0, 0, 0 };
-		gbl_panel_2.rowHeights = new int[] { 0, 0, 0, 0, 0, 0 };
-		gbl_panel_2.columnWeights = new double[] { 0.0, 1.0, Double.MIN_VALUE };
-		gbl_panel_2.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
+		gbl_panel_2.columnWidths = new int[] { 0, 155, 0, 115, 0, 0 };
+		gbl_panel_2.rowHeights = new int[] { 0, 0, 0, 0, 0 };
+		gbl_panel_2.columnWeights = new double[] { 0.0, 1.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
+		gbl_panel_2.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
 		panel_2.setLayout(gbl_panel_2);
 
 		JLabel lblNewLabel = new JLabel("Freight Number");
@@ -96,7 +97,7 @@ public class PopUpRegisterShipment extends JDialog {
 
 		textFreightNumber = new JTextField();
 		GridBagConstraints gbc_textFreightNumber = new GridBagConstraints();
-		gbc_textFreightNumber.insets = new Insets(0, 0, 5, 0);
+		gbc_textFreightNumber.insets = new Insets(0, 0, 5, 5);
 		gbc_textFreightNumber.fill = GridBagConstraints.HORIZONTAL;
 		gbc_textFreightNumber.gridx = 1;
 		gbc_textFreightNumber.gridy = 0;
@@ -113,7 +114,7 @@ public class PopUpRegisterShipment extends JDialog {
 
 		textWarehouse = new JTextField();
 		GridBagConstraints gbc_textWarehouse = new GridBagConstraints();
-		gbc_textWarehouse.insets = new Insets(0, 0, 5, 0);
+		gbc_textWarehouse.insets = new Insets(0, 0, 5, 5);
 		gbc_textWarehouse.fill = GridBagConstraints.HORIZONTAL;
 		gbc_textWarehouse.gridx = 1;
 		gbc_textWarehouse.gridy = 1;
@@ -130,63 +131,49 @@ public class PopUpRegisterShipment extends JDialog {
 
 		textStaffNumber = new JTextField();
 		GridBagConstraints gbc_textStaffNumber = new GridBagConstraints();
-		gbc_textStaffNumber.insets = new Insets(0, 0, 5, 0);
+		gbc_textStaffNumber.insets = new Insets(0, 0, 5, 5);
 		gbc_textStaffNumber.fill = GridBagConstraints.HORIZONTAL;
 		gbc_textStaffNumber.gridx = 1;
 		gbc_textStaffNumber.gridy = 2;
 		panel_2.add(textStaffNumber, gbc_textStaffNumber);
 		textStaffNumber.setColumns(10);
-
-		JButton btnAddStaff = new JButton("ADD STAFF");
-		btnAddStaff.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				addStaffClicked();
-			}
-		});
-		GridBagConstraints gbc_btnAddStaff = new GridBagConstraints();
-		gbc_btnAddStaff.gridx = 1;
-		gbc_btnAddStaff.gridy = 4;
-		panel_2.add(btnAddStaff, gbc_btnAddStaff);
+				
+						JButton btnAddStaff = new JButton("ADD STAFF");
+						btnAddStaff.addActionListener(new ActionListener() {
+							public void actionPerformed(ActionEvent e) {
+								addStaffClicked();
+							}
+						});
+						GridBagConstraints gbc_btnAddStaff = new GridBagConstraints();
+						gbc_btnAddStaff.insets = new Insets(0, 0, 5, 5);
+						gbc_btnAddStaff.gridx = 2;
+						gbc_btnAddStaff.gridy = 2;
+						panel_2.add(btnAddStaff, gbc_btnAddStaff);
 
 		JPanel panel_1 = new JPanel();
+		panel_1.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(panel_1, BorderLayout.SOUTH);
-		GridBagLayout gbl_panel_1 = new GridBagLayout();
-		gbl_panel_1.columnWidths = new int[] { 244, 85, 85, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-		gbl_panel_1.rowHeights = new int[] { 21, 0 };
-		gbl_panel_1.columnWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-				Double.MIN_VALUE };
-		gbl_panel_1.rowWeights = new double[] { 0.0, Double.MIN_VALUE };
-		panel_1.setLayout(gbl_panel_1);
-
-		JButton btnCancel = new JButton("CANCEL");
-		btnCancel.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				cancelClicked();
-			}
-		});
-		GridBagConstraints gbc_btnCancel = new GridBagConstraints();
-		gbc_btnCancel.insets = new Insets(0, 0, 0, 5);
-		gbc_btnCancel.anchor = GridBagConstraints.NORTHWEST;
-		gbc_btnCancel.gridx = 7;
-		gbc_btnCancel.gridy = 0;
-		panel_1.add(btnCancel, gbc_btnCancel);
-
-		JButton btnCreateShipment = new JButton("CREATE SHIPMENT");
-		btnCreateShipment.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				try {
-					createShipmentClicked();
-				} catch (DataAccessException e1) {
-					// Make error thats shows it couldnt create shipment
-				}
-			}
-		});
-		GridBagConstraints gbc_btnCreateShipment = new GridBagConstraints();
-		gbc_btnCreateShipment.insets = new Insets(0, 0, 0, 5);
-		gbc_btnCreateShipment.anchor = GridBagConstraints.NORTHWEST;
-		gbc_btnCreateShipment.gridx = 8;
-		gbc_btnCreateShipment.gridy = 0;
-		panel_1.add(btnCreateShipment, gbc_btnCreateShipment);
+						
+								JButton btnCancel = new JButton("CANCEL");
+								btnCancel.addActionListener(new ActionListener() {
+									public void actionPerformed(ActionEvent e) {
+										cancelClicked();
+									}
+								});
+								panel_1.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+								panel_1.add(btnCancel);
+						
+								JButton btnCreateShipment = new JButton("CREATE SHIPMENT");
+								btnCreateShipment.addActionListener(new ActionListener() {
+									public void actionPerformed(ActionEvent e) {
+										try {
+											createShipmentClicked();
+										} catch (DataAccessException e1) {
+											// Make error thats shows it couldnt create shipment
+										}
+									}
+								});
+								panel_1.add(btnCreateShipment);
 
 		init();
 	}
