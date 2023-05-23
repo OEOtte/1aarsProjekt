@@ -14,6 +14,22 @@ public class BoxedProduct extends Product {
 		this.parentBarcode = parentBarcode;
 	}
 
+	public int getQuantityInBox() {
+		return quantityInBox;
+	}
+
+	public void setQuantityInBox(int quantityInBox) {
+		this.quantityInBox = quantityInBox;
+	}
+
+	public String getParentBarcode() {
+		return parentBarcode;
+	}
+
+	public void setParentBarcode(String parentBarcode) {
+		this.parentBarcode = parentBarcode;
+	}
+
 
 
 }

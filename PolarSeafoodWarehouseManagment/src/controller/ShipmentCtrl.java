@@ -5,6 +5,7 @@ import java.util.List;
 
 import database.ShipmentDB;
 import database.ShipmentDBIF;
+import model.BoxedProduct;
 import model.Freight;
 import model.LotLine;
 import model.Product;
