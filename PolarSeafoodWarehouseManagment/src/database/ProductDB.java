@@ -68,7 +68,6 @@ public class ProductDB implements ProductDBIF {
 						rs.getString("barcode"), rs.getInt("percentOfGlaze"), rs.getString("description"),
 						rs.getDouble("weight"), rs.getInt("minStock"), rs.getBoolean("priority"),
 						rs.getInt("countryOfOrigin_Id"), new Supplier(rs.getInt("supplier_id")));
-
 				break;
 			case ("boxedproduct"):
 				res = new BoxedProduct(rs.getInt("id"), rs.getString("productName"), rs.getString("itemNumber"),

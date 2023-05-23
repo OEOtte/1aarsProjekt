@@ -16,18 +16,26 @@ import java.awt.Font;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.util.List;
 import java.awt.event.ActionEvent;
 import java.awt.Toolkit;
 import java.awt.Color;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.BoxLayout;
+import java.awt.FlowLayout;
+import model.*;
 
 public class MainGui extends JFrame {
 
+	private static MainGui frame;
 	private JPanel contentPane;
-	private JTextField textProduct;
-	private JTextField textWarehouse;
-	private JTextField txtLot;
 	private JTextField txtProductName;
 	private JTextField txtBarcode;
+	private JTable tblLotLines;
+	private JTextField textQuantity;
+	private LotLineListTableModel lltm;
+	private List<LotLine> lotLines;
 
 	/**
 	 * Launch the application.
@@ -36,13 +44,25 @@ public class MainGui extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					MainGui frame = new MainGui();
+					frame = new MainGui();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
 		});
+		
+		new Thread(() -> {
+			while(true) {
+				try {
+					Thread.sleep(2000);
+				} catch (InterruptedException e) {
+					// should not happen - we don't interrupt this thread
+					e.printStackTrace();
+				}
+				frame.updateNewsList();
+			}
+		}).start();
 	}
 
 	/**
@@ -52,7 +72,7 @@ public class MainGui extends JFrame {
 		setTitle("Polar Seafood Ukraine");
 		setFont(new Font("Dialog", Font.PLAIN, 10));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 539, 496);
+		setBounds(100, 100, 778, 648);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -66,104 +86,33 @@ public class MainGui extends JFrame {
 		lblNewLabel.setIcon(new ImageIcon(
 				"C:\\Users\\Alex\\Documents\\GitHub\\1aarsProjekt\\PolarSeafoodWarehouseManagment\\img\\PolarSeafood320.png"));
 		panel.add(lblNewLabel);
-		
 
 		JPanel panel_1 = new JPanel();
-		contentPane.add(panel_1, BorderLayout.CENTER);
+		contentPane.add(panel_1, BorderLayout.SOUTH);
 		GridBagLayout gbl_panel_1 = new GridBagLayout();
-		gbl_panel_1.columnWidths = new int[] { 37, 72, 106, 269, 0 };
-		gbl_panel_1.rowHeights = new int[] { 30, 40, 36, 30, 0 };
-		gbl_panel_1.columnWeights = new double[] { 0.0, 0.0, 1.0, 0.0, Double.MIN_VALUE };
-		gbl_panel_1.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
+		gbl_panel_1.columnWidths = new int[] { 452, 0 };
+		gbl_panel_1.rowHeights = new int[] { 402, 0 };
+		gbl_panel_1.columnWeights = new double[] { 0.0, Double.MIN_VALUE };
+		gbl_panel_1.rowWeights = new double[] { 0.0, Double.MIN_VALUE };
 		panel_1.setLayout(gbl_panel_1);
 
-		JLabel lot = new JLabel("Lot:");
-		lot.setBackground(new Color(0, 0, 255));
-		lot.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		GridBagConstraints gbc_lot = new GridBagConstraints();
-		gbc_lot.anchor = GridBagConstraints.WEST;
-		gbc_lot.insets = new Insets(0, 0, 5, 5);
-		gbc_lot.gridx = 1;
-		gbc_lot.gridy = 1;
-		panel_1.add(lot, gbc_lot);
+		JScrollPane scrollPane = new JScrollPane();
+		GridBagConstraints gbc_scrollPane = new GridBagConstraints();
+		gbc_scrollPane.anchor = GridBagConstraints.NORTHWEST;
+		gbc_scrollPane.gridx = 0;
+		gbc_scrollPane.gridy = 0;
+		panel_1.add(scrollPane, gbc_scrollPane);
 
-		txtLot = new JTextField();
-		GridBagConstraints gbc_txtLot = new GridBagConstraints();
-		gbc_txtLot.insets = new Insets(0, 0, 5, 5);
-		gbc_txtLot.fill = GridBagConstraints.HORIZONTAL;
-		gbc_txtLot.gridx = 2;
-		gbc_txtLot.gridy = 1;
-		panel_1.add(txtLot, gbc_txtLot);
-		txtLot.setColumns(10);
-
-		JButton btnRegisterShipment = new JButton("Register Shipment");
-		btnRegisterShipment.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				RegisterShipmentClicked();
-			}
-		});
-		btnRegisterShipment.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		GridBagConstraints gbc_btnRegisterShipment = new GridBagConstraints();
-		gbc_btnRegisterShipment.insets = new Insets(0, 0, 5, 0);
-		gbc_btnRegisterShipment.gridx = 3;
-		gbc_btnRegisterShipment.gridy = 1;
-		panel_1.add(btnRegisterShipment, gbc_btnRegisterShipment);
-
-		JLabel product = new JLabel("Product:");
-		product.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		GridBagConstraints gbc_product = new GridBagConstraints();
-		gbc_product.anchor = GridBagConstraints.WEST;
-		gbc_product.insets = new Insets(0, 0, 5, 5);
-		gbc_product.gridx = 1;
-		gbc_product.gridy = 2;
-		panel_1.add(product, gbc_product);
-
-		textProduct = new JTextField();
-		GridBagConstraints gbc_textProduct = new GridBagConstraints();
-		gbc_textProduct.insets = new Insets(0, 0, 5, 5);
-		gbc_textProduct.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textProduct.gridx = 2;
-		gbc_textProduct.gridy = 2;
-		panel_1.add(textProduct, gbc_textProduct);
-		textProduct.setColumns(10);
-
-		JButton btnReserveProduct = new JButton("Reserve Product");
-		btnReserveProduct.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
-		btnReserveProduct.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		GridBagConstraints gbc_btnReserveProduct = new GridBagConstraints();
-		gbc_btnReserveProduct.insets = new Insets(0, 0, 5, 0);
-		gbc_btnReserveProduct.gridx = 3;
-		gbc_btnReserveProduct.gridy = 2;
-		panel_1.add(btnReserveProduct, gbc_btnReserveProduct);
-
-		JLabel warehouse = new JLabel("Warehouse:");
-		warehouse.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		GridBagConstraints gbc_warehouse = new GridBagConstraints();
-		gbc_warehouse.anchor = GridBagConstraints.WEST;
-		gbc_warehouse.insets = new Insets(0, 0, 0, 5);
-		gbc_warehouse.gridx = 1;
-		gbc_warehouse.gridy = 3;
-		panel_1.add(warehouse, gbc_warehouse);
-
-		textWarehouse = new JTextField();
-		GridBagConstraints gbc_textWarehouse = new GridBagConstraints();
-		gbc_textWarehouse.insets = new Insets(0, 0, 0, 5);
-		gbc_textWarehouse.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textWarehouse.gridx = 2;
-		gbc_textWarehouse.gridy = 3;
-		panel_1.add(textWarehouse, gbc_textWarehouse);
-		textWarehouse.setColumns(10);
+		tblLotLines = new JTable();
+		scrollPane.setViewportView(tblLotLines);
 
 		JPanel panel_2 = new JPanel();
-		contentPane.add(panel_2, BorderLayout.SOUTH);
+		contentPane.add(panel_2, BorderLayout.CENTER);
 		GridBagLayout gbl_panel_2 = new GridBagLayout();
-		gbl_panel_2.columnWidths = new int[] { 35, 187, 293, 0 };
-		gbl_panel_2.rowHeights = new int[] { 49, 0, 0, 0, 43, 0 };
-		gbl_panel_2.columnWeights = new double[] { 0.0, 1.0, 0.0, Double.MIN_VALUE };
-		gbl_panel_2.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
+		gbl_panel_2.columnWidths = new int[] { 35, 256, 191, 293, 0 };
+		gbl_panel_2.rowHeights = new int[] { 49, 0, 0, 0, 0, 43, 0 };
+		gbl_panel_2.columnWeights = new double[] { 0.0, 1.0, 0.0, 0.0, Double.MIN_VALUE };
+		gbl_panel_2.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
 		panel_2.setLayout(gbl_panel_2);
 
 		JLabel findProduct = new JLabel("Find Product");
@@ -185,6 +134,19 @@ public class MainGui extends JFrame {
 		panel_2.add(txtProductName, gbc_txtProductName);
 		txtProductName.setColumns(10);
 
+		JButton btnRegisterShipment = new JButton("REGISTER SHIPMENT");
+		GridBagConstraints gbc_btnRegisterShipment = new GridBagConstraints();
+		gbc_btnRegisterShipment.insets = new Insets(0, 0, 5, 0);
+		gbc_btnRegisterShipment.gridx = 3;
+		gbc_btnRegisterShipment.gridy = 1;
+		panel_2.add(btnRegisterShipment, gbc_btnRegisterShipment);
+		btnRegisterShipment.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				RegisterShipmentClicked();
+			}
+		});
+		btnRegisterShipment.setFont(new Font("Tahoma", Font.BOLD, 14));
+
 		txtBarcode = new JTextField();
 		txtBarcode.setText("Barcode");
 		GridBagConstraints gbc_txtBarcode = new GridBagConstraints();
@@ -195,13 +157,59 @@ public class MainGui extends JFrame {
 		panel_2.add(txtBarcode, gbc_txtBarcode);
 		txtBarcode.setColumns(10);
 
-		JButton btnSearch = new JButton("Search");
-		GridBagConstraints gbc_btnSearch = new GridBagConstraints();
-		gbc_btnSearch.anchor = GridBagConstraints.WEST;
-		gbc_btnSearch.insets = new Insets(0, 0, 5, 5);
-		gbc_btnSearch.gridx = 1;
-		gbc_btnSearch.gridy = 3;
-		panel_2.add(btnSearch, gbc_btnSearch);
+		JButton btnReserveProduct = new JButton("RESERVE PRODUCT");
+		GridBagConstraints gbc_btnReserveProduct = new GridBagConstraints();
+		gbc_btnReserveProduct.insets = new Insets(0, 0, 5, 0);
+		gbc_btnReserveProduct.gridx = 3;
+		gbc_btnReserveProduct.gridy = 2;
+		panel_2.add(btnReserveProduct, gbc_btnReserveProduct);
+		btnReserveProduct.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				reserveProductClicked();
+			}
+		});
+		btnReserveProduct.setFont(new Font("Tahoma", Font.BOLD, 14));
+
+		textQuantity = new JTextField();
+		textQuantity.setText("Quantity");
+		GridBagConstraints gbc_textQuantity = new GridBagConstraints();
+		gbc_textQuantity.insets = new Insets(0, 0, 5, 5);
+		gbc_textQuantity.fill = GridBagConstraints.HORIZONTAL;
+		gbc_textQuantity.gridx = 1;
+		gbc_textQuantity.gridy = 3;
+		panel_2.add(textQuantity, gbc_textQuantity);
+		textQuantity.setColumns(10);
+
+		JButton btnPickProduct = new JButton("PICK PRODUCT");
+		btnPickProduct.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				pickProductClicked();
+			}
+		});
+		btnPickProduct.setFont(new Font("Tahoma", Font.BOLD, 14));
+		GridBagConstraints gbc_btnPickProduct = new GridBagConstraints();
+		gbc_btnPickProduct.insets = new Insets(0, 0, 5, 0);
+		gbc_btnPickProduct.gridx = 3;
+		gbc_btnPickProduct.gridy = 3;
+		panel_2.add(btnPickProduct, gbc_btnPickProduct);
+
+		init();
+	}
+
+	private void init() {
+		lltm = new LotLineListTableModel(lotLines);
+		tblLotLines.setModel(lltm);
+		
+	}
+
+	protected void reserveProductClicked() {
+		// TODO Auto-generated method stub
+
+	}
+
+	protected void pickProductClicked() {
+		// TODO Auto-generated method stub
+
 	}
 
 	protected void RegisterShipmentClicked() {
