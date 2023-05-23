@@ -12,11 +12,28 @@ import model.Shipment;
 import model.Staff;
 import model.Warehouse;
 
+/**
+ * @author Gruppe 3
+ */
+
 public class ShipmentCtrl {
 
 	private Shipment currShipment;
 	private ProductCtrl productCtrl;
 	private StorageCtrl storageCtrl;
+
+	/**
+	 * This method creates a shipment by specified list of staffNos (staffNumbers),
+	 * freight number and warehouse name.
+	 *
+	 * @param staffNos      the list of staff numbers that is associated for the
+	 *                      creation of the shipment.
+	 * @param freightNo     the freight number associated with the shipment.
+	 * @param warehouseName the name of the warehouse for the shipment creation.
+	 * @return returns the current shipment with the objects that are found in the
+	 *         database and otherwise if they are null.
+	 * @throws DataAccessException if there is an error accessing the data.
+	 */
 
 	public Shipment createShipment(List<String> staffNos, String freightNo, String warehouseName)
 			throws DataAccessException {
@@ -37,8 +54,18 @@ public class ShipmentCtrl {
 		return currShipment;
 	}
 
-	// TODO: Write logic to make sure date is after LocalDate.now() to ensure
-	// products are not expired.
+	/**
+	 * This method scans product with specified quantity, barcode and date.
+	 * 
+	 * @param quantity the quantity of the scanned product
+	 * @param barcode  the barcode of the scanned product
+	 * @param date     the expiry date of the product.
+	 * @return returns the product if current shipment and date is not null and
+	 *         quantity is bigger than 0 and the found product is succesfully added
+	 *         the product to a shipmentLine and finds available lot.
+	 * @throws DataAccessException if there is an error accessing the data.
+	 */
+
 	public Product scanProduct(int quantity, String barcode, LocalDate date) throws DataAccessException {
 		if (productCtrl == null) {
 			productCtrl = new ProductCtrl();
@@ -54,6 +81,18 @@ public class ShipmentCtrl {
 
 	}
 
+	/**
+	 * This method adds the scanned product in the method above to an available lot.
+	 * 
+	 * @param product  the scanned product from the method above to the available
+	 *                 lot.
+	 * @param quantity the quantity of the product.
+	 * @param date     the date of the of the expiry date of the product.
+	 * @return returns true if the product is added to the available lot and false
+	 *         if not.
+	 * @throws DataAccessException if there is an error accessing the data.
+	 */
+
 	private boolean addFoundProductToAvaliableLot(Product product, int quantity, LocalDate date)
 			throws DataAccessException {
 		boolean res = false;
@@ -67,6 +106,12 @@ public class ShipmentCtrl {
 
 		return res;
 	}
+	
+	/**
+	 * The method confirms the shipment if the shipment is successfully persisted in the database.
+	 * @return returns the confirmed shipment
+	 * @throws DataAccessException if there is an error accessing the data.
+	 */
 
 	public Shipment confirmShipment() throws DataAccessException {
 		ShipmentDBIF shimpmentDBIF = new ShipmentDB();

@@ -21,7 +21,6 @@ public class StorageCtrl {
 		}
 		Lot lot = storageDBIF.findAvailableLotByPriorityInArrivalWarehouse(product.getPriority(), warehouse);
 		LotLine lotLine = new LotLine(product, quantity, date, lot);
-
 		if (lot != null) {
 			storageDBIF.persistProductOnLot(product, lot, quantity, date);
 		}
