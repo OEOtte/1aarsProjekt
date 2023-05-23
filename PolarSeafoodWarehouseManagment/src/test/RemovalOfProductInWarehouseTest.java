@@ -18,7 +18,7 @@ import model.LotLine;
 
 
 
-public class confirmRemovalOfProductInWarehouseTest {
+public class RemovalOfProductInWarehouseTest {
 
 	private ShipmentCtrl sc;
 	private ProductCtrl pc;
