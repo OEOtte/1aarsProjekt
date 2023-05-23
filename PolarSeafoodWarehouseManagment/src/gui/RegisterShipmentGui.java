@@ -90,7 +90,6 @@ public class RegisterShipmentGui extends JFrame {
 		contentPane.setLayout(new BorderLayout(0, 0));
 
 		JPanel panel = new JPanel();
-		Image img = new ImageIcon(this.getClass().getResource("/PolarSeafood1.png")).getImage();
 		contentPane.add(panel, BorderLayout.SOUTH);
 										panel.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 5));
 								
@@ -351,7 +350,6 @@ public class RegisterShipmentGui extends JFrame {
 			int day = Integer.parseInt(txtDay.getText());
 			LocalDate expiryDate = LocalDate.of(year, month, day);
 			int qnty = Integer.parseInt(txtQuantity.getText());
-			
 			Product temp = sc.scanProduct(qnty, barcode, expiryDate);
 			fillOutInformation(temp);
 			sltm.setData(sc.getCurrShipment().getShipmentLines());
