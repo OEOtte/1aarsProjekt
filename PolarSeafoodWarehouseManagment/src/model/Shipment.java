@@ -44,7 +44,6 @@ public class Shipment {
 					.equals(((BoxedProduct) product).getParentBarcode())) {
 				shipmentLines.get(i).increaseQty(quantity);
 				double weightForBox = quantity * (((BoxedProduct) product).getQuantityInBox() * product.getWeight());
-				System.out.println(weightForBox);
 				shipmentLines.get(i).setWeight(weightForBox);
 				totalWeight += weightForBox;
 				res = shipmentLines.get(i);

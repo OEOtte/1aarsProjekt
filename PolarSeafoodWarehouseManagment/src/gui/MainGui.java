@@ -7,13 +7,20 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import controller.DataAccessException;
+import controller.StorageCtrl;
+
 import java.awt.BorderLayout;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.Font;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.util.List;
@@ -23,6 +30,8 @@ import java.awt.Color;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.BoxLayout;
+import javax.swing.DefaultListModel;
+
 import java.awt.FlowLayout;
 import model.*;
 
@@ -34,8 +43,10 @@ public class MainGui extends JFrame {
 	private JTextField txtBarcode;
 	private JTable tblLotLines;
 	private JTextField textQuantity;
-	private LotLineListTableModel lltm;
-	private List<LotLine> lotLines;
+	private StorageCtrl storageCtrl;
+	private ProductListTableModel lltm;
+	private boolean changesMade;
+	private String tempProductName;
 
 	/**
 	 * Launch the application.
@@ -51,23 +62,40 @@ public class MainGui extends JFrame {
 				}
 			}
 		});
-		
-//		new Thread(() -> {
-//			while(true) {
-//				try {
-//					Thread.sleep(2000);
-//				} catch (InterruptedException e) {
-//					// should not happen - we don't interrupt this thread
-//					e.printStackTrace();
-//				}
-//				frame.updateProductList	();
-//			}
-//		}).start();
+
+		new Thread(() -> {
+			while (true) {
+				try {
+					Thread.sleep(2000);
+				} catch (InterruptedException e) {
+					// should not happen - we don't interrupt this thread
+					e.printStackTrace();
+				}
+				frame.updateProductList();
+			}
+		}).start();
 	}
 
 	private void updateProductList() {
-		// TODO Auto-generated method stub
-		
+		SwingUtilities.invokeLater(() -> {
+			List<Product> products;
+			if (tempProductName != txtProductName.getText()) {
+				try {
+					products = storageCtrl.findProductsByPartialName(txtProductName.getText());
+					ProductListTableModel lltm = new ProductListTableModel(products);
+					lltm.setData(products);
+					this.tblLotLines.setModel(lltm);
+					changesMade = true;
+				} catch (DataAccessException e) {
+					JOptionPane.showMessageDialog(null, "Could not update list");
+					e.printStackTrace();
+				}
+
+			} else {
+				changesMade = false;
+			}
+
+		});
 	}
 
 	/**
@@ -202,9 +230,10 @@ public class MainGui extends JFrame {
 	}
 
 	private void init() {
-		lltm = new LotLineListTableModel(lotLines);
-		tblLotLines.setModel(lltm);
-		
+		storageCtrl = new StorageCtrl();
+		// lltm = new ProductListTableModel(null);
+		updateProductList();
+
 	}
 
 	protected void reserveProductClicked() {

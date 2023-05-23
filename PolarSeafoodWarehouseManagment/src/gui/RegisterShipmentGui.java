@@ -338,7 +338,6 @@ public class RegisterShipmentGui extends JFrame {
 	private void init() {
 		sltm = new ShipmentListTableModel(sl);
 		tblShipmentLine.setModel(sltm);
-		//sl = null;
 
 	}
 
