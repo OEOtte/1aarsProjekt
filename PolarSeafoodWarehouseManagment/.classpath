@@ -9,7 +9,6 @@
 	</classpathentry>
 	<classpathentry kind="lib" path="lib/mssql-jdbc-10.2.0.jre17.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/5"/>
-	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="lib" path="lib/jgoodies-forms-1.8.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

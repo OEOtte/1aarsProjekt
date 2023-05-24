@@ -364,6 +364,7 @@ public class StorageDB implements StorageDBIF {
 	/**
 	 * A method used for removing a product that has previously been persisted on a lot, within the database
 	 * @param lotLines
+	 * @return boolean
 	 */
 	@Override
 	public boolean removalOfProductInWarehouse(List<LotLine> lotLines) throws DataAccessException {
