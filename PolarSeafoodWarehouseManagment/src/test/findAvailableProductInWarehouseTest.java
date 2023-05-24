@@ -2,53 +2,42 @@ package test;
 
 	import static org.junit.jupiter.api.Assertions.assertEquals;
 
-	import java.time.LocalDate;
-	import java.util.ArrayList;
-	import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-	import org.junit.jupiter.api.BeforeEach;
-	import org.junit.jupiter.api.Test;
-
-	import controller.DataAccessException;
-	import controller.ProductCtrl;
-	import controller.ShipmentCtrl;
-	import controller.StorageCtrl;
-	import database.StorageDB;
-	import model.LotLine;
+import controller.DataAccessException;
+import controller.ProductCtrl;
+import controller.StorageCtrl;
+import model.Product;
 
 
 
 	public class findAvailableProductInWarehouseTest {
 
-		private ShipmentCtrl sc;
 		private ProductCtrl pc;
 		private StorageCtrl stoCtrl;
-		private StorageDB SDB;
 		
 		@BeforeEach
 		void SetUp() throws DataAccessException {
-			sc = new ShipmentCtrl();
 			pc = new ProductCtrl();
 			stoCtrl = new StorageCtrl();
-			SDB = new StorageDB();
 		}
 		
+		/**
+		 *This method tests if the findAvailableProductInWarehouse method works correctly.
+		 *It does this by creating a local variable that is product p, and setting it to be the return value of the tested method, and
+		 *afterwards asserting that the barcode of p is the same as the barcode used in the scanProduct method. 
+		 * @throws DataAccessException
+		 */
+		
 		@Test
-		void testRemovalOfProductInWarehouseWithValidInput() throws DataAccessException {
+		void testfindAvailableProductInWarehouseWithValidInput() throws DataAccessException {
 			// Arrange
-			LocalDate expiryDate = LocalDate.of(2023, 07, 01);
-			String freightNo = "9999";
-			List<String> staffNos = new ArrayList<>();
-			staffNos.add("5555");
-			String warehouseName = "PSU1";
+			Product p;
 			// act
-			sc.createShipment(staffNos, freightNo, warehouseName);
-			sc.scanProduct(1, "4820226000082", expiryDate);
-			sc.confirmShipment();
-			
-			
+			p = stoCtrl.findAvailableProductInWarehouse(pc.findProductByBarcode("4820226000082"), 1, "PSU1").get(0).getProduct();
 			// assert
-			assertEquals(stoCtrl.findAvailableProductInWarehouse(pc.findProductByBarcode("4820226000082"), 1, "PSU1").get(0).getProduct().getBarcode() , "4820226000082");
+			assertEquals(p.getBarcode() , "4820226000082");
 		}
 
 	}
