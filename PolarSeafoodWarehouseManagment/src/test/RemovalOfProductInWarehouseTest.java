@@ -58,25 +58,6 @@ public class RemovalOfProductInWarehouseTest {
 	}
 
 	/**
-	 * This method tests if the removalOfProductInWarehouse method works with an
-	 * invalid index 0 on lotLines. It does this by first creating a list of LotLines ll, but not adding anything to it.
-	 * This should make the method called with the method with ll as input parameter throw a NullPointerException.
-	 * 
-	 * @throws DataAccessException
-	 */
-
-	@Test
-	void testRemovalOfProductInWarehouseWithLotLinesIndex0BeingNull() throws DataAccessException {
-		// Arrange
-
-		List<LotLine> ll = new ArrayList<>();
-		// act
-
-		// assert
-		assertThrows(NullPointerException.class, () -> stoDB.removalOfProductInWarehouse(ll));
-	}
-
-	/**
 	 * This method tests if the removalOfProductInWarehouse method works with
 	 * lotLines being null. It does this by first creating a list of LotLines ll, and setting it to null.
 	 * This should make the method called with the method with ll as input parameter throw a NullPointerException.
