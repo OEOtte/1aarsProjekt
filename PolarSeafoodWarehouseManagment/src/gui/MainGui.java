@@ -43,12 +43,10 @@ public class MainGui extends JFrame {
 	private JPanel contentPane;
 	private JTextField txtProductName;
 	private JTextField txtWarehouse;
-	private JTable tblLotLines;
+	private JTable tblProducts;
 	private JTextField textQuantity;
 	private StorageCtrl storageCtrl;
-	private ProductListTableModel lltm;
-	private boolean changesMade;
-	private String tempProductName;
+	private ProductListTableModel pltm;
 
 	/**
 	 * Launch the application.
@@ -73,30 +71,25 @@ public class MainGui extends JFrame {
 					// should not happen - we don't interrupt this thread
 					e.printStackTrace();
 				}
-				frame.changedState();
+				frame.updateProductList();
 			}
 		}).start();
-	}
-
-	private void changedState() {
-		if (tempProductName != txtProductName.getText()) {
-			updateProductList();
-		}
 	}
 
 	private void updateProductList() {
 		SwingUtilities.invokeLater(() -> {
 			List<Product> products;
-			try {
-				products = storageCtrl.findProductsByPartialName(txtProductName.getText());
-				ProductListTableModel lltm = new ProductListTableModel(products);
-				lltm.setData(products);
-				this.tblLotLines.setModel(lltm);
+			if (!tblProducts.hasFocus()) {
+				try {
+					products = storageCtrl.findProductsByPartialName(txtProductName.getText());
+					pltm = new ProductListTableModel(products);
+					pltm.setData(products);
+					this.tblProducts.setModel(pltm);
 
-				tempProductName = txtProductName.getText();
-			} catch (DataAccessException e) {
-				JOptionPane.showMessageDialog(null, "Could not update list");
-				e.printStackTrace();
+				} catch (DataAccessException e) {
+					JOptionPane.showMessageDialog(null, "Could not update list");
+					e.printStackTrace();
+				}
 			}
 
 		});
@@ -141,8 +134,8 @@ public class MainGui extends JFrame {
 		gbc_scrollPane.gridy = 0;
 		panel_1.add(scrollPane, gbc_scrollPane);
 
-		tblLotLines = new JTable();
-		scrollPane.setViewportView(tblLotLines);
+		tblProducts = new JTable();
+		scrollPane.setViewportView(tblProducts);
 
 		JPanel panel_2 = new JPanel();
 		panel_2.setBorder(null);
@@ -243,7 +236,12 @@ public class MainGui extends JFrame {
 		JButton btnPickProduct = new JButton("PICK PRODUCT");
 		btnPickProduct.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				pickProductClicked();
+				try {
+					pickProductClicked();
+				} catch (NumberFormatException | DataAccessException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 		});
 		btnPickProduct.setFont(new Font("Tahoma", Font.BOLD, 14));
@@ -269,17 +267,40 @@ public class MainGui extends JFrame {
 
 	}
 
-	protected void reserveProductClicked() {
-		// TODO Auto-generated method stub
+	private void reserveProductClicked() {
+		JOptionPane.showMessageDialog(this, "This use-case has not been implemented :)");
+	}
+
+	private void pickProductClicked() throws NumberFormatException, DataAccessException {
+
+		if (!txtWarehouse.getText().isBlank() && !textQuantity.getText().isBlank()) {
+			Product p = pltm.getDataAt(tblProducts.getSelectedRow());
+			String warehouseName = txtWarehouse.getText();
+			String qty = textQuantity.getText();
+
+			List<LotLine> lls = storageCtrl.findAvailableProductInWarehouse(p, Integer.parseInt(qty), warehouseName);
+
+			int input = JOptionPane.showConfirmDialog(contentPane, buildLotLines(lls));
+			if(input == 0) {
+				storageCtrl.confirmRemovalOfProductInWarehouse(lls);
+			} else if (input == 1);
+			//TODO: implement method that goes back and removes values on "removedqty" on LotLines 
+		}
 
 	}
 
-	protected void pickProductClicked() {
-		// TODO Auto-generated method stub
-
+	private String buildLotLines(List<LotLine> lls) {
+		StringBuilder res = new StringBuilder();
+		res.append("Lot Numbers in warehouse:");
+		res.append(lls.get(lls.size()-1).getLot().getWarehouse().getName());
+		for (LotLine l : lls) {
+			res.append("\nLot: ");
+			res.append(l.getLot().getLotNumber());
+		}
+		return res.toString();
 	}
 
-	protected void RegisterShipmentClicked() {
+	private void RegisterShipmentClicked() {
 		PopUpRegisterShipment ps = new PopUpRegisterShipment();
 		ps.setVisible(true);
 	}

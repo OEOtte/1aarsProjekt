@@ -7,6 +7,7 @@ import model.Freight;
  * 
  * @author Gruppe 3
  */
+
 /**
 * This method finds a freight by its freight number.
 *
