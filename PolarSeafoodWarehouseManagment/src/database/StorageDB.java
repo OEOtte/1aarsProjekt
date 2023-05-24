@@ -32,6 +32,9 @@ public class StorageDB implements StorageDBIF {
 	private static final String FIND_LOT_BY_ID_AND_UPDATE_TO_UNAVAILABLE_Q = "update lot set available = 0 where id = ?;";
 	private PreparedStatement findLotByIdAndUpdateToUnavailablePS;
 
+	private static final String FIND_LOT_BY_ID_AND_UPDATE_TO_AVAILABLE_Q = "update lot set available = 1 where id = ?;";
+	private PreparedStatement findLotByIdAndUpdateToAvailablePS;
+
 	private static final String FIND_WAREHOUSE_BY_ID_Q = "select * from Warehouse where id = '?';";
 	private PreparedStatement findWarehouseByIdPS;
 
@@ -72,6 +75,7 @@ public class StorageDB implements StorageDBIF {
 			findWarehouseByNamePS = connection.prepareStatement(FIND_WAREHOUSE_BY_NAME_Q);
 			findLotByIdAndUpdateToUnavailablePS = connection
 					.prepareStatement(FIND_LOT_BY_ID_AND_UPDATE_TO_UNAVAILABLE_Q);
+			findLotByIdAndUpdateToAvailablePS = connection.prepareStatement(FIND_LOT_BY_ID_AND_UPDATE_TO_AVAILABLE_Q);
 			insertProductOnLotToDatabasePS = connection.prepareStatement(INSERT_PRODUCT_ON_LOT_TO_DATABASE_Q);
 			findAddressWithFullAssosiationFromAddressPS = connection
 					.prepareStatement(FIND_ADDRESS_WITH_FULL_ASSOSIATION_FROM_ADDRESS_Q);
@@ -84,9 +88,11 @@ public class StorageDB implements StorageDBIF {
 			throw new DataAccessException(DBMessages.COULD_NOT_PREPARE_STATEMENT, e);
 		}
 	}
-	
+
 	/**
-	 * This method is used to find the first available lot according to priority of the product
+	 * This method is used to find the first available lot according to priority of
+	 * the product
+	 * 
 	 * @param priority
 	 * @param warehouse
 	 * @return Lot
@@ -115,9 +121,10 @@ public class StorageDB implements StorageDBIF {
 
 		return foundLot;
 	}
-	
+
 	/**
 	 * A method used to construct a lot from database information.
+	 * 
 	 * @param rs
 	 * @param warehouse
 	 * @return Lot
@@ -153,9 +160,11 @@ public class StorageDB implements StorageDBIF {
 		}
 		return foundWarehouse;
 	}
-	
+
 	/**
-	 * A method similar to buildLot, it is instead used to create a warehouse, within which Lots are found.
+	 * A method similar to buildLot, it is instead used to create a warehouse,
+	 * within which Lots are found.
+	 * 
 	 * @param rs
 	 * @return Warehouse
 	 * @throws DataAccessException
@@ -173,9 +182,10 @@ public class StorageDB implements StorageDBIF {
 		}
 		return warehouse;
 	}
-	
+
 	/**
-	 * A method used for finding the address of a specific warehouse, using a warehouse ID and a prepared statement
+	 * A method used for finding the address of a specific warehouse, using a
+	 * warehouse ID and a prepared statement
 	 */
 
 	public String findAddress(int addressId) throws DataAccessException {
@@ -191,9 +201,10 @@ public class StorageDB implements StorageDBIF {
 		}
 		return address;
 	}
-	
+
 	/**
 	 * A method used for creating an address from database information
+	 * 
 	 * @param rs
 	 * @return String
 	 * @throws DataAccessException
@@ -210,9 +221,10 @@ public class StorageDB implements StorageDBIF {
 		}
 		return res;
 	}
-	
+
 	/**
 	 * A method used for persisting the product on the lot within the database
+	 * 
 	 * @param product
 	 * @param lot
 	 * @param quantity
@@ -242,9 +254,11 @@ public class StorageDB implements StorageDBIF {
 		// TODO return correct boolean
 		return false;
 	}
-	
+
 	/**
-	 * A method used for marking lots as unavailable, so that new products may not be placed on them
+	 * A method used for marking lots as unavailable, so that new products may not
+	 * be placed on them
+	 * 
 	 * @param lot
 	 * @throws DataAccessException
 	 */
@@ -259,8 +273,21 @@ public class StorageDB implements StorageDBIF {
 		}
 
 	}
+
+	private void setLotToAvailable(Lot lot) throws DataAccessException {
+		try {
+			findLotByIdAndUpdateToAvailablePS.setInt(1, lot.getId());
+			findLotByIdAndUpdateToAvailablePS.executeUpdate();
+
+		} catch (SQLException e) {
+			throw new DataAccessException(DBMessages.COULD_NOT_BIND_OR_EXECUTE_QUERY, e);
+		}
+
+	}
+
 	/**
 	 * A method used for finding a warehouse using its name
+	 * 
 	 * @param warehouseName
 	 * @return Warehouse
 	 */
@@ -280,18 +307,19 @@ public class StorageDB implements StorageDBIF {
 
 		return warehouse;
 	}
-	
+
 	/**
-	 * A method used when removing from the physical warehouse for finding the product in the database
-	 * and preparing it for removal from the database
+	 * A method used when removing from the physical warehouse for finding the
+	 * product in the database and preparing it for removal from the database
+	 * 
 	 * @param product
 	 * @param quantity
 	 * @param warehouseName
 	 * @return List<LotLine>
 	 */
 	@Override
-	public List<LotLine> findAvailableProductsInWarehouseAndPrepareToRemove(Product product, int quantity, String warehouseName)
-			throws DataAccessException {
+	public List<LotLine> findAvailableProductsInWarehouseAndPrepareToRemove(Product product, int quantity,
+			String warehouseName) throws DataAccessException {
 		List<LotLine> res = new ArrayList<LotLine>();
 		Warehouse currentWarehouse = findWarehouseByName(warehouseName);
 		LotLine foundLotLine = null;
@@ -309,7 +337,8 @@ public class StorageDB implements StorageDBIF {
 				} else if (quantity < foundLotLine.getQuantity()) {
 					foundLotLine.setRemovedQty(quantity);
 					quantity = 0;
-				} //TODO make else statement that allows the method to work if no lotlines are available
+				} // TODO make else statement that allows the method to work if no lotlines are
+					// available
 				res.add(foundLotLine);
 			}
 
@@ -318,8 +347,10 @@ public class StorageDB implements StorageDBIF {
 		}
 		return res;
 	}
+
 	/**
 	 * A method used for constructing LotLine objects from the database
+	 * 
 	 * @param rs
 	 * @param product
 	 * @param warehouse
@@ -337,9 +368,10 @@ public class StorageDB implements StorageDBIF {
 		}
 		return res;
 	}
-	
+
 	/**
 	 * A method used for finding Lots by their IDs
+	 * 
 	 * @param id
 	 * @param warehouse
 	 * @return Lot
@@ -360,9 +392,11 @@ public class StorageDB implements StorageDBIF {
 		}
 		return res;
 	}
-	
+
 	/**
-	 * A method used for removing a product that has previously been persisted on a lot, within the database
+	 * A method used for removing a product that has previously been persisted on a
+	 * lot, within the database
+	 * 
 	 * @param lotLines
 	 * @return boolean
 	 */
@@ -377,6 +411,8 @@ public class StorageDB implements StorageDBIF {
 					removeLotLineFromDatabaseWithIdsPS.setInt(1, ll.getProduct().getId());
 					removeLotLineFromDatabaseWithIdsPS.setInt(2, ll.getLot().getId());
 					removeLotLineFromDatabaseWithIdsPS.executeUpdate();
+					setLotToAvailable(ll.getLot());
+
 				} else {
 					int leftQty = ll.getQuantity() - ll.getRemovedQty();
 					updateQuantityOnLotLinePS.setInt(1, leftQty);

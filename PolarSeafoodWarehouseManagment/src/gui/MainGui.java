@@ -99,6 +99,7 @@ public class MainGui extends JFrame {
 	 * Create the frame.
 	 */
 	public MainGui() {
+		setIconImage(Toolkit.getDefaultToolkit().getImage("C:\\Users\\Alex\\Documents\\GitHub\\1aarsProjekt\\PolarSeafoodWarehouseManagment\\img\\PSULOGO.png"));
 		setTitle("Polar Seafood Ukraine");
 		setFont(new Font("Dialog", Font.PLAIN, 10));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -291,7 +292,7 @@ public class MainGui extends JFrame {
 
 	private String buildLotLines(List<LotLine> lls) {
 		StringBuilder res = new StringBuilder();
-		res.append("Lot Numbers in warehouse:");
+		res.append("Lot Numbers in warehouse: ");
 		res.append(lls.get(lls.size()-1).getLot().getWarehouse().getName());
 		for (LotLine l : lls) {
 			res.append("\nLot: ");

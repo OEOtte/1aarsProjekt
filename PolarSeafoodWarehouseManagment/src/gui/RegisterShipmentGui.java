@@ -43,6 +43,7 @@ import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.RowSpec;
 //import net.miginfocom.swing.MigLayout;
 import java.awt.CardLayout;
+import java.awt.Toolkit;
 
 public class RegisterShipmentGui extends JFrame {
 
@@ -79,6 +80,7 @@ public class RegisterShipmentGui extends JFrame {
 	 * Create the frame.
 	 */
 	public RegisterShipmentGui() {
+		setIconImage(Toolkit.getDefaultToolkit().getImage("C:\\Users\\Alex\\Documents\\GitHub\\1aarsProjekt\\PolarSeafoodWarehouseManagment\\img\\PSULOGO.png"));
 		setTitle("Register Shipment");
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

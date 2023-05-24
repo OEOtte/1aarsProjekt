@@ -58,7 +58,7 @@ public class PopUpRegisterShipment extends JDialog {
 	 * Create the dialog.
 	 */
 	public PopUpRegisterShipment() {
-		setIconImage(Toolkit.getDefaultToolkit().getImage("C:\\Users\\oscar\\OneDrive\\Dokumenter\\PolarSeafood1.png"));
+		setIconImage(Toolkit.getDefaultToolkit().getImage("C:\\Users\\Alex\\Documents\\GitHub\\1aarsProjekt\\PolarSeafoodWarehouseManagment\\img\\PSULOGO.png"));
 		setTitle("Create Shipment");
 		setBounds(100, 100, 479, 309);
 		getContentPane().setLayout(new BorderLayout(0, 0));
