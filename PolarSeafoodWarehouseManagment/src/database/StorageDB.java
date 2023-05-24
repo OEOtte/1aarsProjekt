@@ -35,7 +35,7 @@ public class StorageDB implements StorageDBIF {
 	private static final String FIND_LOT_BY_ID_AND_UPDATE_TO_AVAILABLE_Q = "update lot set available = 1 where id = ?;";
 	private PreparedStatement findLotByIdAndUpdateToAvailablePS;
 
-	private static final String FIND_WAREHOUSE_BY_ID_Q = "select * from Warehouse where id = '?';";
+	private static final String FIND_WAREHOUSE_BY_ID_Q = "select * from Warehouse where id = ?;";
 	private PreparedStatement findWarehouseByIdPS;
 
 	private static final String FIND_WAREHOUSE_BY_NAME_Q = "select * from Warehouse where name = ?;";
@@ -112,7 +112,7 @@ public class StorageDB implements StorageDBIF {
 				rs = findAvailableLotByPriorityDecendingPS.executeQuery();
 			}
 			if (rs.next()) {
-				foundLot = buildLot(rs, warehouse);
+				foundLot = buildLot(rs);
 			}
 
 		} catch (SQLException e) {
@@ -131,10 +131,11 @@ public class StorageDB implements StorageDBIF {
 	 * @throws DataAccessException
 	 */
 
-	private Lot buildLot(ResultSet rs, Warehouse warehouse) throws DataAccessException {
+	private Lot buildLot(ResultSet rs) throws DataAccessException {
 		Lot res = null;
 		try {
-			res = new Lot(rs.getInt("id"), rs.getString("lotNo"), rs.getBoolean("available"), warehouse);
+			res = new Lot(rs.getInt("id"), rs.getString("lotNo"), rs.getBoolean("available"),
+					findWarehouseById(rs.getInt("warehouse_id")));
 
 		} catch (SQLException e) {
 			throw new DataAccessException(DBMessages.COULD_NOT_READ_RESULTSET, e);
@@ -143,9 +144,7 @@ public class StorageDB implements StorageDBIF {
 		return res;
 	}
 
-	/*
-	 * Not a used method
-	 */
+	//TODO:
 	private Warehouse findWarehouseById(int id) throws DataAccessException {
 		Warehouse foundWarehouse = null;
 		try {
@@ -330,7 +329,7 @@ public class StorageDB implements StorageDBIF {
 			ResultSet rs = findProductsInWarehouseByIdPS.executeQuery();
 
 			while (rs.next() && quantity != 0) {
-				foundLotLine = buildLotLine(rs, product, currentWarehouse);
+				foundLotLine = buildLotLine(rs, product);
 				if (quantity >= foundLotLine.getQuantity()) {
 					foundLotLine.setRemovedQty(foundLotLine.getQuantity());
 					quantity -= foundLotLine.getQuantity();
@@ -357,12 +356,12 @@ public class StorageDB implements StorageDBIF {
 	 * @return LotLine
 	 * @throws DataAccessException
 	 */
-	private LotLine buildLotLine(ResultSet rs, Product product, Warehouse warehouse) throws DataAccessException {
+	private LotLine buildLotLine(ResultSet rs, Product product) throws DataAccessException {
 
 		LotLine res = null;
 		try {
 			res = new LotLine(product, rs.getInt("quantity"), rs.getDate("expirationDate").toLocalDate(),
-					findLotFromID(rs.getInt("lot_id"), warehouse));
+					findLotFromID(rs.getInt("lot_id")));
 		} catch (SQLException e) {
 			throw new DataAccessException(DBMessages.COULD_NOT_READ_RESULTSET, e);
 		}
@@ -377,7 +376,7 @@ public class StorageDB implements StorageDBIF {
 	 * @return Lot
 	 * @throws DataAccessException
 	 */
-	private Lot findLotFromID(int id, Warehouse warehouse) throws DataAccessException {
+	private Lot findLotFromID(int id) throws DataAccessException {
 		Lot res = null;
 
 		try {
@@ -385,7 +384,7 @@ public class StorageDB implements StorageDBIF {
 			ResultSet rs = findLotFromIdPS.executeQuery();
 
 			if (rs.next()) {
-				res = buildLot(rs, warehouse);
+				res = buildLot(rs);
 			}
 		} catch (SQLException e) {
 			throw new DataAccessException(DBMessages.COULD_NOT_BIND_OR_EXECUTE_QUERY, e);
