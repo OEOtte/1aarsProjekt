@@ -84,6 +84,13 @@ public class StorageDB implements StorageDBIF {
 			throw new DataAccessException(DBMessages.COULD_NOT_PREPARE_STATEMENT, e);
 		}
 	}
+	
+	/**
+	 * This method is used to find the first available lot according to priority of the product
+	 * @param priority
+	 * @param warehouse
+	 * @return Lot
+	 */
 
 	@Override
 	public Lot findAvailableLotByPriorityInArrivalWarehouse(boolean priority, Warehouse warehouse)
@@ -108,6 +115,14 @@ public class StorageDB implements StorageDBIF {
 
 		return foundLot;
 	}
+	
+	/**
+	 * A method used to construct a lot from database information.
+	 * @param rs
+	 * @param warehouse
+	 * @return Lot
+	 * @throws DataAccessException
+	 */
 
 	private Lot buildLot(ResultSet rs, Warehouse warehouse) throws DataAccessException {
 		Lot res = null;
@@ -138,6 +153,13 @@ public class StorageDB implements StorageDBIF {
 		}
 		return foundWarehouse;
 	}
+	
+	/**
+	 * A method similar to buildLot, it is instead used to create a warehouse, within which Lots are found.
+	 * @param rs
+	 * @return Warehouse
+	 * @throws DataAccessException
+	 */
 
 	private Warehouse buildWarehouse(ResultSet rs) throws DataAccessException {
 		Warehouse warehouse = null;
@@ -151,6 +173,10 @@ public class StorageDB implements StorageDBIF {
 		}
 		return warehouse;
 	}
+	
+	/**
+	 * A method used for finding the address of a specific warehouse, using a warehouse ID and a prepared statement
+	 */
 
 	public String findAddress(int addressId) throws DataAccessException {
 		String address = null;
@@ -165,6 +191,13 @@ public class StorageDB implements StorageDBIF {
 		}
 		return address;
 	}
+	
+	/**
+	 * A method used for creating an address from database information
+	 * @param rs
+	 * @return String
+	 * @throws DataAccessException
+	 */
 
 	private String buildAddress(ResultSet rs) throws DataAccessException {
 		String res = null;
@@ -177,7 +210,15 @@ public class StorageDB implements StorageDBIF {
 		}
 		return res;
 	}
-
+	
+	/**
+	 * A method used for persisting the product on the lot within the database
+	 * @param product
+	 * @param lot
+	 * @param quantity
+	 * @param date
+	 * @return boolean
+	 */
 	@Override
 	public boolean persistProductOnLot(Product product, Lot lot, int quantity, LocalDate date)
 			throws DataAccessException {
@@ -201,6 +242,12 @@ public class StorageDB implements StorageDBIF {
 		// TODO return correct boolean
 		return false;
 	}
+	
+	/**
+	 * A method used for marking lots as unavailable, so that new products may not be placed on them
+	 * @param lot
+	 * @throws DataAccessException
+	 */
 
 	private void setLotToUnavailable(Lot lot) throws DataAccessException {
 		try {
@@ -212,7 +259,11 @@ public class StorageDB implements StorageDBIF {
 		}
 
 	}
-
+	/**
+	 * A method used for finding a warehouse using its name
+	 * @param warehouseName
+	 * @return Warehouse
+	 */
 	@Override
 	public Warehouse findWarehouseByName(String warehouseName) throws DataAccessException {
 		Warehouse warehouse = null;
@@ -229,7 +280,15 @@ public class StorageDB implements StorageDBIF {
 
 		return warehouse;
 	}
-
+	
+	/**
+	 * A method used when removing from the physical warehouse for finding the product in the database
+	 * and preparing it for removal from the database
+	 * @param product
+	 * @param quantity
+	 * @param warehouseName
+	 * @return List<LotLine>
+	 */
 	@Override
 	public List<LotLine> findAvailableProductsInWarehouseAndPrepareToRemove(Product product, int quantity, String warehouseName)
 			throws DataAccessException {
@@ -259,7 +318,14 @@ public class StorageDB implements StorageDBIF {
 		}
 		return res;
 	}
-
+	/**
+	 * A method used for constructing LotLine objects from the database
+	 * @param rs
+	 * @param product
+	 * @param warehouse
+	 * @return LotLine
+	 * @throws DataAccessException
+	 */
 	private LotLine buildLotLine(ResultSet rs, Product product, Warehouse warehouse) throws DataAccessException {
 
 		LotLine res = null;
@@ -271,7 +337,14 @@ public class StorageDB implements StorageDBIF {
 		}
 		return res;
 	}
-
+	
+	/**
+	 * A method used for finding Lots by their IDs
+	 * @param id
+	 * @param warehouse
+	 * @return Lot
+	 * @throws DataAccessException
+	 */
 	private Lot findLotFromID(int id, Warehouse warehouse) throws DataAccessException {
 		Lot res = null;
 
@@ -287,7 +360,11 @@ public class StorageDB implements StorageDBIF {
 		}
 		return res;
 	}
-
+	
+	/**
+	 * A method used for removing a product that has previously been persisted on a lot, within the database
+	 * @param lotLines
+	 */
 	@Override
 	public boolean removalOfProductInWarehouse(List<LotLine> lotLines) throws DataAccessException {
 		boolean res = true;

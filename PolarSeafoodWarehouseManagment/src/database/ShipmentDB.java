@@ -52,6 +52,12 @@ public class ShipmentDB implements ShipmentDBIF {
 			throw new DataAccessException(DBMessages.COULD_NOT_PREPARE_STATEMENT, e);
 		}
 	}
+	
+	/**
+	 * persistShipment is used to persist the shipment within the database so that it might be found again later.
+	 * It does this, using a prepared statement and a transaction.
+	 * @param shipment an instance if Shipment that was put together previously.
+	 */
 
 	@Override
 	public void persistShipment(Shipment shipment) throws DataAccessException {
@@ -79,6 +85,11 @@ public class ShipmentDB implements ShipmentDBIF {
 			throw new DataAccessException(DBMessages.COULD_NOT_BIND_OR_EXECUTE_QUERY, e);
 		}
 	}
+	
+	/**
+	 * getLatestShipmentNoAndIncreaseByOne is used when creating a new shipment, to ensure that the shipment number is always unique.
+	 * @return int
+	 */
 
 	private int getLatestShipmentNoAndIncreaseByOne() throws DataAccessException {
 		int foundShipmentNo = 1;
@@ -92,6 +103,11 @@ public class ShipmentDB implements ShipmentDBIF {
 		}
 		return foundShipmentNo;
 	}
+	
+	/**
+	 * getLatestShipmentNo simply finds the latest shipment number that was persisted within the database
+	 * @return int
+	 */
 
 	@Override
 	public int getLatestShipmentNo() throws DataAccessException {
@@ -106,6 +122,14 @@ public class ShipmentDB implements ShipmentDBIF {
 		}
 		return foundShipmentNo;
 	}
+	
+	/**
+	 * persistStaffOnShipment does exactly what it says, it persists the assigned staff to the shipment
+	 * so that it might be found later.
+	 * @param id
+	 * @param staffOnShipment
+	 * @throws DataAccessException
+	 */
 
 	private void persistStaffOnShipment(int id, List<Staff> staffOnShipment) throws DataAccessException {
 		try {
@@ -121,6 +145,14 @@ public class ShipmentDB implements ShipmentDBIF {
 		}
 
 	}
+	
+	/**
+	 * persistShipmentInWarehouse is used to assign which warehouse a shipment has arrived at
+	 * so that the shipment can be found through the warehouse, and the warehouse can be found through the shipment
+	 * @param shipment
+	 * @param id
+	 * @throws DataAccessException
+	 */
 
 	private void persistShipmentInWarehouse(Shipment shipment, int id) throws DataAccessException {
 		try {
@@ -132,6 +164,13 @@ public class ShipmentDB implements ShipmentDBIF {
 			throw new DataAccessException(DBMessages.COULD_NOT_BIND_OR_EXECUTE_QUERY, e);
 		}
 	}
+	
+	/**
+	 * persistShipmentLine is used to persist the shipmentLine within the database.
+	 * @param shipment
+	 * @param id
+	 * @throws DataAccessException
+	 */
 
 	private void persistShipmentLine(Shipment shipment, int id) throws DataAccessException {
 		List<ShipmentLine> shipmentLines = shipment.getShipmentLines();
