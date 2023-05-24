@@ -73,28 +73,30 @@ public class MainGui extends JFrame {
 					// should not happen - we don't interrupt this thread
 					e.printStackTrace();
 				}
-				frame.updateProductList();
+				frame.changedState();
 			}
 		}).start();
+	}
+
+	private void changedState() {
+		if (tempProductName != txtProductName.getText()) {
+			updateProductList();
+		}
 	}
 
 	private void updateProductList() {
 		SwingUtilities.invokeLater(() -> {
 			List<Product> products;
-			if (tempProductName != txtProductName.getText()) {
-				try {
-					products = storageCtrl.findProductsByPartialName(txtProductName.getText());
-					ProductListTableModel lltm = new ProductListTableModel(products);
-					lltm.setData(products);
-					this.tblLotLines.setModel(lltm);
-					changesMade = true;
-				} catch (DataAccessException e) {
-					JOptionPane.showMessageDialog(null, "Could not update list");
-					e.printStackTrace();
-				}
+			try {
+				products = storageCtrl.findProductsByPartialName(txtProductName.getText());
+				ProductListTableModel lltm = new ProductListTableModel(products);
+				lltm.setData(products);
+				this.tblLotLines.setModel(lltm);
 
-			} else {
-				changesMade = false;
+				tempProductName = txtProductName.getText();
+			} catch (DataAccessException e) {
+				JOptionPane.showMessageDialog(null, "Could not update list");
+				e.printStackTrace();
 			}
 
 		});
@@ -160,7 +162,7 @@ public class MainGui extends JFrame {
 		gbc_findProduct.gridx = 2;
 		gbc_findProduct.gridy = 0;
 		panel_2.add(findProduct, gbc_findProduct);
-		
+
 		JLabel lblProductName = new JLabel("Product Name:");
 		GridBagConstraints gbc_lblProductName = new GridBagConstraints();
 		gbc_lblProductName.insets = new Insets(0, 0, 5, 5);
@@ -190,7 +192,7 @@ public class MainGui extends JFrame {
 			}
 		});
 		btnRegisterShipment.setFont(new Font("Tahoma", Font.BOLD, 14));
-		
+
 		JLabel lblWarehouse = new JLabel("Warehouse:");
 		GridBagConstraints gbc_lblWarehouse = new GridBagConstraints();
 		gbc_lblWarehouse.insets = new Insets(0, 0, 5, 5);
@@ -220,7 +222,7 @@ public class MainGui extends JFrame {
 			}
 		});
 		btnReserveProduct.setFont(new Font("Tahoma", Font.BOLD, 14));
-		
+
 		JLabel lblQuantity = new JLabel("Quantity");
 		GridBagConstraints gbc_lblQuantity = new GridBagConstraints();
 		gbc_lblQuantity.insets = new Insets(0, 0, 5, 5);
@@ -250,7 +252,7 @@ public class MainGui extends JFrame {
 		gbc_btnPickProduct.gridx = 4;
 		gbc_btnPickProduct.gridy = 3;
 		panel_2.add(btnPickProduct, gbc_btnPickProduct);
-		
+
 		JLabel lblNewLabel_1 = new JLabel("-");
 		GridBagConstraints gbc_lblNewLabel_1 = new GridBagConstraints();
 		gbc_lblNewLabel_1.insets = new Insets(0, 0, 5, 5);
