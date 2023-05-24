@@ -28,6 +28,11 @@ public class ProductDB implements ProductDBIF {
 	public ProductDB() throws DataAccessException {
 		init();
 	}
+	
+	/**
+	 * initializes the ProductDB object by setting up a database connection and preparing statements
+	 * @throws DataAccessException
+	 */
 
 	private void init() throws DataAccessException {
 		Connection connection = DBConnection.getInstance().getConnection();
@@ -39,6 +44,13 @@ public class ProductDB implements ProductDBIF {
 			throw new DataAccessException(DBMessages.COULD_NOT_PREPARE_STATEMENT, e);
 		}
 	}
+	
+	/**
+	 * findProductByBarcode uses the input parameter "barcode" to create a result set containing various matching products
+	 * 
+	 * @param barcode a string of the barcode found on the physical product
+	 * @return foundProduct a list of products constructed using the result set
+	 */
 
 	@Override
 	public Product findProductByBarcode(String barcode) throws DataAccessException {
@@ -56,6 +68,13 @@ public class ProductDB implements ProductDBIF {
 		}
 		return foundProduct;
 	}
+	
+	/**
+	 * buildObject constructs objects with data from the result set found in findProductByBarcode
+	 * @param rs
+	 * @return res an instance of Product
+	 * @throws DataAccessException
+	 */
 
 	private Product buildObject(ResultSet rs) throws DataAccessException {
 		Product res = null;
@@ -87,6 +106,14 @@ public class ProductDB implements ProductDBIF {
 
 		return res;
 	}
+	
+	
+	/**
+	 * findProductByPartialName a method that allows finding various products, with only a partial name.
+	 * finding and returning a list of all products that contain matching strings
+	 * 
+	 * @param productName a string containing the partial name of a product
+	 */
 
 	@Override
 	public List<Product> findProductByPartialName(String productName) throws DataAccessException {

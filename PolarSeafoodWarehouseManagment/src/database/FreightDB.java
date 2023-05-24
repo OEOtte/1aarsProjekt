@@ -19,6 +19,11 @@ public class FreightDB implements FreightDBIF {
 	public FreightDB() throws DataAccessException {
 		init();
 	}
+	
+	/**
+	 * initializes the FreightDB object by setting up a database connection and preparing statements
+	 * @throws DataAccessException
+	 */
 
 	private void init() throws DataAccessException {
 		Connection connection = DBConnection.getInstance().getConnection();
@@ -29,6 +34,13 @@ public class FreightDB implements FreightDBIF {
 			throw new DataAccessException(DBMessages.COULD_NOT_PREPARE_STATEMENT, e);
 		}
 	}
+	
+	/**
+	 * findFreightByFreightNumber uses a prepared statement to construct a result set, with which we construct the desired objects
+	 * @param freightNumber the number used to identify various freights
+	 * @return foundFreight a list of freights matching the input parameters.
+	 * 
+	 */
 
 	@Override
 	public Freight findFreightByFreightNumber(String freightNumber) throws DataAccessException {
@@ -46,6 +58,13 @@ public class FreightDB implements FreightDBIF {
 		}
 		return foundFreight;
 	}
+	
+	/**
+	 * buildObject contstructs objects with data from the resultset found in findFreightByFreightNumber
+	 * @param rs
+	 * @return res an instance of Freight
+	 * @throws DataAccessException
+	 */
 
 	private Freight buildObject(ResultSet rs) throws DataAccessException {
 		Freight res = null;
