@@ -32,6 +32,11 @@ public class ShipmentDB implements ShipmentDBIF {
 	public ShipmentDB() throws DataAccessException {
 		init();
 	}
+	
+	/**
+	 * initialized ShipmentDB by creating a connection to the database and setting up the prepared statements
+	 * @throws DataAccessException
+	 */
 
 	private void init() throws DataAccessException {
 		Connection connection = DBConnection.getInstance().getConnection();
