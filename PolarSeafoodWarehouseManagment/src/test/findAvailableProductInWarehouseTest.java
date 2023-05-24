@@ -1,6 +1,8 @@
 package test;
 
-	import static org.junit.jupiter.api.Assertions.assertEquals;
+	import static org.junit.Assert.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,7 +33,7 @@ import model.Product;
 		 */
 		
 		@Test
-		void testfindAvailableProductInWarehouseWithValidInput() throws DataAccessException {
+		void testFindAvailableProductInWarehouseWithValidInput() throws DataAccessException {
 			// Arrange
 			Product p;
 			// act
@@ -40,5 +42,61 @@ import model.Product;
 			assertEquals(p.getBarcode() , "4820226000082");
 		}
 
+		@Test
+		void testFindAvailableProductInWarehouseWithInvalidProduct() throws DataAccessException {
+			// Arrange
+			Product p;
+			// act
+			p = null;
+			// assert
+			org.junit.jupiter.api.Assertions.assertThrows(NullPointerException.class, () -> 
+		        stoCtrl.findAvailableProductInWarehouse(p, 1, "PSU1"));
+		    
+		}
+		
+		@Test
+		void testFindAvailableProductInWarehouseWhereWarehouseNameIsNotString() throws DataAccessException {
+			// Arrange
+			Product p;
+			// act
+			p = pc.findProductByBarcode("4820226000082");
+			// assert
+			org.junit.jupiter.api.Assertions.assertThrows(NullPointerException.class, () -> 
+		        stoCtrl.findAvailableProductInWarehouse(p, 1, null));
+		    
+		}
+		
+		@Test
+		void testFindAvailableProductInWarehouseWhereWarehouseNameHasInvalidInfo() throws DataAccessException {
+			// Arrange
+			Product p;
+			// act
+			p = pc.findProductByBarcode("4820226000082");
+			// assert
+			org.junit.jupiter.api.Assertions.assertThrows(NullPointerException.class, () -> 
+		        stoCtrl.findAvailableProductInWarehouse(p, 1, "Ukraine"));
+		}
+		
+		@Test
+		void testFindAvailableProductInWarehouseWithInvalidQuantity0() throws DataAccessException {
+			// Arrange
+			Product p;
+			// act
+			p = pc.findProductByBarcode("4820226000082");
+			// assert
+			org.junit.jupiter.api.Assertions.assertThrows(NullPointerException.class, () -> 
+		        stoCtrl.findAvailableProductInWarehouse(p, 0, "PSU1"));
+		}
+		
+		@Test
+		void testFindAvailableProductInWarehouseWithInvalidQuantityMinus1() throws DataAccessException {
+			// Arrange
+			Product p;
+			// act
+			p = pc.findProductByBarcode("4820226000082");
+			// assert
+			org.junit.jupiter.api.Assertions.assertThrows(NullPointerException.class, () -> 
+		        stoCtrl.findAvailableProductInWarehouse(p, -1, "PSU1"));
+		}
 	}
 
