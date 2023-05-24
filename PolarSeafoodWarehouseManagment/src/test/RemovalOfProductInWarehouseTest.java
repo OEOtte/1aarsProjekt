@@ -1,6 +1,6 @@
 package test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -22,15 +22,13 @@ public class RemovalOfProductInWarehouseTest {
 
 	private ShipmentCtrl sc;
 	private ProductCtrl pc;
-	private StorageCtrl stoCtrl;
-	private StorageDB SDB;
+	private StorageDB stoDB;
 	
 	@BeforeEach
 	void SetUp() throws DataAccessException {
 		sc = new ShipmentCtrl();
 		pc = new ProductCtrl();
-		stoCtrl = new StorageCtrl();
-		SDB = new StorageDB();
+		stoDB = new StorageDB();
 	}
 	
 	@Test
@@ -46,10 +44,10 @@ public class RemovalOfProductInWarehouseTest {
 		sc.createShipment(staffNos, freightNo, warehouseName);
 		sc.scanProduct(1, "4820226000082", expiryDate);
 		sc.confirmShipment();
-		ll.add(pc.findProductsByPartialName("tuna").get(0).getLotLines().get(0));
-		SDB.removalOfProductInWarehouse(ll);
+		ll = stoDB.findAvailableProductsInWarehouseAndPrepareToRemove(pc.findProductsByPartialName("tuna").get(0), 1, "PSU1");
+		boolean works = stoDB.removalOfProductInWarehouse(ll);
 		// assert
-		assertEquals(pc.findProductByBarcode("4820226000082").getBarcode() , "4820226000082");
+		assertTrue(works);
 	}
 
 }

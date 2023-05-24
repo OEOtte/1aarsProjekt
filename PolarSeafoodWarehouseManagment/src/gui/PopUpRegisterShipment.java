@@ -206,7 +206,7 @@ public class PopUpRegisterShipment extends JDialog {
 	protected void createShipmentClicked() throws DataAccessException {
 		RegisterShipmentGui rsg = new RegisterShipmentGui();
 
-		if (textFreightNumber != null && textWarehouse != null && staffNos != null) {
+		if (!textFreightNumber.getText().isBlank() && !textWarehouse.getText().isBlank() && staffNos != null) {
 			String freight = textFreightNumber.getText();
 			String warehouse = textWarehouse.getText();
 

@@ -32,6 +32,12 @@ public class StaffDB implements StaffDBIF {
 			throw new DataAccessException(DBMessages.COULD_NOT_PREPARE_STATEMENT, e);
 		}
 	}
+	
+	/**
+	 * findStaffByNos finds a staff member within the system, using their employee number (or staffNo)
+	 * @param staffNos
+	 * @return List<Staff>
+	 */
 
 	@Override
 	public List<Staff> findStaffByNos(List<String> staffNos) throws DataAccessException {
@@ -54,6 +60,13 @@ public class StaffDB implements StaffDBIF {
 
 		return foundStaff;
 	}
+	
+	/**
+	 * buildObject is used to construct a staff with information from the database
+	 * @param rs
+	 * @return Staff
+	 * @throws DataAccessException
+	 */
 
 	private Staff buildObject(ResultSet rs) throws DataAccessException {
 		Staff res = null;
@@ -69,6 +82,12 @@ public class StaffDB implements StaffDBIF {
 
 		return res;
 	}
+	
+	/**
+	 * findStaffIdByNo is used to find the id from the database using the staff number
+	 * @param staffNo
+	 * @return int
+	 */
 
 	@Override
 	public int findStaffIdByNo(String staffNo) throws DataAccessException {
