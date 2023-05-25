@@ -35,7 +35,7 @@ import model.Product;
 			// Arrange
 			Product p;
 			// act
-			p = stoCtrl.findAvailableProductInWarehouse(pc.findProductByBarcode("4820226000082"), 1, "PSU1").get(0).getProduct();
+			p = stoCtrl.findAvailableProductInWarehouseAndPrepareToRemove(pc.findProductByBarcode("4820226000082"), 1, "PSU1").get(0).getProduct();
 			// assert
 			assertEquals(p.getBarcode() , "4820226000082");
 		}

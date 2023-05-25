@@ -144,7 +144,7 @@ public class StorageDB implements StorageDBIF {
 		return res;
 	}
 
-	//TODO:
+	//TODO: Write javadoc
 	private Warehouse findWarehouseById(int id) throws DataAccessException {
 		Warehouse foundWarehouse = null;
 		try {

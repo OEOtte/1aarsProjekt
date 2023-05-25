@@ -32,9 +32,11 @@ public class StaffDB implements StaffDBIF {
 			throw new DataAccessException(DBMessages.COULD_NOT_PREPARE_STATEMENT, e);
 		}
 	}
-	
+
 	/**
-	 * findStaffByNos finds a staff member within the system, using their employee number (or staffNo)
+	 * findStaffByNos finds a staff member within the system, using their employee
+	 * number (or staffNo)
+	 * 
 	 * @param staffNos
 	 * @return List<Staff>
 	 */
@@ -51,7 +53,7 @@ public class StaffDB implements StaffDBIF {
 					if (foundStaff == null) {
 						foundStaff = new ArrayList<>();
 					}
-					foundStaff.add(buildObject(rs));
+					foundStaff.add(buildStaff(rs));
 				}
 			} catch (SQLException e) {
 				throw new DataAccessException(DBMessages.COULD_NOT_BIND_OR_EXECUTE_QUERY, e);
@@ -60,15 +62,16 @@ public class StaffDB implements StaffDBIF {
 
 		return foundStaff;
 	}
-	
+
 	/**
 	 * buildObject is used to construct a staff with information from the database
+	 * 
 	 * @param rs
 	 * @return Staff
 	 * @throws DataAccessException
 	 */
 
-	private Staff buildObject(ResultSet rs) throws DataAccessException {
+	private Staff buildStaff(ResultSet rs) throws DataAccessException {
 		Staff res = null;
 
 		try {
@@ -82,9 +85,11 @@ public class StaffDB implements StaffDBIF {
 
 		return res;
 	}
-	
+
 	/**
-	 * findStaffIdByNo is used to find the id from the database using the staff number
+	 * findStaffIdByNo is used to find the id from the database using the staff
+	 * number
+	 * 
 	 * @param staffNo
 	 * @return int
 	 */
@@ -103,16 +108,5 @@ public class StaffDB implements StaffDBIF {
 		}
 		return foundStaffId;
 	}
-
-//	private int getId(ResultSet rs) throws DataAccessException {
-//		int res = -1;
-//		try {
-//			res = rs.getInt("id");
-//		} catch (SQLException e) {
-//			throw new DataAccessException(DBMessages.COULD_NOT_READ_RESULTSET, e);
-//		}
-//
-//		return res;
-//	}
 
 }

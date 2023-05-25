@@ -60,7 +60,7 @@ public class ProductDB implements ProductDBIF {
 			findByBarcodePS.setString(2, barcode);
 			ResultSet rs = findByBarcodePS.executeQuery();
 			if (rs.next()) {
-				foundProduct = buildObject(rs);
+				foundProduct = buildProduct(rs);
 			}
 
 		} catch (SQLException e) {
@@ -76,7 +76,7 @@ public class ProductDB implements ProductDBIF {
 	 * @throws DataAccessException
 	 */
 
-	private Product buildObject(ResultSet rs) throws DataAccessException {
+	private Product buildProduct(ResultSet rs) throws DataAccessException {
 		Product res = null;
 		try {
 			String type = rs.getString("type").toLowerCase();
@@ -122,7 +122,7 @@ public class ProductDB implements ProductDBIF {
 			findByPartialNamePS.setString(1, "%" + productName + "%");
 			ResultSet rs = findByPartialNamePS.executeQuery();
 			while (rs.next()) {
-				foundProduct = buildObject(rs);
+				foundProduct = buildProduct(rs);
 				products.add(foundProduct);
 			}
 

@@ -107,9 +107,11 @@ public class ShipmentCtrl {
 
 		return res;
 	}
-	
+
 	/**
-	 * The method confirms the shipment if the shipment is successfully persisted in the database.
+	 * The method confirms the shipment if the shipment is successfully persisted in
+	 * the database.
+	 * 
 	 * @return returns the confirmed shipment
 	 * @throws DataAccessException if there is an error accessing the data.
 	 */

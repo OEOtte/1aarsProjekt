@@ -7,5 +7,5 @@ import model.*;
 public interface StaffDBIF {
 
 	public List<Staff> findStaffByNos(List<String> staffNos) throws DataAccessException;
-	public int findStaffIdByNo(String staffNos) throws DataAccessException;
+	public int findStaffIdByNo(String staffNo) throws DataAccessException;
 }

@@ -6,5 +6,6 @@ import model.Shipment;
 public interface ShipmentDBIF {
 
 	public void persistShipment(Shipment shipment) throws DataAccessException;
+	
 	public int getLatestShipmentNo() throws DataAccessException;
 }

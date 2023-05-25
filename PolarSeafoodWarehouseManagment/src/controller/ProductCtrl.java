@@ -49,9 +49,9 @@ public class ProductCtrl {
      * @throws DataAccessException if there is an error accessing the data.
      */
 	
-	public List<Product> findProductsByPartialName(String prod) throws DataAccessException{
+	public List<Product> findProductsByPartialName(String product) throws DataAccessException{
 		ProductDBIF prodDBIF = new ProductDB();
-		return prodDBIF.findProductByPartialName(prod);
+		return prodDBIF.findProductByPartialName(product);
 	}
 
 

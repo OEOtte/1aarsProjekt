@@ -78,7 +78,7 @@ public class StorageCtrl {
 	 * @throws DataAccessException if there is an error accessing the data
 	 */
 	
-	public List<LotLine> findAvailableProductInWarehouse(Product product, int quantity, String warehouseName)
+	public List<LotLine> findAvailableProductInWarehouseAndPrepareToRemove(Product product, int quantity, String warehouseName)
 			throws DataAccessException {
 		if (storageDBIF == null) {
 			storageDBIF = new StorageDB();

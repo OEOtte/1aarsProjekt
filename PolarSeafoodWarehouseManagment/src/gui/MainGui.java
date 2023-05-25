@@ -279,7 +279,7 @@ public class MainGui extends JFrame {
 			String warehouseName = txtWarehouse.getText();
 			String qty = textQuantity.getText();
 
-			List<LotLine> lls = storageCtrl.findAvailableProductInWarehouse(p, Integer.parseInt(qty), warehouseName);
+			List<LotLine> lls = storageCtrl.findAvailableProductInWarehouseAndPrepareToRemove(p, Integer.parseInt(qty), warehouseName);
 
 			int input = JOptionPane.showConfirmDialog(contentPane, buildLotLines(lls));
 			if(input == 0) {

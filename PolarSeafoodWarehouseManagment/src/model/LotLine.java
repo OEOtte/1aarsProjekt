@@ -11,6 +11,13 @@ public class LotLine {
 	private Lot lot;
 	private int removedQty;
 	
+	public LotLine(Product product, int quantity, LocalDate expirationDate, Lot lot) {
+		this.product = product;
+		this.quantity = quantity;
+		this.expirationDate = expirationDate;
+		this.lot = lot;
+	}
+	
 	public LocalDate getExpirationDate() {
 		return expirationDate;
 	}
@@ -33,13 +40,6 @@ public class LotLine {
 
 	public void setRemovedQty(int removedQty) {
 		this.removedQty = removedQty;
-	}
-
-	public LotLine(Product product, int quantity, LocalDate expirationDate, Lot lot) {
-		this.product = product;
-		this.quantity = quantity;
-		this.expirationDate = expirationDate;
-		this.lot = lot;
 	}
 
 	public int getQuantity() {

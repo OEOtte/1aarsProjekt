@@ -50,7 +50,7 @@ public class FreightDB implements FreightDBIF {
 			ResultSet rs = findByFreightNumberPS.executeQuery();
 
 			if (rs.next()) {
-				foundFreight = buildObject(rs);
+				foundFreight = buildFreight(rs);
 			}
 
 		} catch (SQLException e) {
@@ -66,7 +66,7 @@ public class FreightDB implements FreightDBIF {
 	 * @throws DataAccessException
 	 */
 
-	private Freight buildObject(ResultSet rs) throws DataAccessException {
+	private Freight buildFreight(ResultSet rs) throws DataAccessException {
 		Freight res = null;
 		try {
 			StorageDBIF storageDBIF = new StorageDB();
