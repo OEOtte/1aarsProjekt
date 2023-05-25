@@ -50,7 +50,7 @@ import model.Product;
 			p = null;
 			// assert
 			org.junit.jupiter.api.Assertions.assertThrows(NullPointerException.class, () -> 
-		        stoCtrl.findAvailableProductInWarehouse(p, 1, "PSU1"));
+		        stoCtrl.findAvailableProductInWarehouseAndPrepareToRemove(p, 1, "PSU1"));
 		    
 		}
 		
@@ -62,7 +62,7 @@ import model.Product;
 			p = pc.findProductByBarcode("4820226000082");
 			// assert
 			org.junit.jupiter.api.Assertions.assertThrows(NullPointerException.class, () -> 
-		        stoCtrl.findAvailableProductInWarehouse(p, 1, null));
+		        stoCtrl.findAvailableProductInWarehouseAndPrepareToRemove(p, 1, null));
 		    
 		}
 		
@@ -74,7 +74,7 @@ import model.Product;
 			p = pc.findProductByBarcode("4820226000082");
 			// assert
 			org.junit.jupiter.api.Assertions.assertThrows(NullPointerException.class, () -> 
-		        stoCtrl.findAvailableProductInWarehouse(p, 1, "Ukraine"));
+		        stoCtrl.findAvailableProductInWarehouseAndPrepareToRemove(p, 1, "Ukraine"));
 		}
 		
 		@Test
@@ -85,7 +85,7 @@ import model.Product;
 			p = pc.findProductByBarcode("4820226000082");
 			// assert
 			org.junit.jupiter.api.Assertions.assertThrows(NullPointerException.class, () -> 
-		        stoCtrl.findAvailableProductInWarehouse(p, 0, "PSU1"));
+		        stoCtrl.findAvailableProductInWarehouseAndPrepareToRemove(p, 0, "PSU1"));
 		}
 		
 		@Test
@@ -96,7 +96,7 @@ import model.Product;
 			p = pc.findProductByBarcode("4820226000082");
 			// assert
 			org.junit.jupiter.api.Assertions.assertThrows(NullPointerException.class, () -> 
-		        stoCtrl.findAvailableProductInWarehouse(p, -1, "PSU1"));
+		        stoCtrl.findAvailableProductInWarehouseAndPrepareToRemove(p, -1, "PSU1"));
 		}
 	}
 
