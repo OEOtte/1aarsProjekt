@@ -281,11 +281,12 @@ public class MainGui extends JFrame {
 
 			List<LotLine> lls = storageCtrl.findAvailableProductInWarehouseAndPrepareToRemove(p, Integer.parseInt(qty), warehouseName);
 
-			int input = JOptionPane.showConfirmDialog(contentPane, buildLotLines(lls));
+			int input = JOptionPane.showConfirmDialog(contentPane, buildLotLines(lls), "Remove Products", JOptionPane.OK_CANCEL_OPTION);
 			if(input == 0) {
 				storageCtrl.confirmRemovalOfProductInWarehouse(lls);
 			} else if (input == 1);
 			//TODO: implement method that goes back and removes values on "removedqty" on LotLines 
+			
 		}
 
 	}
