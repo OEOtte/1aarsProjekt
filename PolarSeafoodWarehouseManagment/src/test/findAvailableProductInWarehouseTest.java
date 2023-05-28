@@ -1,8 +1,6 @@
 package test;
 
-	import static org.junit.Assert.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+	import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,7 +31,7 @@ import model.Product;
 		 */
 		
 		@Test
-		void testFindAvailableProductInWarehouseWithValidInput() throws DataAccessException {
+		void testFindAvailableProductInWarehouseAndPrepareToRemoveWithValidInput() throws DataAccessException {
 			// Arrange
 			Product p;
 			// act
@@ -42,8 +40,11 @@ import model.Product;
 			assertEquals(p.getBarcode() , "4820226000082");
 		}
 
+		/**
+		 * Local import for assertThrows was used due to trouble with importing it normally
+		 */
 		@Test
-		void testFindAvailableProductInWarehouseWithInvalidProduct() throws DataAccessException {
+		void testFindAvailableProductInWarehouseAndPrepareToRemoveWithInvalidProduct() throws DataAccessException {
 			// Arrange
 			Product p;
 			// act
@@ -55,7 +56,7 @@ import model.Product;
 		}
 		
 		@Test
-		void testFindAvailableProductInWarehouseWhereWarehouseNameIsNotString() throws DataAccessException {
+		void testFindAvailableProductInWarehouseAndPrepareToRemoveWhereWarehouseNameIsNotString() throws DataAccessException {
 			// Arrange
 			Product p;
 			// act
@@ -67,7 +68,7 @@ import model.Product;
 		}
 		
 		@Test
-		void testFindAvailableProductInWarehouseWhereWarehouseNameHasInvalidInfo() throws DataAccessException {
+		void testFindAvailableProductInWarehouseAndPrepareToRemoveWhereWarehouseNameHasInvalidInfo() throws DataAccessException {
 			// Arrange
 			Product p;
 			// act
@@ -77,8 +78,13 @@ import model.Product;
 		        stoCtrl.findAvailableProductInWarehouseAndPrepareToRemove(p, 1, "Ukraine"));
 		}
 		
+		/**
+		 * Currently 2 tests below aren't working, a fix needs to be implemented to ensure 0 or less is not a valid quantity
+		 * @throws DataAccessException
+		 */
+		
 		@Test
-		void testFindAvailableProductInWarehouseWithInvalidQuantity0() throws DataAccessException {
+		void testFindAvailableProductInWarehouseAndPrepareToRemoveWithInvalidQuantity0() throws DataAccessException {
 			// Arrange
 			Product p;
 			// act
@@ -89,7 +95,7 @@ import model.Product;
 		}
 		
 		@Test
-		void testFindAvailableProductInWarehouseWithInvalidQuantityMinus1() throws DataAccessException {
+		void testFindAvailableProductInWarehouseAndPrepareToRemoveWithInvalidQuantityMinus1() throws DataAccessException {
 			// Arrange
 			Product p;
 			// act
@@ -99,4 +105,3 @@ import model.Product;
 		        stoCtrl.findAvailableProductInWarehouseAndPrepareToRemove(p, -1, "PSU1"));
 		}
 	}
-
