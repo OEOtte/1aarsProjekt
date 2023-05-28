@@ -8,11 +8,12 @@ import database.StaffDBIF;
 import model.Staff;
 
 public class StaffCtrl {
-	private List<Staff> staffList;
-	
+
 	/**
 	 * This method find staffs by IDs.
-	 * @param staffNos	the list of ID strings that we use to search in the database with.
+	 * 
+	 * @param staffNos the list of ID strings that we use to search in the database
+	 *                 with.
 	 * @return returns a list of staff IDs and null if the staff IDs were not found.
 	 * @throws DataAccessException if there is an error accessing the data.
 	 */
@@ -22,7 +23,6 @@ public class StaffCtrl {
 		List<Staff> res = null;
 		if (!staffNos.isEmpty()) {
 			res = staffDBIF.findStaffByNos(staffNos);
-			staffList = res;
 		}
 		return res;
 

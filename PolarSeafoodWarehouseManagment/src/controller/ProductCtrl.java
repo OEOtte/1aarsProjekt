@@ -44,7 +44,7 @@ public class ProductCtrl {
 	/**
      * This method finds products by a partial name.
      *
-     * @param (prod) is the partial name of the product.
+     * @param (product) is the partial name of the product.
      * @return Returns a list of products matching the partial name.
      * @throws DataAccessException if there is an error accessing the data.
      */

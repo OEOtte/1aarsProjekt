@@ -21,22 +21,30 @@ public class Shipment {
 		this.staffOnShipment = staffs;
 		this.arrivalLocation = warehouse;
 		this.arrivalDate = LocalDate.now();
-		this.dispatchDate = LocalDate.now();
+		this.dispatchDate = LocalDate.now(); // TODO: register dispatch date. Another use-case
 	}
 
-	
-	//DER BURDE IKKE VÆRE FORRETNINGSLOGIC HER, MEN PGA. SHIPEMTNLINES kendskab i shipment er det ok
+	/**
+	 * Adds a product to a shipment line or updates an existing shipment line with
+	 * the given product and quantity. it checks if there is an existing shipment
+	 * line with the same barcode. If found, it increases the quantity and updates
+	 * the weight accordingly. If no matching shipment line is found, a new shipment
+	 * line is created. The total weight and amount of different products are
+	 * updated accordingly.
+	 *
+	 * @param product  the product to be added to the shipment line
+	 * @param quantity the quantity of the product to be added
+	 * @return the shipment line where the product was added or updated
+	 */
 	public ShipmentLine addProductToAShipmentline(Product product, int quantity) {
 		ShipmentLine res = null;
 		if (shipmentLines == null) {
 			shipmentLines = new ArrayList<>();
 		}
 
-		System.out.println(product.getClass().getName());
 		boolean boxed = false;
-		if(product instanceof BoxedProduct) {
+		if (product instanceof BoxedProduct) {
 			boxed = true;
-			System.out.println("This is a BoxedProduct" + product.getItemNumber());
 		}
 
 		for (int i = 0; i < shipmentLines.size(); i++) {

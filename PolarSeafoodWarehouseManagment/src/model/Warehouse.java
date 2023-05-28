@@ -5,15 +5,11 @@ public class Warehouse {
 	private int id;
 	private String name;
 	private String address;
-
-
-	public Warehouse(int id) {
-		this.id = id;
-	}
 	
 	public Warehouse(int id, String name, String address) {
 		this.id = id;
 		this.name = name;
+		this.address = address;
 	}
 
 	public String getName() {

@@ -144,7 +144,7 @@ public class StorageDB implements StorageDBIF {
 		return res;
 	}
 
-	//TODO: Write javadoc
+	// TODO: Write javadoc
 	private Warehouse findWarehouseById(int id) throws DataAccessException {
 		Warehouse foundWarehouse = null;
 		try {
@@ -231,8 +231,8 @@ public class StorageDB implements StorageDBIF {
 	 * @return boolean
 	 */
 	@Override
-	public boolean persistProductOnLot(Product product, Lot lot, int quantity, LocalDate date)
-			throws DataAccessException {
+	public boolean persistProductOnLot(Product product, Lot lot, int quantity, LocalDate date) throws DataAccessException {
+		boolean res = true;
 		try {
 			DBConnection.getInstance().startTransaction();
 
@@ -248,10 +248,10 @@ public class StorageDB implements StorageDBIF {
 
 		} catch (SQLException e) {
 			DBConnection.getInstance().rollbackTransaction();
+			res = false;
 			throw new DataAccessException(DBMessages.COULD_NOT_BIND_OR_EXECUTE_QUERY, e);
 		}
-		// TODO return correct boolean
-		return false;
+		return res;
 	}
 
 	/**
