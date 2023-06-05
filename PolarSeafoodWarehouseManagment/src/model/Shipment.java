@@ -38,43 +38,31 @@ public class Shipment {
 	 */
 	public ShipmentLine addProductToAShipmentline(Product product, int quantity) {
 		ShipmentLine res = null;
+		double weight;
 		if (shipmentLines == null) {
 			shipmentLines = new ArrayList<>();
 		}
 
-		boolean boxed = false;
 		if (product instanceof BoxedProduct) {
-			boxed = true;
+			weight = quantity * (((BoxedProduct) product).getQuantityInBox() * product.getWeight());
+		} else {
+			weight = quantity * product.getWeight();
 		}
 
 		for (int i = 0; i < shipmentLines.size(); i++) {
-			if (boxed && ((BoxedProduct) shipmentLines.get(i).getProduct()).getParentBarcode()
-					.equals(((BoxedProduct) product).getParentBarcode())) {
+			if (shipmentLines.get(i).getProduct().getBarcode().equals(product.getBarcode())) {
 				shipmentLines.get(i).increaseQty(quantity);
-				double weightForBox = quantity * (((BoxedProduct) product).getQuantityInBox() * product.getWeight());
-				shipmentLines.get(i).setWeight(weightForBox);
-				totalWeight += weightForBox;
-				res = shipmentLines.get(i);
-			} else if (shipmentLines.get(i).getProduct().getBarcode().equals(product.getBarcode())) {
-				shipmentLines.get(i).increaseQty(quantity);
-				double shipmentLineWeight = quantity * product.getWeight();
-				shipmentLines.get(i).setWeight(shipmentLineWeight);
-				totalWeight += shipmentLineWeight;
+				shipmentLines.get(i).setWeight(weight);
+				totalWeight += weight;
 				res = shipmentLines.get(i);
 			}
 		}
-		if (res == null && !boxed) {
+		if (res == null) {
 			res = new ShipmentLine(product, quantity);
-			res.setWeight(quantity * product.getWeight());
+			res.setWeight(weight);
 			shipmentLines.add(res);
 			amountOfDifferentProduct++;
-			totalWeight += (quantity * product.getWeight());
-		} else if (res == null && boxed) {
-			res = new ShipmentLine(product, quantity);
-			double weightForBox = quantity * (((BoxedProduct) product).getQuantityInBox() * product.getWeight());
-			res.setWeight(weightForBox);
-			shipmentLines.add(res);
-			totalWeight += weightForBox;
+			totalWeight += weight;
 		}
 		return res;
 	}
